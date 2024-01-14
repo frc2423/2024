@@ -5,10 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -38,8 +41,11 @@ public class RobotContainer
   CommandJoystick driverController = new CommandJoystick(1);
 
   // CommandJoystick driverController   = new CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT);
-  XboxController driverXbox = new XboxController(0);
+  XboxController driverXbox = new XboxController(0);  
+  CommandXboxController driverXboxCommand = new CommandXboxController(0);
 
+   private XboxController m_controller;
+  //  BooleanEvent aButton = m_controller.a();
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -105,9 +111,21 @@ public class RobotContainer
   {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    new JoystickButton(driverXbox, 1).onTrue((new InstantCommand(drivebase::zeroGyro)));
+    // new JoystickButton(driverXbox, 1).onTrue((new InstantCommand(drivebase::zeroGyro)));
     new JoystickButton(driverXbox, 3).onTrue(new InstantCommand(drivebase::addFakeVisionReading));
-//    new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
+    new JoystickButton(driverXbox, 2).whileTrue(Commands.run(() -> {
+      drivebase.drive(new Translation2d(5,0), 0, false);
+    }));
+    new JoystickButton(driverXbox, 1).whileTrue(Commands.run(() -> {
+      drivebase.drive(new Translation2d(0,-5), 0, false);
+    }));
+       new JoystickButton(driverXbox, 3).whileTrue(Commands.run(() -> {
+      drivebase.drive(new Translation2d(-5,0), 0, false); // not sure why this is causing it to change rotation in sim
+    }));
+      new JoystickButton(driverXbox, 4).whileTrue(Commands.run(() -> {
+      drivebase.drive(new Translation2d(0,5), 0, false);
+    }));
+//    new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantComm.and(drivebase::lock, drivebase)));
   }
 
   /**
