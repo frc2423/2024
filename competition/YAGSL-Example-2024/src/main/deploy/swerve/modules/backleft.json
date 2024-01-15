@@ -5,13 +5,13 @@
   },
   "absoluteEncoderOffset": 0,
   "drive": {
-    "type": "sparkmax",
-    "id": 5,
+    "type": "sparkflex",
+    "id": 7,
     "canbus": null
   },
   "angle": {
     "type": "sparkmax",
-    "id": 6,
+    "id": 8,
     "canbus": null
   },
   "conversionFactor": {
@@ -19,7 +19,7 @@
     "drive": 0.047877872
   },
   "encoder": {
-    "type": "throughbore",
+    "type": "attached",
     "id": 11,
     "canbus": null
   },

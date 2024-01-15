@@ -5,7 +5,7 @@
   },
   "absoluteEncoderOffset": 0,
   "drive": {
-    "type": "sparkmax",
+    "type": "sparkflex",
     "id": 3,
     "canbus": null
   },
@@ -19,7 +19,7 @@
     "drive": 0.047877872
   },
   "encoder": {
-    "type": "throughbore",
+    "type": "attached",
     "id": 10,
     "canbus": null
   },
