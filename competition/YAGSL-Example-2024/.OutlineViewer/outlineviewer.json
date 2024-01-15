@@ -13,6 +13,12 @@
       },
       "open": true,
       "swerve": {
+        "double[]##v_/SmartDashboard/swerve/desiredChassisSpeeds": {
+          "open": true
+        },
+        "double[]##v_/SmartDashboard/swerve/measuredChassisSpeeds": {
+          "open": true
+        },
         "open": true
       }
     }
