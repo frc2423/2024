@@ -7,10 +7,17 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.sim.DrivetrainSim;
+import frc.robot.sim.VisionSim;
+
 import java.io.File;
 import java.io.IOException;
+
+import org.photonvision.PhotonCamera;
+
 import swervelib.parser.SwerveParser;
 
 /**
@@ -27,6 +34,13 @@ public class Robot extends TimedRobot
   private RobotContainer m_robotContainer;
 
   private Timer disabledTimer;
+  DrivetrainSim dtSim;
+  VisionSim visionSim;
+
+  PWMVictorSPX leftMotor = new PWMVictorSPX(0);
+  PWMVictorSPX rightMotor = new PWMVictorSPX(1);
+
+  PhotonCamera camera = new PhotonCamera("photonvision");
 
   public Robot()
   {
@@ -159,13 +173,15 @@ public class Robot extends TimedRobot
   public void testPeriodic()
   {
   }
-
+  
   /**
    * This function is called once when the robot is first started up.
    */
   @Override
   public void simulationInit()
   {
+    dtSim = new DrivetrainSim(leftMotor, rightMotor);
+    visionSim = new VisionSim("main", camera);
   }
 
   /**
@@ -174,5 +190,7 @@ public class Robot extends TimedRobot
   @Override
   public void simulationPeriodic()
   {
+    dtSim.update();
+    visionSim.update(dtSim.getPose());
   }
 }
