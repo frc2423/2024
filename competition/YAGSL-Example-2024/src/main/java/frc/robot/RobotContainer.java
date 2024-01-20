@@ -46,6 +46,7 @@ public class RobotContainer {
   // CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT);
   XboxController driverXbox = new XboxController(0);
   CommandXboxController driverXboxCommand = new CommandXboxController(0);
+  
 
   private XboxController m_controller;
 
@@ -92,13 +93,13 @@ public class RobotContainer {
             OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
             OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRawAxis(2), () -> true);
+        () -> driverXbox.getRawAxis(4), () -> true);
 
     TeleopDrive closedFieldRel = new TeleopDrive(
         drivebase,
         () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> -driverXbox.getRawAxis(5), () -> true);
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> -driverXbox.getRightX(), () -> true);
 
     drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedFieldRel : simClosedFieldRel);
   }
