@@ -109,7 +109,7 @@ public class RobotContainer {
     Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
       () ->
         MathUtil.applyDeadband(
-          driverXbox.getLeftY(),
+          -driverXbox.getLeftY(),
           OperatorConstants.LEFT_Y_DEADBAND
         ),
       () ->
