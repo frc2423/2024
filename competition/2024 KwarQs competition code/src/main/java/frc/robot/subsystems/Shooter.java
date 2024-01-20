@@ -12,10 +12,12 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.devices.NeoMotor;
@@ -28,6 +30,8 @@ public class Shooter extends SubsystemBase {
     private Rotation2d shooterAngle = new Rotation2d();
     private double shooterSpeed = 0;
     private CANcoder angleEncoder;
+    private double shooterAngleVoltage;
+    public static final double MAX_SHOOTER_ANGLE_VOLTAGE = 4;
     private ProfiledPIDController shooterPID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : .005, 0, 0, new TrapezoidProfile.Constraints(360, 420));
     
     
@@ -60,16 +64,22 @@ public class Shooter extends SubsystemBase {
         shooterSpeed = speed;
     }
 
+    private void setShooterAngleVoltage(double voltage) {
+        shooterAngleVoltage = voltage;
+    }
      public void setAngle(double angle) {
-        // We need a PID that sets the angle
+        double voltage = calculatePid(new Rotation2d(angle));
     }
 
     private double calculatePid(Rotation2d angle) {
-        return shooterPID.calculate(angleEncoder.get(), angle.getDegrees());
+        return shooterPID.calculate(shooterAngle.getDegrees(), angle.getDegrees());
     }
 
     public void periodic() {
         shooterAngle = Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition().getValue());
+          var voltage = MathUtil.clamp(shooterAngleVoltage, -MAX_SHOOTER_ANGLE_VOLTAGE, MAX_SHOOTER_ANGLE_VOLTAGE);
+          var shooterAngleMotorPercent = (voltage / RobotController.getBatteryVoltage());
+          shooterAngleMotor.setSpeed(shooterAngleMotorPercent);
     }
 
 }
