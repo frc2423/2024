@@ -25,10 +25,10 @@ import java.io.File;
  * Instead, the structure of the robot (including subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-
+  String deployDirectory = (Robot.isSimulation())? "neo" : "swerve";
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem(
-    new File(Filesystem.getDeployDirectory(), "swerve/neo")
+    new File(Filesystem.getDeployDirectory(), deployDirectory)
   );
   // CommandJoystick rotationController = new CommandJoystick(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
