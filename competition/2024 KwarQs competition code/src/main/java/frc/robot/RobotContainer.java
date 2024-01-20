@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
@@ -36,6 +37,8 @@ public class RobotContainer {
 
   // CommandJoystick driverController   = new CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT);
   XboxController driverXbox = new XboxController(0);
+
+  IntakeSubsystem intake =new IntakeSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -142,6 +145,9 @@ public class RobotContainer {
     //new JoystickButton(driverXbox, 3)
      // .onTrue(new InstantCommand(drivebase::addFakeVisionReading));
     //    new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
+
+    //When button 2 is pressed, move intake out and move belt motors.
+    new JoystickButton(driverXbox,2).onTrue(new InstantCommand(intake::extend)).onFalse(new InstantCommand(intake::pivotStop));
   }
 
   /**
