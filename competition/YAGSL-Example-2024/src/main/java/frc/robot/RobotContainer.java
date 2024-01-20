@@ -122,7 +122,7 @@ public class RobotContainer {
 
     // new JoystickButton(driverXbox, 1).onTrue((new
     // InstantCommand(drivebase::zeroGyro)));
-    new JoystickButton(driverXbox, 3).onTrue(new InstantCommand(drivebase::addFakeVisionReading));
+    // new JoystickButton(driverXbox, 3).onTrue(new InstantCommand(drivebase::addFakeVisionReading));
     new JoystickButton(driverXbox, 2).whileTrue(Commands.run(() -> {
       drivebase.drive(new Translation2d(5, 0), 0, false);
     }));
