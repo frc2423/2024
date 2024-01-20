@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.util.List;
@@ -19,7 +19,7 @@ import swervelib.math.SwerveMath;
 /**
  * An example command that uses an example subsystem.
  */
-public class AbsoluteDrive extends CommandBase
+public class AbsoluteDrive extends Command
 {
 
   private final SwerveSubsystem swerve;
@@ -76,13 +76,13 @@ public class AbsoluteDrive extends CommandBase
                                                          headingVertical.getAsDouble());
 
     // Prevent Movement After Auto
-    if(initRotation)
+    if (initRotation)
     {
-      if(headingHorizontal.getAsDouble() == 0 && headingVertical.getAsDouble() == 0)
+      if (headingHorizontal.getAsDouble() == 0 && headingVertical.getAsDouble() == 0)
       {
         // Get the curretHeading
         Rotation2d firstLoopHeading = swerve.getHeading();
-      
+
         // Set the Current Heading to the desired Heading
         desiredSpeeds = swerve.getTargetSpeeds(0, 0, firstLoopHeading.getSin(), firstLoopHeading.getCos());
       }
