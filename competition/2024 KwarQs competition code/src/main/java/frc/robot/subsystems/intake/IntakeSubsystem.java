@@ -1,11 +1,18 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.devices.AbsoluteEncoder;
 import frc.robot.devices.NeoMotor;
 public class IntakeSubsystem extends SubsystemBase
 {
     private NeoMotor pivotMotor;
     private NeoMotor beltMotor;
+    private ProfiledPIDController pivotPID = new ProfiledPIDController(0, 0, 0, null);
+    private double intakeupposition = 1;
+    private double intakedownposition = 2;
+    private Encoder pivotEncoder= new Encoder(20, 21);
 
     public IntakeSubsystem()
     {
@@ -15,7 +22,10 @@ public class IntakeSubsystem extends SubsystemBase
     public void extend()
     {
         //run pivot motor forward
-        pivotMotor.setSpeed(0.4);
+        double speed = pivotPID.calculate(pivotMotor.getDistance(),intakedownposition);
+        //make it actual angle
+        pivotMotor.setSpeed(speed);
+
         //run belt motor forward
         intake();
     }
