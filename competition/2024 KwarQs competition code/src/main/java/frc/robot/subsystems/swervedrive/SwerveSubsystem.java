@@ -5,6 +5,7 @@
 package frc.robot.subsystems.swervedrive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -146,6 +147,15 @@ public class SwerveSubsystem extends SubsystemBase {
     // event markers.
     return AutoBuilder.followPath(path);
   }
+    public Command getAuto(String auto){
+       PathPlannerAuto path = new PathPlannerAuto(auto);
+       Pose2d pose = PathPlannerAuto.getStaringPoseFromAutoFile(auto);
+      //figure out what to do if pose is undefined
+       resetOdometry(pose);
+
+       return path;
+  }
+
 
   /**
    * Command to drive the robot using translative values and heading as a

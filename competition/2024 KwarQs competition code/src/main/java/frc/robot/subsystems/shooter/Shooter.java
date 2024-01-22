@@ -8,7 +8,7 @@
 // Toggle for on and off
 // Two motors controlling the angle
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 

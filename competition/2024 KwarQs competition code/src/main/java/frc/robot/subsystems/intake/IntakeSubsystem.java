@@ -1,6 +1,9 @@
 package frc.robot.subsystems.intake;
 
+import com.ctre.phoenix6.hardware.CANcoder;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.devices.AbsoluteEncoder;
@@ -9,10 +12,10 @@ public class IntakeSubsystem extends SubsystemBase
 {
     private NeoMotor pivotMotor;
     private NeoMotor beltMotor;
-    private ProfiledPIDController pivotPID = new ProfiledPIDController(0, 0, 0, null);
+    private ProfiledPIDController pivotPID = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(360, 420));
     private double intakeupposition = 1;
     private double intakedownposition = 2;
-    private Encoder pivotEncoder= new Encoder(20, 21);
+    private CANcoder pivotEncoder= new CANcoder(20);
 
     public IntakeSubsystem()
     {

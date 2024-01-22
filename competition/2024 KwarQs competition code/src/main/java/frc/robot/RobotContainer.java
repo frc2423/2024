@@ -20,6 +20,10 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.reduxrobotics.sensors.canandcoder.Canandcoder;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
  * little robot logic should actually be handled in the {@link Robot} periodic methods (other than the scheduler calls).
@@ -46,7 +50,6 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(
       drivebase,
       () ->
@@ -128,6 +131,12 @@ public class RobotContainer {
         ? driveFieldOrientedAnglularVelocity
         : driveFieldOrientedDirectAngleSim
     );
+
+
+    //auto commands
+      //EXAMPLE:  NamedCommands.registerCommand("useless", exampleSubsystem.exampleCommand());
+
+
   }
 
   /**
@@ -147,7 +156,7 @@ public class RobotContainer {
     //    new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
 
     //When button 2 is pressed, move intake out and move belt motors.
-    new JoystickButton(driverXbox,2).onTrue(new InstantCommand(intake::extend)).onFalse(new InstantCommand(intake::pivotStop));
+   new JoystickButton(driverXbox,2).onTrue(new InstantCommand(intake::extend)).onFalse(new InstantCommand(intake::pivotStop));
   }
 
   /**
@@ -157,7 +166,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("New Path", true);
+    return drivebase.getAuto("ExampleAuto");
   }
 
   public void setDriveMode() {
