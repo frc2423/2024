@@ -1,9 +1,22 @@
 package frc.robot.devices;
 
+/*
+ * TODO:
+ *  - fix anything that is deprecated
+ *  - use wpilib pid controller instead of the cansparkmax
+ *  - remove any functions that are unecessary
+ * 
+ * 
+ */
+
+
+
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkPIDController;
 import com.ctre.phoenix.sensors.CANCoder;
 
 public class NeoMotor {
@@ -11,7 +24,7 @@ public class NeoMotor {
     public static final String ControlType = null;
     protected CANSparkMax motor;
     private IEncoder encoder;
-    private SparkMaxPIDController pidController;
+    private SparkPIDController pidController;
     private double voltage = 0.0;
     private double motorValue = 0.0;
     private CANSparkMax.ControlType motorControlType = CANSparkMax.ControlType.kDutyCycle;
@@ -41,6 +54,10 @@ public class NeoMotor {
 
     public void setIZone(double zone) {
         pidController.setIZone(zone);
+    }
+
+    public CANSparkMax getSparkMax() {
+        return motor;
     }
 
     public void setSpeed(double speed) {

@@ -1,5 +1,15 @@
 package frc.robot.subsystems.intake;
 
+/*
+ * TODO:
+ *  - make pivot code (add in code so that it never extends beyond a certain point)
+ *  - add code for beam break sensor to turn off belt
+ *  - test belt code
+ *  - get correct can ids
+ * 
+ */
+
+
 import com.ctre.phoenix6.hardware.CANcoder;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -15,12 +25,13 @@ public class IntakeSubsystem extends SubsystemBase
     private ProfiledPIDController pivotPID = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(360, 420));
     private double intakeupposition = 1;
     private double intakedownposition = 2;
-    private CANcoder pivotEncoder= new CANcoder(20);
+    private AbsoluteEncoder pivotEncoder;
 
     public IntakeSubsystem()
     {
         pivotMotor = new NeoMotor(20);
         beltMotor = new NeoMotor(21);
+        pivotEncoder= new AbsoluteEncoder(pivotMotor.getSparkMax());
     }
     public void extend()
     {

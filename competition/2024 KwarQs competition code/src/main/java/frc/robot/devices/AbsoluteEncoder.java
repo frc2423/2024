@@ -1,6 +1,7 @@
 package frc.robot.devices;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
@@ -13,7 +14,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 public class AbsoluteEncoder implements IEncoder {
 
     CANSparkMax motor;
-    SparkMaxAbsoluteEncoder encoder;
+    SparkAbsoluteEncoder encoder;
 
     /**
      * Constructs a new absolute encoder for a given motor with an encoder
