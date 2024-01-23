@@ -1,79 +1,81 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+
 /*
  * TODO:
- *  - make pivot code (add in code so that it never extends beyond a certain point)
- *  - add code for beam break sensor to turn off belt
  *  - test belt code
  *  - get correct can ids
  * 
  */
 
-
-import com.ctre.phoenix6.hardware.CANcoder;
-
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.devices.AbsoluteEncoder;
 import frc.robot.devices.NeoMotor;
-public class IntakeSubsystem extends SubsystemBase
-{
+
+public class IntakeSubsystem extends SubsystemBase {
     private NeoMotor pivotMotor;
     private NeoMotor beltMotor;
-    private ProfiledPIDController pivotPID = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(360, 420));
     private double intakeupposition = 1;
     private double intakedownposition = 2;
-    private AbsoluteEncoder pivotEncoder;
+    //get correct channel for digital input
+    private DigitalInput beamBreak = new DigitalInput(0);
 
-    public IntakeSubsystem()
-    {
+    public IntakeSubsystem() {
         pivotMotor = new NeoMotor(20);
         beltMotor = new NeoMotor(21);
-        pivotEncoder= new AbsoluteEncoder(pivotMotor.getSparkMax());
+        pivotMotor.setPid(0.1, 00, 00);
     }
-    public void extend()
-    {
-        //run pivot motor forward
-        double speed = pivotPID.calculate(pivotMotor.getDistance(),intakedownposition);
-        //make it actual angle
-        pivotMotor.setSpeed(speed);
 
-        //run belt motor forward
-        intake();
+    public void extend() {
+        // make it down angle
+        pivotMotor.setDistance(intakedownposition);
     }
-    public void retract()
-    {
-        pivotMotor.setSpeed(-0.4);
-        outtake();
+
+    public void retract() {
+        //make it up angle
+        pivotMotor.setDistance(intakeupposition);
     }
-    public void intake()
-    {
+
+    public void intake() {
+        // slurp the note
         beltMotor.setSpeed(0.4);
     }
-    public void outtake()
-    {
+
+    public void runIntake() {
+        if (isBeamBroken()) {
+            beltStop();
+        }
+
+        else {
+            intake();
+        }
+    }
+
+    public void outtake() {
+        //spit the note out
         beltMotor.setSpeed(-0.4);
     }
-    public void beltStop()
-    {
+
+    public void beltStop() {
+        //stop the belt
         beltMotor.setSpeed(0);
     }
-    public void pivotStop()
-    {
+
+    public void pivotStop() {
+        //stop moving up and down
         pivotMotor.setSpeed(0);
     }
-    public double getPivotMotorSpeed()
-    {
-        return pivotMotor.getSpeed();
+
+    public double getPivotMotorDistance() {
+        return pivotMotor.getDistance();
     }
-    public double getBeltMotorSpeed()
-    {
+
+    public double getBeltMotorSpeed() {
         return beltMotor.getSpeed();
     }
-   // public boolean isBeamBroken()
-    //{
 
-   // }
+    //checks if the beam is broken
+    public boolean isBeamBroken() {
+        return beamBreak.get();
+    }
 }

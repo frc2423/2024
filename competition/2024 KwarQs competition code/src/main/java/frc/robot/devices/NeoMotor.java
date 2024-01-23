@@ -1,9 +1,10 @@
 package frc.robot.devices;
 
+import com.revrobotics.CANSparkLowLevel;
+
 /*
  * TODO:
- *  - fix anything that is deprecated
- *  - use wpilib pid controller instead of the cansparkmax
+ *  - code to add for free forward
  *  - remove any functions that are unecessary
  * 
  * 
@@ -13,8 +14,16 @@ package frc.robot.devices;
 
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.Robot;
+
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkPIDController;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -24,7 +33,7 @@ public class NeoMotor {
     public static final String ControlType = null;
     protected CANSparkMax motor;
     private IEncoder encoder;
-    private SparkPIDController pidController;
+    private PIDController pidController;
     private double voltage = 0.0;
     private double motorValue = 0.0;
     private CANSparkMax.ControlType motorControlType = CANSparkMax.ControlType.kDutyCycle;
@@ -40,11 +49,11 @@ public class NeoMotor {
 
     public NeoMotor(int port, boolean isAbsoluteEncoder) {
 
-        motor = new CANSparkMax(port, MotorType.kBrushless);
+        motor = new CANSparkMax(port, CANSparkLowLevel.MotorType.kBrushless);
         motor.restoreFactoryDefaults();
-        motor.getAbsoluteEncoder(Type.kDutyCycle).getVelocityConversionFactor();
+        motor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getVelocityConversionFactor();
         encoder = isAbsoluteEncoder ? new frc.robot.devices.AbsoluteEncoder(motor) : new frc.robot.devices.RelativeEncoder(motor);
-        pidController = motor.getPIDController();
+        pidController = new PIDController((Robot.isSimulation()) ? .001 : .005, 0, 0);
         setPercent(0);
     }
 
@@ -121,7 +130,7 @@ public class NeoMotor {
         setP(kP);
         setI(kI);
         setD(kD);
-        setF(kF);
+        //setF(kF);
     }
 
     public void setP(double kP) {
@@ -139,10 +148,11 @@ public class NeoMotor {
         pidController.setD(kD);
     }
 
-    public void setF(double kF) {
-        this.kF = kF;
-        pidController.setFF(kF);
-    }
+    // public void setF(double kF) {
+    //     this.kF = kF;
+    //     //pidController.setFF(kF);\
+    //     pidController.set
+    // }
 
     public double getP() {
         return kP;
@@ -179,7 +189,7 @@ public class NeoMotor {
         if (hasChanged) {
             motorValue = newValue;
             motorControlType = newControlType;
-            pidController.setReference(motorValue, motorControlType);
+            pidController.setSetpoint(motorValue);
         }
     }
 

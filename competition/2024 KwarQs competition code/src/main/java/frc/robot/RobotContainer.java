@@ -149,14 +149,16 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    new JoystickButton(driverXbox, 1)
-      .onTrue((new InstantCommand(drivebase::zeroGyro)));
+    // new JoystickButton(driverXbox, 1)
+    //   .onTrue((new InstantCommand(drivebase::zeroGyro)));
     //new JoystickButton(driverXbox, 3)
      // .onTrue(new InstantCommand(drivebase::addFakeVisionReading));
     //    new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
 
     //When button 2 is pressed, move intake out and move belt motors.
-   new JoystickButton(driverXbox,2).onTrue(new InstantCommand(intake::extend)).onFalse(new InstantCommand(intake::pivotStop));
+   //new JoystickButton(driverXbox,2).onTrue(new InstantCommand(intake::extend)).onFalse(new InstantCommand(intake::pivotStop));
+   new JoystickButton(driverXbox, XboxController.Button.kY.value).onTrue(new InstantCommand(intake::intake)).onFalse(new InstantCommand(intake::beltStop));;
+   new JoystickButton(driverXbox, XboxController.Button.kB.value).onTrue(new InstantCommand(intake::outtake)).onFalse(new InstantCommand(intake::beltStop));;
   }
 
   /**
