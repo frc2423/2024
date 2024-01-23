@@ -1,5 +1,8 @@
 package frc.robot.subsystems.intake;
 
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 
 /*
@@ -14,7 +17,7 @@ import frc.robot.devices.NeoMotor;
 
 public class IntakeSubsystem extends SubsystemBase {
     private NeoMotor pivotMotor;
-    private NeoMotor beltMotor;
+    private CANSparkMax beltMotor;
     private double intakeupposition = 1;
     private double intakedownposition = 2;
     //get correct channel for digital input
@@ -22,7 +25,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public IntakeSubsystem() {
         pivotMotor = new NeoMotor(20);
-        beltMotor = new NeoMotor(21);
+        beltMotor = new CANSparkMax(19, CANSparkLowLevel.MotorType.kBrushless);
         pivotMotor.setPid(0.1, 00, 00);
     }
 
@@ -38,7 +41,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void intake() {
         // slurp the note
-        beltMotor.setSpeed(0.4);
+        beltMotor.set(0.4);
     }
 
     public void runIntake() {
@@ -53,12 +56,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void outtake() {
         //spit the note out
-        beltMotor.setSpeed(-0.4);
+        beltMotor.set(-0.4);
     }
 
     public void beltStop() {
         //stop the belt
-        beltMotor.setSpeed(0);
+        beltMotor.set(0);
     }
 
     public void pivotStop() {
@@ -71,7 +74,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public double getBeltMotorSpeed() {
-        return beltMotor.getSpeed();
+        return beltMotor.get();
     }
 
     //checks if the beam is broken

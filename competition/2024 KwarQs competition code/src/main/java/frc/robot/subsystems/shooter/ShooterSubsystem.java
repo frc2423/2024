@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.devices.NeoMotor;
 
-public class Shooter extends SubsystemBase {
+public class ShooterSubsystem extends SubsystemBase {
 
     private NeoMotor shooterMotorOne;
     private NeoMotor shooterMotorTwo;
@@ -35,7 +35,7 @@ public class Shooter extends SubsystemBase {
     private ProfiledPIDController shooterPID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : .005, 0, 0, new TrapezoidProfile.Constraints(360, 420));
     
     
-    public Shooter()
+    public ShooterSubsystem()
     {
         
         shooterMotorOne = new NeoMotor(28); // Correct these when we know the numbers

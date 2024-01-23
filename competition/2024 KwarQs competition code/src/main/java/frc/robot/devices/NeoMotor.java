@@ -53,7 +53,7 @@ public class NeoMotor {
         motor.restoreFactoryDefaults();
         motor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getVelocityConversionFactor();
         encoder = isAbsoluteEncoder ? new frc.robot.devices.AbsoluteEncoder(motor) : new frc.robot.devices.RelativeEncoder(motor);
-        pidController = new PIDController((Robot.isSimulation()) ? .001 : .005, 0, 0);
+        pidController = new PIDController((Robot.isSimulation()) ? .001 : .1, 0, 0);
         setPercent(0);
     }
 
