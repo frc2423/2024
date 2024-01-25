@@ -3,12 +3,14 @@ package frc.robot.subsystems.intake;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 /*
  * TODO:
  *  - test belt code
  *  - get correct can ids
+ * make the initial speed very very slow
  * 
  */
 
@@ -20,7 +22,9 @@ public class IntakeSubsystem extends SubsystemBase {
     private CANSparkMax beltMotor;
     private double intakeupposition = 1;
     private double intakedownposition = 2;
-    //get correct channel for digital input
+    private boolean isDown = false;
+    private String intakeState = "Static"; // static, intaking, outtaking
+    // get correct channel for digital input
     private DigitalInput beamBreak = new DigitalInput(0);
 
     public IntakeSubsystem() {
@@ -32,11 +36,15 @@ public class IntakeSubsystem extends SubsystemBase {
     public void extend() {
         // make it down angle
         pivotMotor.setDistance(intakedownposition);
+        isDown = true;
+        intakeState = "Intaking";
     }
 
     public void retract() {
-        //make it up angle
+        // make it up angle
         pivotMotor.setDistance(intakeupposition);
+        isDown = false;
+        intakeState = "Static";
     }
 
     public void intake() {
@@ -55,17 +63,17 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void outtake() {
-        //spit the note out
+        // spit the note out
         beltMotor.set(-0.4);
     }
 
     public void beltStop() {
-        //stop the belt
+        // stop the belt
         beltMotor.set(0);
     }
 
     public void pivotStop() {
-        //stop moving up and down
+        // stop moving up and down
         pivotMotor.setSpeed(0);
     }
 
@@ -77,8 +85,27 @@ public class IntakeSubsystem extends SubsystemBase {
         return beltMotor.get();
     }
 
-    //checks if the beam is broken
+    // checks if the beam is broken
     public boolean isBeamBroken() {
         return beamBreak.get();
+    }
+
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        // This method will be called once per scheduler run during simulation
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        // This is used to add things to NetworkTables
+        super.initSendable(builder);
+        builder.addBooleanProperty("Is down", () -> isDown, null);
+        builder.addStringProperty("Intake state", () -> intakeState, null);
+        builder.addDoubleProperty("Pivot distance", pivotMotor::getDistance, null);
     }
 }
