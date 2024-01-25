@@ -10,14 +10,20 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.reduxrobotics.sensors.canandcoder.Canandcoder;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -37,12 +43,15 @@ public class RobotContainer {
   // CommandJoystick driverController   = new CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT);
   XboxController driverXbox = new XboxController(0);
 
+  IntakeSubsystem intake =new IntakeSubsystem();
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    intake.beltStop();
 
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(
       drivebase,
@@ -125,6 +134,12 @@ public class RobotContainer {
         ? driveFieldOrientedAnglularVelocity
         : driveFieldOrientedDirectAngleSim
     );
+
+
+    //auto commands
+      //EXAMPLE:  NamedCommands.registerCommand("useless", exampleSubsystem.exampleCommand());
+
+
   }
 
   /**
@@ -142,6 +157,12 @@ public class RobotContainer {
     //new JoystickButton(driverXbox, 3)
      // .onTrue(new InstantCommand(drivebase::addFakeVisionReading));
     //    new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
+
+    //When button 2 is pressed, move intake out and move belt motors.
+   //new JoystickButton(driverXbox,2).onTrue(new InstantCommand(intake::extend)).onFalse(new InstantCommand(intake::pivotStop));
+
+   new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(new RunCommand(intake::intake)).onFalse(new RunCommand(intake::beltStop));;
+   new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(new RunCommand(intake::outtake)).onFalse(new RunCommand(intake::beltStop));;
   }
 
   /**
@@ -151,7 +172,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("New Path", true);
+    return drivebase.getAuto("ExampleAuto");
   }
 
   public void setDriveMode() {
@@ -160,5 +181,9 @@ public class RobotContainer {
 
   public void setMotorBrake(boolean brake) {
     drivebase.setMotorBrake(brake);
+  }
+
+  public void zeroGyro() {
+    drivebase.zeroGyro();
   }
 }
