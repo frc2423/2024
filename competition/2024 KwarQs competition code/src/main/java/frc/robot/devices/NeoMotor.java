@@ -189,7 +189,10 @@ public class NeoMotor {
         if (hasChanged) {
             motorValue = newValue;
             motorControlType = newControlType;
-            pidController.setSetpoint(motorValue);
+            // pidController.setReference(motorValue, motorControlType)
+            // pidController.
+            // pidController.setSetpoint(motorValue, newControlType);
+            motor.set(newValue);
         }
     }
 

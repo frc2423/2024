@@ -39,22 +39,22 @@ public class IntakeSubsystem extends ProfiledPIDSubsystem {
     public static final double kGVolts = 1;
     public static final double kVVoltSecondPerRad = 0.5;
     public static final double kAVoltSecondSquaredPerRad = 0.1;
-    public static final double kMaxVelocityRadPerSecond = .2;
+    public static final double kMaxVelocityRadPerSecond = 3;
     public static final double kMaxAccelerationRadPerSecSquared = 10;
     public static final int kMotorPort = 20;
-    public static final double kP = .1;
+    public static final double kP = 1;
     public static final int[] kEncoderPorts = new int[] { 4, 5 };
     public static final int kEncoderPPR = 256;
     public static final double kEncoderDistancePerPulse = 2.0 * Math.PI / kEncoderPPR;
 
-    public static final double upPositionRads = 0.5;
-    private final NeoMotor m_Pivot = new NeoMotor(kMotorPort);
+    public static final double upPositionRads = 0.4;//0.3
+    private final NeoMotor m_Pivot;
     private final ArmFeedforward m_feedforward = new ArmFeedforward(
             kSVolts, kGVolts,
             kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
     private CANSparkMax beltMotor;
-    private double intakedownposition = Math.PI/2;
-    private double intake_Offset = 0.1;
+    private double intakedownposition = 0.7;//0.755
+    private double intake_Offset = 0.05;
     private boolean isDown = false;
     private String intakeState = "Static"; // static, intaking, outtaking
     // get correct channel for digital input
@@ -74,10 +74,13 @@ public class IntakeSubsystem extends ProfiledPIDSubsystem {
                     kMaxVelocityRadPerSecond,
                     kMaxAccelerationRadPerSecSquared)),
             0);
-        m_Pivot.setConversionFactor(kEncoderDistancePerPulse);
+
+        m_Pivot = new NeoMotor(kMotorPort, true);
+        //m_Pivot.setConversionFactor(kEncoderDistancePerPulse);
         // Start arm at rest in neutral position
         setGoal(upPositionRads);
         beltMotor = new CANSparkMax(19, CANSparkLowLevel.MotorType.kBrushless);
+        m_Pivot.resetEncoder(0);
 
 
         Mechanism2d mech = new Mechanism2d(3, 3);
@@ -96,13 +99,17 @@ public class IntakeSubsystem extends ProfiledPIDSubsystem {
         return m_Pivot.getDistance() + upPositionRads;
     }
 
+    public void resetEncoder() {
+        // m_Pivot.resetEncoder(0);
+    }
+
     @Override
     public void useOutput(double output, TrapezoidProfile.State setpoint) {
         // Calculate the feedforward from the sepoint
         double feedforward = m_feedforward.calculate(setpoint.position, setpoint.velocity);
         // Add the feedforward to the PID output to get the motor output
         pivotMotorPercent = (output + feedforward) / RobotController.getBatteryVoltage();
-        m_Pivot.setPercent((output + feedforward) / RobotController.getBatteryVoltage());
+        System.out.print(setpoint);
 
     }
 
@@ -165,14 +172,16 @@ public class IntakeSubsystem extends ProfiledPIDSubsystem {
         super.periodic();
         // This method will be called once per scheduler run
 
+        m_Pivot.setPercent(-(pivotMotorPercent));
 
-        // double m_Pivot_Pos = getMeasurement();
-        // if (m_Pivot_Pos > intakedownposition + intake_Offset && isDown) {// down position
-        //     m_Pivot.setPercent(0);
-        // }
-        // if (m_Pivot_Pos < upPositionRads - intake_Offset && !isDown) {// down position
-        //     m_Pivot.setPercent(0);
-        // }
+
+        double m_Pivot_Pos = getMeasurement();
+        if (m_Pivot_Pos > intakedownposition + intake_Offset && isDown) {// down position
+            m_Pivot.setPercent(0);
+        }
+        if (m_Pivot_Pos < upPositionRads - intake_Offset && !isDown) {// down position
+            m_Pivot.setPercent(0);
+        }
     }
 
     @Override
@@ -199,5 +208,6 @@ public class IntakeSubsystem extends ProfiledPIDSubsystem {
         builder.addBooleanProperty("Is down", () -> isDown, null);
         builder.addStringProperty("Intake state", () -> intakeState, null);
         builder.addDoubleProperty("Pivot distance", m_Pivot::getDistance, null);
+        builder.addDoubleProperty("Pivot percent", m_Pivot::getPercent, null);
     }
 }

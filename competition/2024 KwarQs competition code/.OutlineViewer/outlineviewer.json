@@ -1,0 +1,14 @@
+{
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "2423"
+  },
+  "transitory": {
+    "SmartDashboard": {
+      "Intake": {
+        "open": true
+      },
+      "open": true
+    }
+  }
+}
