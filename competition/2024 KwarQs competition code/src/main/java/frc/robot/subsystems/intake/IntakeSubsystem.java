@@ -5,7 +5,10 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
@@ -14,23 +17,32 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 /*
  * TODO:
  *  - test belt code
- *  - get correct can ids
- * make the initial speed very very slow
+ *  - test intake pid
+ *  - get correct can id for pivot
+ *  - add sim - use singlejointed arm sim
+ *  - add commands in robot container to move the intake pivot
  * 
  */
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.devices.NeoMotor;
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
+
 
 public class IntakeSubsystem extends ProfiledPIDSubsystem {
     public static final double kSVolts = 1;
     public static final double kGVolts = 1;
     public static final double kVVoltSecondPerRad = 0.5;
     public static final double kAVoltSecondSquaredPerRad = 0.1;
-    public static final double kMaxVelocityRadPerSecond = 3;
+    public static final double kMaxVelocityRadPerSecond = .2;
     public static final double kMaxAccelerationRadPerSecSquared = 10;
     public static final int kMotorPort = 20;
-    public static final double kP = 0.1;
+    public static final double kP = .1;
     public static final int[] kEncoderPorts = new int[] { 4, 5 };
     public static final int kEncoderPPR = 256;
     public static final double kEncoderDistancePerPulse = 2.0 * Math.PI / kEncoderPPR;
@@ -41,27 +53,42 @@ public class IntakeSubsystem extends ProfiledPIDSubsystem {
             kSVolts, kGVolts,
             kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
     private CANSparkMax beltMotor;
-    private double intakedownposition = 2;
+    private double intakedownposition = Math.PI/2;
     private double intake_Offset = 0.1;
     private boolean isDown = false;
     private String intakeState = "Static"; // static, intaking, outtaking
     // get correct channel for digital input
     private DigitalInput beamBreak = new DigitalInput(0);
+    private MechanismLigament2d pivot;
+    private final FlywheelSim pivotSimMotor = new FlywheelSim(DCMotor.getNEO(1), 6.75, 0.025);
+    private Rotation2d pivotAngle = new Rotation2d(0);
+    private double pivotMotorPercent = 0;
 
     public IntakeSubsystem() {
         super(
-                new ProfiledPIDController(
-                        kP,
-                        0,
-                        0,
-                        new TrapezoidProfile.Constraints(
-                                kMaxVelocityRadPerSecond,
-                                kMaxAccelerationRadPerSecSquared)),
-                0);
+            new ProfiledPIDController(
+                kP,
+                0,
+                0,
+                new TrapezoidProfile.Constraints(
+                    kMaxVelocityRadPerSecond,
+                    kMaxAccelerationRadPerSecSquared)),
+            0);
         m_Pivot.setConversionFactor(kEncoderDistancePerPulse);
         // Start arm at rest in neutral position
         setGoal(upPositionRads);
         beltMotor = new CANSparkMax(19, CANSparkLowLevel.MotorType.kBrushless);
+
+
+        Mechanism2d mech = new Mechanism2d(3, 3);
+        // the mechanism root node
+        MechanismRoot2d arm = mech.getRoot("arm", 1.5, .5);
+        pivot = arm.append(
+            new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kOrange)));
+        SmartDashboard.putData("Mech2d", mech);
+        pivotSimMotor.setInput(0);
+
+
     }
 
     @Override
@@ -74,7 +101,7 @@ public class IntakeSubsystem extends ProfiledPIDSubsystem {
         // Calculate the feedforward from the sepoint
         double feedforward = m_feedforward.calculate(setpoint.position, setpoint.velocity);
         // Add the feedforward to the PID output to get the motor output
-
+        pivotMotorPercent = (output + feedforward) / RobotController.getBatteryVoltage();
         m_Pivot.setPercent((output + feedforward) / RobotController.getBatteryVoltage());
 
     }
@@ -83,14 +110,16 @@ public class IntakeSubsystem extends ProfiledPIDSubsystem {
         // make it down angle
         isDown = true;
         intakeState = "Intaking";
-        setGoal(intakedownposition);
+        this.setGoal(intakedownposition);
+        this.enable();
     }
 
     public void retract() {
         // make it up angle
         isDown = false;
         intakeState = "Static";
-        setGoal(upPositionRads);
+        this.setGoal(upPositionRads);
+        this.enable();
     }
 
     public void intake() {
@@ -133,19 +162,34 @@ public class IntakeSubsystem extends ProfiledPIDSubsystem {
 
     @Override
     public void periodic() {
+        super.periodic();
         // This method will be called once per scheduler run
-        double m_Pivot_Pos = getMeasurement();
-        if (m_Pivot_Pos > intakedownposition + intake_Offset && isDown) {// down position
-            m_Pivot.setPercent(0);
-        }
-        if (m_Pivot_Pos < upPositionRads - intake_Offset && !isDown) {// down position
-            m_Pivot.setPercent(0);
-        }
+
+
+        // double m_Pivot_Pos = getMeasurement();
+        // if (m_Pivot_Pos > intakedownposition + intake_Offset && isDown) {// down position
+        //     m_Pivot.setPercent(0);
+        // }
+        // if (m_Pivot_Pos < upPositionRads - intake_Offset && !isDown) {// down position
+        //     m_Pivot.setPercent(0);
+        // }
     }
 
     @Override
     public void simulationPeriodic() {
+        super.simulationPeriodic();
         // This method will be called once per scheduler run during simulation
+        pivotSimMotor.setInputVoltage(pivotMotorPercent * RobotController.getBatteryVoltage());
+        // Move simulation forward dt seconds
+        pivotSimMotor.update(.02);
+        var encoderRateSign = 1;
+
+        // Get state from simulation devices (telescopeDist and shoulderAngle)
+        var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() * encoderRateSign;
+        pivotAngle = pivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
+
+        // mechanism2d :
+        pivot.setAngle(pivotAngle.getDegrees() + 90);
     }
 
     @Override

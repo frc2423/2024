@@ -139,7 +139,6 @@ public class RobotContainer {
     //auto commands
       //EXAMPLE:  NamedCommands.registerCommand("useless", exampleSubsystem.exampleCommand());
 
-
   }
 
   /**
@@ -163,6 +162,8 @@ public class RobotContainer {
 
    new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(new RunCommand(intake::intake)).onFalse(new RunCommand(intake::beltStop));;
    new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(new RunCommand(intake::outtake)).onFalse(new RunCommand(intake::beltStop));;
+   new JoystickButton(driverXbox, XboxController.Button.kA.value).onTrue(new RunCommand(intake::extend));
+   new JoystickButton(driverXbox, XboxController.Button.kX.value).onTrue(new RunCommand(intake::retract));
   }
 
   /**
