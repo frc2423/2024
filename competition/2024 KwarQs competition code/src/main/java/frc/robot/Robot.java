@@ -16,7 +16,6 @@ import swervelib.parser.SwerveParser;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
-import org.photonvision.simulation.VisionSystemSim;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
@@ -33,8 +32,6 @@ public class Robot extends TimedRobot
 
   private Timer disabledTimer;
 
-  private VisionSystemSim visionSim = new VisionSystemSim("main");
-  private Vision vision;
 
   public Robot()
   {
@@ -60,7 +57,6 @@ public class Robot extends TimedRobot
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
 
-    vision = new Vision();
   }
 
   /**
@@ -116,9 +112,6 @@ public class Robot extends TimedRobot
       m_autonomousCommand.schedule();
     }
 
-    var pose = new Pose2d(1, 1, new Rotation2d());
-
-    vision.resetSimPose(pose);
   }
 
   /**
@@ -189,8 +182,7 @@ public class Robot extends TimedRobot
   @Override
   public void simulationPeriodic()
   {
-    var pose = new Pose2d(1, 1, new Rotation2d());
-    vision.simulationPeriodic(pose);
-
+    m_robotContainer.updateSimVision();
+    System.out.println("Active");
   }
 }

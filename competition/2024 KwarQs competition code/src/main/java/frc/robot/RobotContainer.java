@@ -33,6 +33,10 @@ public class RobotContainer {
   private final SwerveSubsystem drivebase = new SwerveSubsystem(
     new File(Filesystem.getDeployDirectory(), deployDirectory)
   );
+
+  private Vision vision = new Vision();
+
+
   // CommandJoystick rotationController = new CommandJoystick(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   CommandJoystick driverController = new CommandJoystick(1);
@@ -170,6 +174,11 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return drivebase.getAuto("ExampleAuto");
+  }
+
+  public void updateSimVision(){
+    vision.simulationPeriodic(drivebase.getPose());
+    System.out.println(drivebase.getPose());
   }
 
   public void setDriveMode() {
