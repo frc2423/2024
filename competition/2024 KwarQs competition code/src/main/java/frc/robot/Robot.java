@@ -13,6 +13,11 @@ import java.io.File;
 import java.io.IOException;
 import swervelib.parser.SwerveParser;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+
+import org.photonvision.simulation.VisionSystemSim;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
  * described in the TimedRobot documentation. If you change the name of this class or the package after creating this
@@ -27,6 +32,9 @@ public class Robot extends TimedRobot
   private RobotContainer m_robotContainer;
 
   private Timer disabledTimer;
+
+  private VisionSystemSim visionSim = new VisionSystemSim("main");
+  private Vision vision;
 
   public Robot()
   {
@@ -51,6 +59,8 @@ public class Robot extends TimedRobot
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
+
+    vision = new Vision();
   }
 
   /**
@@ -105,6 +115,10 @@ public class Robot extends TimedRobot
     {
       m_autonomousCommand.schedule();
     }
+
+    var pose = new Pose2d(1, 1, new Rotation2d());
+
+    vision.resetSimPose(pose);
   }
 
   /**
@@ -175,5 +189,8 @@ public class Robot extends TimedRobot
   @Override
   public void simulationPeriodic()
   {
+    var pose = new Pose2d(1, 1, new Rotation2d());
+    vision.simulationPeriodic(pose);
+
   }
 }

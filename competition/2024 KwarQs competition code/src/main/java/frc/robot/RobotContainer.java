@@ -21,9 +21,6 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.reduxrobotics.sensors.canandcoder.Canandcoder;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
