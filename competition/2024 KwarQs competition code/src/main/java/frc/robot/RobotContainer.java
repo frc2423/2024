@@ -19,6 +19,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.util.NtHelper;
+
 import java.io.File;
 
 
@@ -178,6 +180,9 @@ public class RobotContainer {
 
   public void updateSimVision(){
     vision.simulationPeriodic(drivebase.getPose());
+    var hasTarget = NtHelper.getBoolean("/photonvision/YOUR CAMERA NAME/hasTarget", false);
+    System.out.println(hasTarget); // Checks if the robot can see a tag
+    // Check if the ID is the one we want, get tag coordinates, tell robot where target is, orient to target 
     System.out.println(drivebase.getPose());
   }
 
