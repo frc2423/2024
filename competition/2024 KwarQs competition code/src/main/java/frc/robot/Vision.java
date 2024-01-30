@@ -29,7 +29,9 @@ import static frc.robot.Constants.Vision.*;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -38,9 +40,11 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.estimation.TargetModel;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.simulation.VisionTargetSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 public class Vision {
@@ -65,6 +69,12 @@ public class Vision {
             visionSim = new VisionSystemSim("main");
             // Add all the AprilTags inside the tag layout as visible targets to this simulated field.
             visionSim.addAprilTags(kTagLayout);
+            // Pose2d(Translation2d(X: 3.72, Y: 5.41), Rotation2d(Rads: 1.19, Deg: 68.40))
+            var targetPose = new Pose3d(3.72, 5.41, 1.25, new Rotation3d());
+            var targetModel = new TargetModel(0.2);
+            VisionTargetSim visionTarget = new VisionTargetSim(targetPose, targetModel, 40);
+            // Add this vision target to the vision system simulation to make it visible
+            visionSim.addVisionTargets(visionTarget);
             // Create simulated camera properties. These can be set to mimic your actual camera.
             var cameraProp = new SimCameraProperties();
             cameraProp.setCalibration(960, 720, Rotation2d.fromDegrees(90));
@@ -78,7 +88,7 @@ public class Vision {
             // Add the simulated camera to view the targets on this simulated field.
             visionSim.addCamera(cameraSim, kRobotToCam);
 
-            cameraSim.enableDrawWireframe(false);
+            cameraSim.enableDrawWireframe(true);
         }
     }
 
