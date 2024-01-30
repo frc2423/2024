@@ -26,7 +26,7 @@ import frc.robot.Robot;
 
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkPIDController;
-import com.ctre.phoenix.sensors.CANCoder;
+//import com.ctre.phoenix.sensors.CANCoder;
 
 public class NeoMotor {
 
