@@ -2,6 +2,7 @@ package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -11,8 +12,11 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 /*
  * TODO:
@@ -34,21 +38,23 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 
-public class IntakeSubsystem extends ProfiledPIDSubsystem {
+public class IntakeSubsystem extends SubsystemBase {
     public static final double kSVolts = 1;
-    public static final double kGVolts = 1;
-    public static final double kVVoltSecondPerRad = 0.5;
-    public static final double kAVoltSecondSquaredPerRad = .1;
-    public static final double kMaxVelocityRadPerSecond = 10;
+    public static final double kGVolts = 2.48;
+    public static final double kVVoltSecondPerRad = 0.39;
+    public static final double kAVoltSecondSquaredPerRad = .08;
+    public static final double kMaxVelocityRadPerSecond = 3;
     public static final double kMaxAccelerationRadPerSecSquared = 10;
     public static final int kMotorPort = 20;
-    public static final double kP = 100;
+    public static final double kP = 1;
     public static final int[] kEncoderPorts = new int[] { 4, 5 };
     public static final int kEncoderPPR = 256;
     public static final double kEncoderDistancePerPulse = 2.0 * Math.PI / kEncoderPPR;
 
     public static final double upPositionRads = 0.55;//.4//0.3
-    private final NeoMotor m_Pivot;
+    public static Rotation2d setpoint =Rotation2d.fromRadians(upPositionRads);
+    private final CANSparkMax m_Pivot;
+    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : .2, 0, 0, new TrapezoidProfile.Constraints(20, 20));//noice
     private final ArmFeedforward m_feedforward = new ArmFeedforward(
             kSVolts, kGVolts,
             kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
@@ -67,20 +73,11 @@ public class IntakeSubsystem extends ProfiledPIDSubsystem {
     private double outputValue = 0;
 
     public IntakeSubsystem() {
-        super(
-            new ProfiledPIDController(
-                kP,
-                0,
-                0,
-                new TrapezoidProfile.Constraints(
-                    kMaxVelocityRadPerSecond,
-                    kMaxAccelerationRadPerSecSquared)),
-            0);
+       pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
 
-        m_Pivot = new NeoMotor(kMotorPort, true);
+        m_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
         // m_Pivot.setConversionFactor(kEncoderDistancePerPulse);
         // Start arm at rest in neutral position
-        setGoal(upPositionRads);
         beltMotor = new CANSparkMax(19, CANSparkLowLevel.MotorType.kBrushless);
 
 
@@ -95,41 +92,24 @@ public class IntakeSubsystem extends ProfiledPIDSubsystem {
 
     }
 
-    @Override
-    public double getMeasurement() {
-        return m_Pivot.getDistance();
+    private double calculatePid(Rotation2d angle) {
+        pivotAngle = Rotation2d.fromDegrees(m_Pivot.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle).getPosition());
+        return pivot_PID.calculate(pivotAngle.getDegrees(), angle.getDegrees());
     }
-
-    public void resetEncoder() {
-        // m_Pivot.resetEncoder(0);
-    }
-
-    @Override
-    public void useOutput(double output, TrapezoidProfile.State setpoint) {
-        // Calculate the feedforward from the sepoint
-        double feedforward = m_feedforward.calculate(setpoint.position, setpoint.velocity);
-        feedforwardValue = feedforward;
-        outputValue = output;
-        // Add the feedforward to the PID output to get the motor output
-        pivotMotorPercent = (output + feedforward) / RobotController.getBatteryVoltage();
-        System.out.print(setpoint);
-
-    }
-
+    
     public void extend() {
         // make it down angle
         isDown = true;
         intakeState = "Intaking";
-        this.setGoal(intakedownposition);
-        this.enable();
+        setpoint = Rotation2d.fromRadians(intakedownposition);
     }
 
     public void retract() {
         // make it up angle
         isDown = false;
         intakeState = "Static";
-        this.setGoal(upPositionRads);
-        this.enable();
+        setpoint = Rotation2d.fromRadians(upPositionRads);
+        
     }
 
     public void intake() {
@@ -172,10 +152,10 @@ public class IntakeSubsystem extends ProfiledPIDSubsystem {
 
     @Override
     public void periodic() {
-        super.periodic();
         // This method will be called once per scheduler run
+        pivotMotorPercent = calculatePid(new Rotation2d());
 
-        m_Pivot.setPercent(-(pivotMotorPercent));
+        m_Pivot.set(-(pivotMotorPercent));
 
 
 
@@ -211,13 +191,11 @@ public class IntakeSubsystem extends ProfiledPIDSubsystem {
         super.initSendable(builder);
         builder.addBooleanProperty("Is down", () -> isDown, null);
         builder.addStringProperty("Intake state", () -> intakeState, null);
-        builder.addDoubleProperty("Pivot distance", m_Pivot::getDistance, null);
-        builder.addDoubleProperty("Pivot percent", m_Pivot::getPercent, null);
+        builder.addDoubleProperty("Pivot distance", () -> pivotAngle.getDegrees(), null);
+        // builder.addDoubleProperty("Pivot percent", m_Pivot::gett, null);
         builder.addDoubleProperty("Feed Forward", () -> feedforwardValue, null);
         builder.addDoubleProperty("Output Value", () -> outputValue, null);
-        builder.addDoubleProperty("Goal", () -> this.m_controller.getGoal().position, null);
-        builder.addDoubleProperty("Setpoint", () -> this.m_controller.getSetpoint().position, null);
-        builder.addDoubleProperty("Position Error", () -> this.m_controller.getPositionError(), null);
+        builder.addDoubleProperty("Setpoint", () -> setpoint.getDegrees(), null);
+
     }
     }
-}
