@@ -52,7 +52,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public static final double kEncoderDistancePerPulse = 2.0 * Math.PI / kEncoderPPR;
 
     public static final double upPositionRads = 0.55;//.4//0.3
-    public static Rotation2d setpoint =Rotation2d.fromRadians(upPositionRads);
+    public static Rotation2d setpoint = Rotation2d.fromRadians(upPositionRads);
     private final CANSparkMax m_Pivot;
     ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : .2, 0, 0, new TrapezoidProfile.Constraints(20, 20));//noice
     private final ArmFeedforward m_feedforward = new ArmFeedforward(
