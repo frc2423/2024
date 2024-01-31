@@ -18,9 +18,9 @@ import frc.robot.devices.NeoMotor;
 /** A robot arm subsystem that moves with a motion profile. */
 public class ArmSubsystem extends ProfiledPIDSubsystem {
   public static final double kSVolts = 1;
-  public static final double kGVolts = 1;
-  public static final double kVVoltSecondPerRad = 0.5;
-  public static final double kAVoltSecondSquaredPerRad = 0.1;
+  public static final double kGVolts = 2.48;
+  public static final double kVVoltSecondPerRad = 0.39;
+  public static final double kAVoltSecondSquaredPerRad = 0.08;
   public static final double kMaxVelocityRadPerSecond = 3;
   public static final double kMaxAccelerationRadPerSecSquared = 10;
   public static final int kMotorPort = 20;
