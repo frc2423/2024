@@ -2,8 +2,7 @@ package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
-
+import com.revrobotics.SparkAbsoluteEncoder;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -37,7 +36,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
-
 public class IntakeSubsystem extends SubsystemBase {
     public static final double kSVolts = 1;
     public static final double kGVolts = 2.48;
@@ -51,15 +49,16 @@ public class IntakeSubsystem extends SubsystemBase {
     public static final int kEncoderPPR = 256;
     public static final double kEncoderDistancePerPulse = 2.0 * Math.PI / kEncoderPPR;
 
-    public static final double upPositionRads = 0.55;//.4//0.3
-    public static Rotation2d setpoint =Rotation2d.fromRadians(upPositionRads);
+    public static final double upPositionRads = 0.55;// .4//0.3
+    public static Rotation2d setpoint = Rotation2d.fromRadians(upPositionRads);
     private final CANSparkMax m_Pivot;
-    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : .2, 0, 0, new TrapezoidProfile.Constraints(20, 20));//noice
+    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : .002, 0, 0,
+            new TrapezoidProfile.Constraints(20, 20));// noice
     private final ArmFeedforward m_feedforward = new ArmFeedforward(
             kSVolts, kGVolts,
             kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
     private CANSparkMax beltMotor;
-    private double intakedownposition = 0.69;//.7, 0.755
+    private double intakedownposition = 0.69;// .7, 0.755
     private double intake_Offset = 0.05;
     private boolean isDown = false;
     private String intakeState = "Static"; // static, intaking, outtaking
@@ -73,30 +72,31 @@ public class IntakeSubsystem extends SubsystemBase {
     private double outputValue = 0;
 
     public IntakeSubsystem() {
-       pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
+        pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
+        pivot_PID.enableContinuousInput(-180, 180);
 
         m_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
-        // m_Pivot.setConversionFactor(kEncoderDistancePerPulse);
+        m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).setPositionConversionFactor(360);
+
         // Start arm at rest in neutral position
         beltMotor = new CANSparkMax(19, CANSparkLowLevel.MotorType.kBrushless);
-
 
         Mechanism2d mech = new Mechanism2d(3, 3);
         // the mechanism root node
         MechanismRoot2d arm = mech.getRoot("arm", 1.5, .5);
         pivot = arm.append(
-            new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kOrange)));
+                new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kOrange)));
         SmartDashboard.putData("Mech2d", mech);
         pivotSimMotor.setInput(0);
-
 
     }
 
     private double calculatePid(Rotation2d angle) {
-        pivotAngle = Rotation2d.fromDegrees(m_Pivot.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle).getPosition());
+        double encoderPosition = m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition();
+        pivotAngle = Rotation2d.fromDegrees(encoderPosition).minus(Rotation2d.fromDegrees(180));
         return pivot_PID.calculate(pivotAngle.getDegrees(), angle.getDegrees());
     }
-    
+
     public void extend() {
         // make it down angle
         isDown = true;
@@ -109,7 +109,7 @@ public class IntakeSubsystem extends SubsystemBase {
         isDown = false;
         intakeState = "Static";
         setpoint = Rotation2d.fromRadians(upPositionRads);
-        
+
     }
 
     public void intake() {
@@ -153,18 +153,19 @@ public class IntakeSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        pivotMotorPercent = calculatePid(new Rotation2d());
+        pivotMotorPercent = calculatePid(setpoint);
 
-        m_Pivot.set(-(pivotMotorPercent));
-
-
+        m_Pivot.set(pivotMotorPercent);
+        // m_Pivot.set(.1);
 
         // double m_Pivot_Pos = getMeasurement();
-        // if (m_Pivot_Pos > intakedownposition + intake_Offset && isDown) {// down position
-        //     m_Pivot.setPercent(0);
+        // if (m_Pivot_Pos > intakedownposition + intake_Offset && isDown) {// down
+        // position
+        // m_Pivot.setPercent(0);
         // }
-        // if (m_Pivot_Pos < upPositionRads - intake_Offset && !isDown) {// down position
-        //     m_Pivot.setPercent(0);
+        // if (m_Pivot_Pos < upPositionRads - intake_Offset && !isDown) {// down
+        // position
+        // m_Pivot.setPercent(0);
         // }
     }
 
@@ -192,10 +193,15 @@ public class IntakeSubsystem extends SubsystemBase {
         builder.addBooleanProperty("Is down", () -> isDown, null);
         builder.addStringProperty("Intake state", () -> intakeState, null);
         builder.addDoubleProperty("Pivot distance", () -> pivotAngle.getDegrees(), null);
+        builder.addDoubleProperty("Pivot raw encoder value",
+                () -> m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition(), null);
+
         // builder.addDoubleProperty("Pivot percent", m_Pivot::gett, null);
         builder.addDoubleProperty("Feed Forward", () -> feedforwardValue, null);
         builder.addDoubleProperty("Output Value", () -> outputValue, null);
-        builder.addDoubleProperty("Setpoint", () -> setpoint.getDegrees(), null);
-
+        builder.addDoubleProperty("Setpoint", () -> setpoint.getDegrees(), (angle) -> {
+            setpoint = Rotation2d.fromDegrees(angle);
+        });
+        builder.addDoubleProperty("Pivot Motor Percent", () -> pivotMotorPercent, null);
     }
-    }
+}
