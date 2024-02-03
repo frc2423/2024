@@ -77,6 +77,7 @@ public class IntakeSubsystem extends SubsystemBase {
         pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
 
         m_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
+        m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).setZeroOffset(0);
         m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).setPositionConversionFactor(360);
 
         // Start arm at rest in neutral position
