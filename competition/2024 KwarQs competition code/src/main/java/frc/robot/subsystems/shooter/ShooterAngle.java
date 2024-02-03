@@ -38,7 +38,6 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 /** A robot arm subsystem that moves with a motion profile. */
 public class ShooterAngle extends SubsystemBase {
   private final CANSparkMax shooter_Pivot;
-  private final CANSparkMax feeder_Motor;
   public static final double kSVolts = 1;
   public static final double kGVolts = 1;
   public static final double kVVoltSecondPerRad = 0.5;// all things for feed forward is wrong, re do pls
@@ -46,7 +45,6 @@ public class ShooterAngle extends SubsystemBase {
   public static final double kMaxVelocityRadPerSecond = 3;
   public static final double kMaxAccelerationRadPerSecSquared = 10;
   public static final int kMotorPort = 20;
-  public static final int kFeederMotorPort = 21;
   public static final double kP = 0.1;
   public static final int kEncoderPPR = 256;
   public static final double kEncoderDistancePerPulse = 2.0 * Math.PI / kEncoderPPR;
@@ -60,9 +58,7 @@ public class ShooterAngle extends SubsystemBase {
   public static double shoot = 0;
   public static double handOff = 0;
   public static double neutral = 0;
-  public static double shooterVoltage = 0;
-  public static Timer timer;
-  public static double feederVoltage = 0;
+  
 
   public static final double kArmOffsetRads = 0.5;
   private final ArmFeedforward m_feedforward = new ArmFeedforward(
@@ -72,7 +68,7 @@ public class ShooterAngle extends SubsystemBase {
   /** Create a new ArmSubsystem. */
   public ShooterAngle() {
     shooter_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
-    feeder_Motor = new CANSparkMax(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
+    
     shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
     // Start arm at rest in neutral position
     setpoint = Rotation2d.fromRadians(shoot); 
@@ -84,19 +80,6 @@ public class ShooterAngle extends SubsystemBase {
             new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kOrange)));
         SmartDashboard.putData("Mech2d", mech);
         pivotSimMotor.setInput(0);
-  }
-
-    public void moveFeederMotor(double voltage){
-    feeder_Motor.setVoltage(voltage);
-  }
-
-  public void runShooter(double seconds){ 
-    timer.start();
-    feeder_Motor.setVoltage(shooterVoltage);
-    while (timer.get() < seconds) {
-      moveFeederMotor(feederVoltage);
-    }
-    moveFeederMotor(0);
   }
 
   public void setAngle(double degrees){
