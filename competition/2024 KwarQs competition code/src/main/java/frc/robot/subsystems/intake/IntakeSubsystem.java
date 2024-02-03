@@ -49,8 +49,8 @@ public class IntakeSubsystem extends SubsystemBase {
     public static final int kEncoderPPR = 256;
     public static final double kEncoderDistancePerPulse = 2.0 * Math.PI / kEncoderPPR;
 
-    public static final double upPositionRads = 0.55;// .4//0.3
-    public static Rotation2d setpoint = Rotation2d.fromRadians(upPositionRads);
+    public static final double upPositionDegrees = 130;// .4//0.3
+    public static Rotation2d setpoint = Rotation2d.fromDegrees(upPositionDegrees);
     private final CANSparkMax m_Pivot;
     ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : .002, 0, 0,
             new TrapezoidProfile.Constraints(20, 20));// noice
@@ -58,7 +58,7 @@ public class IntakeSubsystem extends SubsystemBase {
             kSVolts, kGVolts,
             kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
     private CANSparkMax beltMotor;
-    private double intakedownposition = 0.69;// .7, 0.755
+    private double downPositionDegrees = 250;// .7, 0.755
     private double intake_Offset = 0.05;
     private boolean isDown = false;
     private String intakeState = "Static"; // static, intaking, outtaking
@@ -70,10 +70,11 @@ public class IntakeSubsystem extends SubsystemBase {
     private double pivotMotorPercent = 0;
     private double feedforwardValue = 0;
     private double outputValue = 0;
+    private double maxPivotAngle = 275; //degrees
+    private double minPivotAngle = 100; //still degrees
 
     public IntakeSubsystem() {
         pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
-        pivot_PID.enableContinuousInput(-180, 180);
 
         m_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
         m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).setPositionConversionFactor(360);
@@ -101,14 +102,14 @@ public class IntakeSubsystem extends SubsystemBase {
         // make it down angle
         isDown = true;
         intakeState = "Intaking";
-        setpoint = Rotation2d.fromRadians(intakedownposition);
+        setpoint = Rotation2d.fromDegrees(downPositionDegrees);
     }
 
     public void retract() {
         // make it up angle
         isDown = false;
         intakeState = "Static";
-        setpoint = Rotation2d.fromRadians(upPositionRads);
+        setpoint = Rotation2d.fromDegrees(upPositionDegrees);
 
     }
 
@@ -152,11 +153,19 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
+        // This method will be called once per scheduler run                                                                                                                 moo
         pivotMotorPercent = calculatePid(setpoint);
 
-        m_Pivot.set(pivotMotorPercent);
-        // m_Pivot.set(.1);
+        if(pivotAngle.getDegrees() > maxPivotAngle){
+            pivotMotorPercent = Math.min(pivotMotorPercent, 0);
+        } else if(pivotAngle.getDegrees() < minPivotAngle){
+            pivotMotorPercent = Math.max(pivotMotorPercent, 0);
+        } 
+
+        double maxSpeed = .5; 
+        
+        m_Pivot.set(Math.max(Math.min(maxSpeed, pivotMotorPercent), -maxSpeed));
+
 
         // double m_Pivot_Pos = getMeasurement();
         // if (m_Pivot_Pos > intakedownposition + intake_Offset && isDown) {// down
