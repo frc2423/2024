@@ -37,10 +37,10 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class IntakeSubsystem extends SubsystemBase {
-    public static final double kSVolts = 1;
-    public static final double kGVolts = 2.48;
-    public static final double kVVoltSecondPerRad = 0.39;
-    public static final double kAVoltSecondSquaredPerRad = .08;
+    public static final double kSVolts = 0;
+    public static final double kGVolts = 0.15;
+    public static final double kVVoltSecondPerRad = 0.25;
+    public static final double kAVoltSecondSquaredPerRad = 0;
     public static final double kMaxVelocityRadPerSecond = 3;
     public static final double kMaxAccelerationRadPerSecSquared = 10;
     public static final int kMotorPort = 20;
@@ -49,16 +49,16 @@ public class IntakeSubsystem extends SubsystemBase {
     public static final int kEncoderPPR = 256;
     public static final double kEncoderDistancePerPulse = 2.0 * Math.PI / kEncoderPPR;
 
-    public static final double upPositionDegrees = 130;// .4//0.3
+    public static final double upPositionDegrees = 190;// .4//0.3
     public static Rotation2d setpoint = Rotation2d.fromDegrees(upPositionDegrees);
     private final CANSparkMax m_Pivot;
-    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : .002, 0, 0,
-            new TrapezoidProfile.Constraints(20, 20));// noice
+    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : .02, 0, 0, 
+            new TrapezoidProfile.Constraints(5, 5));// noice
     private final ArmFeedforward m_feedforward = new ArmFeedforward(
             kSVolts, kGVolts,
             kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
     private CANSparkMax beltMotor;
-    private double downPositionDegrees = 250;// .7, 0.755
+    private double downPositionDegrees = 135;// .7, 0.755
     private double intake_Offset = 0.05;
     private boolean isDown = false;
     private String intakeState = "Static"; // static, intaking, outtaking
@@ -70,8 +70,8 @@ public class IntakeSubsystem extends SubsystemBase {
     private double pivotMotorPercent = 0;
     private double feedforwardValue = 0;
     private double outputValue = 0;
-    private double maxPivotAngle = 275; //degrees
-    private double minPivotAngle = 100; //still degrees
+    private double maxPivotAngle = 225; //degrees
+    private double minPivotAngle = 90; //still degrees
 
     public IntakeSubsystem() {
         pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
@@ -95,8 +95,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private double calculatePid(Rotation2d angle) {
         double encoderPosition = m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition();
-        pivotAngle = Rotation2d.fromDegrees(encoderPosition).minus(Rotation2d.fromDegrees(180));
-        return pivot_PID.calculate(pivotAngle.getDegrees(), angle.getDegrees());
+        pivotAngle = Rotation2d.fromDegrees(encoderPosition);
+        double pid = pivot_PID.calculate(pivotAngle.getDegrees(), angle.getDegrees());
+        var setpoint = pivot_PID.getSetpoint();
+        double feedforward =  m_feedforward.calculate(Math.toRadians(encoderPosition - 109), setpoint.velocity);
+        return feedforward;
     }
 
     public void extend() {
@@ -163,9 +166,10 @@ public class IntakeSubsystem extends SubsystemBase {
             pivotMotorPercent = Math.max(pivotMotorPercent, 0);
         } 
 
-        double maxSpeed = .5; 
+        double maxSpeed = 1; 
+        pivotMotorPercent = Math.max(Math.min(maxSpeed, pivotMotorPercent), -maxSpeed);
         
-        m_Pivot.set(Math.max(Math.min(maxSpeed, pivotMotorPercent), -maxSpeed));
+        m_Pivot.set(2);
 
 
         // double m_Pivot_Pos = getMeasurement();
@@ -208,6 +212,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
         // builder.addDoubleProperty("Pivot percent", m_Pivot::gett, null);
         builder.addDoubleProperty("Feed Forward", () -> feedforwardValue, null);
+        builder.addDoubleProperty("Setpoint velocity", () -> pivot_PID.getSetpoint().velocity, null);
+        builder.addDoubleProperty("Setpoint position", () -> pivot_PID.getSetpoint().position, null);
         builder.addDoubleProperty("Output Value", () -> outputValue, null);
         builder.addDoubleProperty("Setpoint", () -> setpoint.getDegrees(), (angle) -> {
             setpoint = Rotation2d.fromDegrees(angle);
