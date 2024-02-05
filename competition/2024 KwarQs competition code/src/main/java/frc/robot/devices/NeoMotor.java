@@ -26,7 +26,7 @@ import frc.robot.Robot;
 
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkPIDController;
-import com.ctre.phoenix.sensors.CANCoder;
+//import com.ctre.phoenix.sensors.CANCoder;
 
 public class NeoMotor {
 
@@ -189,7 +189,10 @@ public class NeoMotor {
         if (hasChanged) {
             motorValue = newValue;
             motorControlType = newControlType;
-            pidController.setSetpoint(motorValue);
+            // pidController.setReference(motorValue, motorControlType)
+            // pidController.
+            // pidController.setSetpoint(motorValue, newControlType);
+            motor.set(newValue);
         }
     }
 
