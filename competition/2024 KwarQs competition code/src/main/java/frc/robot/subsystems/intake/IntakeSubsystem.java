@@ -37,28 +37,28 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class IntakeSubsystem extends SubsystemBase {
-    public static final double kSVolts = 0;
-    public static final double kGVolts = 0.15;
-    public static final double kVVoltSecondPerRad = 0.25;
-    public static final double kAVoltSecondSquaredPerRad = 0;
-    public static final double kMaxVelocityRadPerSecond = 3;
-    public static final double kMaxAccelerationRadPerSecSquared = 10;
+    public static final double kSVolts = 0.015;
+    public static final double kGVolts = 0.02;
+    public static final double kVVoltSecondPerRad = 0.00;//0.017; 
+    public static final double kAVoltSecondSquaredPerRad = 0.05;
+    // public static final double kMaxVelocityRadPerSecond = 3;
+    // public static final double kMaxAccelerationRadPerSecSquared = 10;
     public static final int kMotorPort = 20;
     public static final double kP = 1;
     public static final int[] kEncoderPorts = new int[] { 4, 5 };
     public static final int kEncoderPPR = 256;
     public static final double kEncoderDistancePerPulse = 2.0 * Math.PI / kEncoderPPR;
 
-    public static final double upPositionDegrees = 190;// .4//0.3
+    public static final double upPositionDegrees = 228;// .4//0.3
     public static Rotation2d setpoint = Rotation2d.fromDegrees(upPositionDegrees);
     private final CANSparkMax m_Pivot;
-    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : .02, 0, 0, 
-            new TrapezoidProfile.Constraints(5, 5));// noice
+    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : 0.0015, 0, 0.0001, 
+            new TrapezoidProfile.Constraints(350, 350));// noice
     private final ArmFeedforward m_feedforward = new ArmFeedforward(
             kSVolts, kGVolts,
             kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
     private CANSparkMax beltMotor;
-    private double downPositionDegrees = 135;// .7, 0.755
+    private double downPositionDegrees = 90;// .7, 0.755
     private double intake_Offset = 0.05;
     private boolean isDown = false;
     private String intakeState = "Static"; // static, intaking, outtaking
@@ -98,8 +98,8 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotAngle = Rotation2d.fromDegrees(encoderPosition);
         double pid = pivot_PID.calculate(pivotAngle.getDegrees(), angle.getDegrees());
         var setpoint = pivot_PID.getSetpoint();
-        double feedforward =  m_feedforward.calculate(Math.toRadians(encoderPosition - 109), setpoint.velocity);
-        return feedforward;
+        double feedforward =  m_feedforward.calculate(Math.toRadians(encoderPosition - 100), setpoint.velocity);
+        return feedforward + pid;
     }
 
     public void extend() {
@@ -166,10 +166,10 @@ public class IntakeSubsystem extends SubsystemBase {
             pivotMotorPercent = Math.max(pivotMotorPercent, 0);
         } 
 
-        double maxSpeed = 1; 
+        double maxSpeed = .5; 
         pivotMotorPercent = Math.max(Math.min(maxSpeed, pivotMotorPercent), -maxSpeed);
         
-        m_Pivot.set(2);
+        m_Pivot.set(pivotMotorPercent);
 
 
         // double m_Pivot_Pos = getMeasurement();
