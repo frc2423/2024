@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
@@ -37,6 +38,11 @@ public class RobotContainer {
   private final SwerveSubsystem drivebase = new SwerveSubsystem(
     new File(Filesystem.getDeployDirectory(), deployDirectory)
   );
+
+  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(2);
+
   // CommandJoystick rotationController = new CommandJoystick(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   CommandJoystick driverController = new CommandJoystick(1);
@@ -55,23 +61,32 @@ public class RobotContainer {
     intake.beltStop();
     SmartDashboard.putData("Intake",intake);
 
+    SmartDashboard.putData("SwerveSubsystem", drivebase);
+
+
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(
       drivebase,
-      () ->
-        MathUtil.applyDeadband(
+      () -> {
+        double y = MathUtil.applyDeadband(
           driverXbox.getLeftY(),
           OperatorConstants.LEFT_Y_DEADBAND
-        ),
-      () ->
-        MathUtil.applyDeadband(
+        );
+        return m_yspeedLimiter.calculate(y);
+      },
+      () -> {
+        double x = MathUtil.applyDeadband(
           driverXbox.getLeftX(),
           OperatorConstants.LEFT_X_DEADBAND
-        ),
-      () ->
-        MathUtil.applyDeadband(
+        );
+        return m_xspeedLimiter.calculate(x);
+      },
+      () -> {
+        double rot = MathUtil.applyDeadband(
           driverXbox.getRightX(),
           OperatorConstants.RIGHT_X_DEADBAND
-        ),
+        );
+          return m_rotLimiter.calculate(rot);
+      },
       driverXbox::getYButtonPressed,
       driverXbox::getAButtonPressed,
       driverXbox::getXButtonPressed,
@@ -84,16 +99,21 @@ public class RobotContainer {
     // left stick controls translation
     // right stick controls the desired angle NOT angular rotation
     Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-      () ->
-        MathUtil.applyDeadband(
+      () -> {
+        double y = MathUtil.applyDeadband(
           driverXbox.getLeftY(),
           OperatorConstants.LEFT_Y_DEADBAND
-        ),
-      () ->
-        MathUtil.applyDeadband(
+        );
+          return m_yspeedLimiter.calculate(y);
+      },
+
+      () -> {
+        double x = MathUtil.applyDeadband(
           driverXbox.getLeftX(),
           OperatorConstants.LEFT_X_DEADBAND
-        ),
+        );
+          return m_xspeedLimiter.calculate(x);
+      },
       () -> driverXbox.getRightX(),
       () -> driverXbox.getRightY()
     );
@@ -104,30 +124,43 @@ public class RobotContainer {
     // left stick controls translation
     // right stick controls the angular velocity of the robot
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-      () ->
-        MathUtil.applyDeadband(
+      () -> {
+        double y = MathUtil.applyDeadband(
           -driverXbox.getLeftY(),
+          //  Math.copySign(Math.pow(-driverXbox.getLeftY(), 2), -driverXbox.getLeftY()),
           OperatorConstants.LEFT_Y_DEADBAND
-        ),
-      () ->
-        MathUtil.applyDeadband(
+        );
+        return m_yspeedLimiter.calculate(y);
+      },
+      () -> {
+        double x = MathUtil.applyDeadband(
           -driverXbox.getLeftX(),
+          // Math.copySign(Math.pow(-driverXbox.getLeftX(), 2), -driverXbox.getLeftX()),
           OperatorConstants.LEFT_X_DEADBAND
-        ),
+        );
+        return m_xspeedLimiter.calculate(x);
+      },
       () -> -driverXbox.getRightX()
     );
 
+   
+
+
     Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
-      () ->
-        MathUtil.applyDeadband(
+      () -> {
+        double y = MathUtil.applyDeadband(
           -driverXbox.getLeftY(),
           OperatorConstants.LEFT_Y_DEADBAND
-        ),
-      () ->
-        MathUtil.applyDeadband(
+        );
+        return m_yspeedLimiter.calculate(y);
+      },
+      () -> {
+        double x = MathUtil.applyDeadband(
           driverXbox.getLeftX(),
           OperatorConstants.LEFT_X_DEADBAND
-        ),
+        );
+        return m_xspeedLimiter.calculate(x);
+      },
       () -> driverXbox.getRawAxis(2)
     );
 
