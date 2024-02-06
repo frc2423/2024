@@ -24,6 +24,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.devices.NeoMotor;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -34,6 +37,8 @@ public class ShooterSubsystem extends SubsystemBase {
     public static double feederVoltage = 0;
     private final CANSparkMax feeder_Motor;
     public static final int kFeederMotorPort = 21;
+    public double feederOnSec = 1.5;
+    public double isDoneSec = 4.5;
     
     
     public ShooterSubsystem(){
@@ -45,6 +50,10 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     //Shooter turns on/ shoots the note
+    public void startTimer() {
+        timer.start();
+    }
+
     public void shooterOn() {
         shooterMotorOne.setSpeed(shooterSpeed);
     }
@@ -52,6 +61,11 @@ public class ShooterSubsystem extends SubsystemBase {
     //stops the shooter
     public void shooterOff() {
          shooterMotorOne.setSpeed(0);
+    }
+
+    public void stopMotors() {
+        shooterOff();
+        moveFeederMotor(0);
     }
 
     //Gets the current speed of the shooter
@@ -70,14 +84,42 @@ public class ShooterSubsystem extends SubsystemBase {
     public void moveFeederMotor(double voltage){
         feeder_Motor.setVoltage(voltage);
     }
-    
-    public void runShooter(double seconds){ 
-        timer.start();
+
+    public void runShooter(){ 
         shooterOn();
-        while (timer.get() < seconds) {
-            moveFeederMotor(feederVoltage);
+
+        if (timer.get() >= feederOnSec){
+            moveFeederMotor(feederVoltage);    
         }
-        moveFeederMotor(0);
     }
+
+    public Boolean shooted(){
+        return timer.get() > isDoneSec;
+    }
+
+    // public void example() {
+
+    // }
+
+    // public void functionExamples() {
+    //     var function1 = () -> System.out.print("hello");       
+        
+    //     var function2 = () -> {
+    //         System.out.print("hello");            
+    //         System.out.print("hello2");
+
+    //     };
+
+    // }
+
+    public Command shoot(ShooterSubsystem shooter) {
+        return new FunctionalCommand(
+            () -> shooter.startTimer(),
+            () -> shooter.runShooter(),
+            (interupted) -> shooter.stopMotors(),
+            () -> shooter.shooted(),
+            shooter);
+      }
+
 
 }

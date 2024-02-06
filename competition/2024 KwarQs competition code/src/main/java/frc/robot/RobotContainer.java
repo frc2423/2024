@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
@@ -45,6 +46,8 @@ public class RobotContainer {
   XboxController driverXbox = new XboxController(0);
 
   IntakeSubsystem intake =new IntakeSubsystem();
+
+  ShooterSubsystem shooter = new ShooterSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -166,6 +169,8 @@ public class RobotContainer {
    new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(new RunCommand(intake::outtake)).onFalse(new RunCommand(intake::beltStop));;
    new JoystickButton(driverXbox, XboxController.Button.kA.value).onTrue(new RunCommand(intake::extend));
    new JoystickButton(driverXbox, XboxController.Button.kX.value).onTrue(new RunCommand(intake::retract));
+   Command shooterCommand = shooter.shoot(shooter); 
+   new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).onTrue(shooterCommand).onFalse(new RunCommand(() -> shooterCommand.cancel()));
   }
 
   /**
