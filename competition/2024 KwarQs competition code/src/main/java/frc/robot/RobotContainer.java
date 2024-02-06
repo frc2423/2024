@@ -169,7 +169,7 @@ public class RobotContainer {
    new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(new RunCommand(intake::outtake)).onFalse(new RunCommand(intake::beltStop));;
    new JoystickButton(driverXbox, XboxController.Button.kA.value).onTrue(new RunCommand(intake::extend));
    new JoystickButton(driverXbox, XboxController.Button.kX.value).onTrue(new RunCommand(intake::retract));
-   Command shooterCommand = shooter.shoot(shooter); 
+   Command shooterCommand = shooter.shoot(); 
    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).onTrue(shooterCommand).onFalse(new RunCommand(() -> shooterCommand.cancel()));
   }
 

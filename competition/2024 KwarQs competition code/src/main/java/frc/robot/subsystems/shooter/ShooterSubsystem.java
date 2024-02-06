@@ -39,9 +39,8 @@ public class ShooterSubsystem extends SubsystemBase {
     public static final int kFeederMotorPort = 21;
     public double feederOnSec = 1.5;
     public double isDoneSec = 4.5;
-    
-    
-    public ShooterSubsystem(){
+
+    public ShooterSubsystem() {
         feeder_Motor = new CANSparkMax(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
         shooterMotorOne = new NeoMotor(28); // Correct these when we know the numbers
         shooterMotorTwo = new NeoMotor(35);
@@ -49,7 +48,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotorOne.setFollower(shooterMotorTwo);
     }
 
-    //Shooter turns on/ shoots the note
+    // Shooter turns on/ shoots the note
     public void startTimer() {
         timer.start();
     }
@@ -58,9 +57,9 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotorOne.setSpeed(shooterSpeed);
     }
 
-    //stops the shooter
+    // stops the shooter
     public void shooterOff() {
-         shooterMotorOne.setSpeed(0);
+        shooterMotorOne.setSpeed(0);
     }
 
     public void stopMotors() {
@@ -68,32 +67,32 @@ public class ShooterSubsystem extends SubsystemBase {
         moveFeederMotor(0);
     }
 
-    //Gets the current speed of the shooter
+    // Gets the current speed of the shooter
     public double getSpeed() {
         return shooterMotorOne.getSpeed();
     }
 
-    //The goal speed for the shooter
+    // The goal speed for the shooter
     public void setSpeed(double speed) {
         shooterSpeed = speed;
     }
-    
+
     public void periodic() {
     }
 
-    public void moveFeederMotor(double voltage){
+    public void moveFeederMotor(double voltage) {
         feeder_Motor.setVoltage(voltage);
     }
 
-    public void runShooter(){ 
+    public void runShooter() {
         shooterOn();
 
-        if (timer.get() >= feederOnSec){
-            moveFeederMotor(feederVoltage);    
+        if (timer.get() >= feederOnSec) {
+            moveFeederMotor(feederVoltage);
         }
     }
 
-    public Boolean shooted(){
+    public Boolean shooted() {
         return timer.get() > isDoneSec;
     }
 
@@ -102,24 +101,23 @@ public class ShooterSubsystem extends SubsystemBase {
     // }
 
     // public void functionExamples() {
-    //     var function1 = () -> System.out.print("hello");       
-        
-    //     var function2 = () -> {
-    //         System.out.print("hello");            
-    //         System.out.print("hello2");
+    // var function1 = () -> System.out.print("hello");
 
-    //     };
+    // var function2 = () -> {
+    // System.out.print("hello");
+    // System.out.print("hello2");
+
+    // };
 
     // }
 
-    public Command shoot(ShooterSubsystem shooter) {
+    public Command shoot() {
         return new FunctionalCommand(
-            () -> shooter.startTimer(),
-            () -> shooter.runShooter(),
-            (interupted) -> shooter.stopMotors(),
-            () -> shooter.shooted(),
-            shooter);
-      }
-
+                () -> startTimer(),
+                () -> runShooter(),
+                (interupted) -> stopMotors(),
+                () -> shooted(),
+                this);
+    }
 
 }
