@@ -10,19 +10,10 @@
 
 package frc.robot.subsystems.shooter;
 
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.devices.NeoMotor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -38,7 +29,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private final CANSparkMax feeder_Motor;
     public static final int kFeederMotorPort = 21;
     public double feederOnSec = 1.5;
-    public double isDoneSec = 4.5;
+    public double isDoneSec = 4.5; // for revving not for shooting
+    public double isDoneShoot = 2; //sec
 
     public ShooterSubsystem() {
         feeder_Motor = new CANSparkMax(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
@@ -62,11 +54,6 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotorOne.setSpeed(0);
     }
 
-    public void stopMotors() {
-        shooterOff();
-        moveFeederMotor(0);
-    }
-
     // Gets the current speed of the shooter
     public double getSpeed() {
         return shooterMotorOne.getSpeed();
@@ -80,44 +67,39 @@ public class ShooterSubsystem extends SubsystemBase {
     public void periodic() {
     }
 
-    public void moveFeederMotor(double voltage) {
-        feeder_Motor.setVoltage(voltage);
+    public void moveFeederMotor() {
+        feeder_Motor.setVoltage(feederVoltage);
     }
 
-    public void runShooter() {
-        shooterOn();
-
-        if (timer.get() >= feederOnSec) {
-            moveFeederMotor(feederVoltage);
-        }
+    public void stopFeederMotor() {
+        feeder_Motor.setVoltage(0);
     }
 
-    public Boolean shooted() {
-        return timer.get() > isDoneSec;
-    }
-
-    // public void example() {
-
-    // }
-
-    // public void functionExamples() {
-    // var function1 = () -> System.out.print("hello");
-
-    // var function2 = () -> {
-    // System.out.print("hello");
-    // System.out.print("hello2");
-
-    // };
-
-    // }
-
-    public Command shoot() {
+    public Command rev() {
+        Timer timer = new Timer();
         return new FunctionalCommand(
-                () -> startTimer(),
-                () -> runShooter(),
-                (interupted) -> stopMotors(),
-                () -> shooted(),
+                () -> timer.start(),
+                () -> shooterOn(),
+                (interupted) -> {},
+                () -> timer.get() > isDoneSec,
                 this);
     }
+
+    public Command shoot() {
+        Timer timer = new Timer();
+        return new FunctionalCommand(
+                () -> timer.start(),
+                () -> moveFeederMotor(),
+                (interupted) -> stopFeederMotor(),
+                () -> timer.get() > isDoneShoot,
+                this);
+    }
+
+    public Command revAndShoot() {
+        return Commands.sequence(
+           rev(),
+           shoot()
+        );
+      }
 
 }
