@@ -9,6 +9,8 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -32,6 +34,7 @@ import com.reduxrobotics.sensors.canandcoder.Canandcoder;
  * little robot logic should actually be handled in the {@link Robot} periodic methods (other than the scheduler calls).
  * Instead, the structure of the robot (including subsystems, commands, and trigger mappings) should be declared here.
  */
+
 public class RobotContainer {
   String deployDirectory = (Robot.isSimulation())? "neo" : "swerve";
   // The robot's subsystems and commands are defined here...
@@ -43,11 +46,16 @@ public class RobotContainer {
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(2);
 
+    // A chooser for autonomous commands
+    SendableChooser<String> m_chooser = new SendableChooser<>();
+
+
+    
   // CommandJoystick rotationController = new CommandJoystick(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   CommandJoystick driverController = new CommandJoystick(1);
 
-  // CommandJoystick driverController   = new CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  // CommandJoystick driverController   = new CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT)
   XboxController driverXbox = new XboxController(0);
 
   IntakeSubsystem intake =new IntakeSubsystem();
@@ -63,7 +71,14 @@ public class RobotContainer {
 
     SmartDashboard.putData("SwerveSubsystem", drivebase);
 
+    // Add commands to the autonomous command chooser
+    m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
+    m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
+     m_chooser.addOption("Yo Auto", "Yo Auto");
+    m_chooser.addOption("YoYo Auto", "YoYo Auto");
 
+    // Put the chooser on the dashboard
+    Shuffleboard.getTab("Autonomous").add(m_chooser);
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(
       drivebase,
       () -> {
@@ -117,6 +132,8 @@ public class RobotContainer {
       () -> driverXbox.getRightX(),
       () -> driverXbox.getRightY()
     );
+
+    
 
     // Applies deadbands and inverts controls because joysticks
     // are back-right positive while robot
@@ -208,7 +225,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivebase.getAuto("ExampleAuto");
+    return drivebase.getAuto(m_chooser.getSelected());
   }
 
   public void setDriveMode() {
