@@ -15,19 +15,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
-
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.reduxrobotics.sensors.canandcoder.Canandcoder;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -46,6 +40,7 @@ public class RobotContainer {
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(2);
 
+<<<<<<< HEAD
     // A chooser for autonomous commands
     SendableChooser<String> m_chooser = new SendableChooser<>();
 
@@ -56,9 +51,11 @@ public class RobotContainer {
   CommandJoystick driverController = new CommandJoystick(1);
 
   // CommandJoystick driverController   = new CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT)
+=======
+>>>>>>> main
   XboxController driverXbox = new XboxController(0);
-
   IntakeSubsystem intake =new IntakeSubsystem();
+  ShooterSubsystem shooter = new ShooterSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -68,9 +65,9 @@ public class RobotContainer {
     configureBindings();
     intake.beltStop();
     SmartDashboard.putData("Intake",intake);
-
     SmartDashboard.putData("SwerveSubsystem", drivebase);
 
+<<<<<<< HEAD
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
     m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
@@ -140,6 +137,8 @@ public class RobotContainer {
     // controls are front-left positive
     // left stick controls translation
     // right stick controls the angular velocity of the robot
+=======
+>>>>>>> main
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
       () -> {
         double y = MathUtil.applyDeadband(
@@ -193,13 +192,6 @@ public class RobotContainer {
 
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
-   * named factories in {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
-   * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
-   */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
@@ -209,13 +201,12 @@ public class RobotContainer {
      // .onTrue(new InstantCommand(drivebase::addFakeVisionReading));
     //    new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
 
-    //When button 2 is pressed, move intake out and move belt motors.
-   //new JoystickButton(driverXbox,2).onTrue(new InstantCommand(intake::extend)).onFalse(new InstantCommand(intake::pivotStop));
-
-   new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(new RunCommand(intake::intake)).onFalse(new RunCommand(intake::beltStop));
-   new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(new RunCommand(intake::outtake)).onFalse(new RunCommand(intake::beltStop));
-   new JoystickButton(driverXbox, XboxController.Button.kA.value).onTrue(new InstantCommand(intake::extend));
-   new JoystickButton(driverXbox, XboxController.Button.kX.value).onTrue(new InstantCommand(intake::retract));
+   new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(new RunCommand(intake::intake)).onFalse(new RunCommand(intake::beltStop));;
+   new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(new RunCommand(intake::outtake)).onFalse(new RunCommand(intake::beltStop));;
+   new JoystickButton(driverXbox, XboxController.Button.kA.value).onTrue(new RunCommand(intake::extend));
+   new JoystickButton(driverXbox, XboxController.Button.kX.value).onTrue(new RunCommand(intake::retract));
+   Command shooterCommand = shooter.revAndShoot(); 
+   new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).onTrue(shooterCommand).onFalse(new RunCommand(() -> shooterCommand.cancel()));
   }
 
   /**
