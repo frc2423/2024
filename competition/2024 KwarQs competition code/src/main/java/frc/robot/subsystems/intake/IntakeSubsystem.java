@@ -39,7 +39,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 public class IntakeSubsystem extends SubsystemBase {
     public static final double kSVolts = 0.015;
     public static final double kGVolts = 0.02;
-    public static final double kVVoltSecondPerRad = 0.00;//0.017; 
+    public static final double kVVoltSecondPerRad = 0.00;// 0.017;
     public static final double kAVoltSecondSquaredPerRad = 0.05;
     // public static final double kMaxVelocityRadPerSecond = 3;
     // public static final double kMaxAccelerationRadPerSecSquared = 10;
@@ -52,7 +52,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public static final double upPositionDegrees = 228;// .4//0.3
     public static Rotation2d setpoint = Rotation2d.fromDegrees(upPositionDegrees);
     private final CANSparkMax m_Pivot;
-    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : 0.0015, 0, 0.0001, 
+    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : 0.0015, 0, 0.0001,
             new TrapezoidProfile.Constraints(350, 350));// noice
     private final ArmFeedforward m_feedforward = new ArmFeedforward(
             kSVolts, kGVolts,
@@ -70,8 +70,8 @@ public class IntakeSubsystem extends SubsystemBase {
     private double pivotMotorPercent = 0;
     private double feedforwardValue = 0;
     private double outputValue = 0;
-    private double maxPivotAngle = 225; //degrees
-    private double minPivotAngle = 90; //still degrees
+    private double maxPivotAngle = 225; // degrees
+    private double minPivotAngle = 90; // still degrees
 
     public IntakeSubsystem() {
         pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
@@ -94,12 +94,23 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     private double calculatePid(Rotation2d angle) {
-        double encoderPosition = m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition();
-        pivotAngle = Rotation2d.fromDegrees(encoderPosition);
+        updatePivotAngle();
         double pid = pivot_PID.calculate(pivotAngle.getDegrees(), angle.getDegrees());
         var setpoint = pivot_PID.getSetpoint();
-        double feedforward =  m_feedforward.calculate(Math.toRadians(encoderPosition - 100), setpoint.velocity);
+        double feedforward = m_feedforward.calculate(Math.toRadians(pivotAngle.getDegrees() - 100), setpoint.velocity);
         return feedforward + pid;
+    }
+
+    private void updatePivotAngle() {
+        if (RobotBase.isSimulation()) {
+            var encoderRateSign = 1;
+            var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() * encoderRateSign;
+            pivotAngle = pivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
+        } else {
+            double encoderPosition = m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition();
+            pivotAngle = Rotation2d.fromDegrees(encoderPosition);
+        }
+
     }
 
     public void extend() {
@@ -157,20 +168,19 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run                                                                                                                 moo
+        // This method will be called once per scheduler run moo
         pivotMotorPercent = calculatePid(setpoint);
 
-        if(pivotAngle.getDegrees() > maxPivotAngle){
+        if (pivotAngle.getDegrees() > maxPivotAngle) {
             pivotMotorPercent = Math.min(pivotMotorPercent, 0);
-        } else if(pivotAngle.getDegrees() < minPivotAngle){
+        } else if (pivotAngle.getDegrees() < minPivotAngle) {
             pivotMotorPercent = Math.max(pivotMotorPercent, 0);
-        } 
+        }
 
-        double maxSpeed = .5; 
+        double maxSpeed = .5;
         pivotMotorPercent = Math.max(Math.min(maxSpeed, pivotMotorPercent), -maxSpeed);
-        
-        m_Pivot.set(pivotMotorPercent);
 
+        m_Pivot.set(pivotMotorPercent);
 
         // double m_Pivot_Pos = getMeasurement();
         // if (m_Pivot_Pos > intakedownposition + intake_Offset && isDown) {// down
@@ -190,14 +200,14 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotSimMotor.setInputVoltage(pivotMotorPercent * RobotController.getBatteryVoltage());
         // Move simulation forward dt seconds
         pivotSimMotor.update(.02);
-        var encoderRateSign = 1;
+        // var encoderRateSign = 1;
 
         // Get state from simulation devices (telescopeDist and shoulderAngle)
-        var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() * encoderRateSign;
-        pivotAngle = pivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
+        // var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() * encoderRateSign;
+        // // pivotAngle = pivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
 
         // mechanism2d :
-        pivot.setAngle(pivotAngle.getDegrees() + 90);
+        pivot.setAngle(-pivotAngle.getDegrees() - 90);
     }
 
     @Override
