@@ -23,19 +23,20 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private NeoMotor shooterMotorOne;
     private NeoMotor shooterMotorTwo;
-    private double shooterSpeed = 0;
+    private double shooterSpeed = -.70;
+    private double shooterSpeed2 = -.70;
     public static Timer timer;
-    public static double feederVoltage = 0;
+    public static double feederVoltage = -3;
     private final CANSparkMax feeder_Motor;
-    public static final int kFeederMotorPort = 21;
+    public static final int kFeederMotorPort = 23;
     public double feederOnSec = 1.5;
-    public double isDoneSec = 4.5; // for revving not for shooting
+    public double isDoneSec = .5; // for revving not for shooting
     public double isDoneShoot = 2; //sec
 
     public ShooterSubsystem() {
         feeder_Motor = new CANSparkMax(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
-        shooterMotorOne = new NeoMotor(28); // Correct these when we know the numbers
-        shooterMotorTwo = new NeoMotor(35);
+        shooterMotorOne = new NeoMotor(21); // Correct these when we know the numbers
+        shooterMotorTwo = new NeoMotor(22);
         shooterMotorTwo.setInverted(true);
         shooterMotorOne.setFollower(shooterMotorTwo);
     }
@@ -47,11 +48,18 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void shooterOn() {
         shooterMotorOne.setSpeed(shooterSpeed);
+        shooterMotorTwo.setSpeed(shooterSpeed2);
     }
 
     // stops the shooter
     public void shooterOff() {
         shooterMotorOne.setSpeed(0);
+        shooterMotorTwo.setSpeed(0);
+    }
+
+    public void everythingOffPlease(){
+        shooterOff();
+        stopFeederMotor();
     }
 
     // Gets the current speed of the shooter
@@ -78,19 +86,31 @@ public class ShooterSubsystem extends SubsystemBase {
     public Command rev() {
         Timer timer = new Timer();
         return new FunctionalCommand(
-                () -> timer.start(),
+                () -> {
+                timer.start(); 
+                timer.restart();
+                },
                 () -> shooterOn(),
                 (interupted) -> {},
                 () -> timer.get() > isDoneSec,
                 this);
     }
 
+     public Command stopIt() {
+        var command = Commands.run(() -> everythingOffPlease(), this);
+        command.setName("Stop it");
+        return command;
+    }
+
     public Command shoot() {
         Timer timer = new Timer();
         return new FunctionalCommand(
-                () -> timer.start(),
+                () -> {
+                timer.start(); 
+                timer.restart();
+                },
                 () -> moveFeederMotor(),
-                (interupted) -> stopFeederMotor(),
+                (interupted) -> {},
                 () -> timer.get() > isDoneShoot,
                 this);
     }
@@ -100,6 +120,6 @@ public class ShooterSubsystem extends SubsystemBase {
            rev(),
            shoot()
         );
-      }
+    }
 
 }

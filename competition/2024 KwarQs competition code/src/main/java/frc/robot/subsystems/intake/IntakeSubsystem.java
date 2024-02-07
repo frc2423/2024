@@ -13,9 +13,13 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 
 /*
  * TODO:
@@ -118,6 +122,8 @@ public class IntakeSubsystem extends SubsystemBase {
         isDown = true;
         intakeState = "Intaking";
         setpoint = Rotation2d.fromDegrees(downPositionDegrees);
+        System.out.println("EXTEND!");
+
     }
 
     public void retract() {
@@ -125,6 +131,7 @@ public class IntakeSubsystem extends SubsystemBase {
         isDown = false;
         intakeState = "Static";
         setpoint = Rotation2d.fromDegrees(upPositionDegrees);
+        System.out.println("RETRACT!");
 
     }
 
@@ -203,11 +210,36 @@ public class IntakeSubsystem extends SubsystemBase {
         // var encoderRateSign = 1;
 
         // Get state from simulation devices (telescopeDist and shoulderAngle)
-        // var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() * encoderRateSign;
+        // var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() *
+        // encoderRateSign;
         // // pivotAngle = pivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
 
         // mechanism2d :
         pivot.setAngle(-pivotAngle.getDegrees() - 90);
+    }
+
+    public Command intakeDown() {
+        var command = Commands.run(() -> extend(), this);
+        command.setName("Intake Down");
+        return command;
+    }
+
+    public Command intakeUp() {
+        var command = Commands.run(() -> retract(), this);
+        command.setName("Intake Up");
+        return command;
+    }
+
+    public Command intakeIntake() {
+        var command = Commands.run(() -> intake(), this);
+        command.setName("Intake Slurp");
+        return command;
+    }
+
+    public Command intakeOuttake() {
+        var command = Commands.run(() -> outtake(), this);
+        command.setName("Intake Barf");
+        return command;
     }
 
     @Override
@@ -229,5 +261,7 @@ public class IntakeSubsystem extends SubsystemBase {
             setpoint = Rotation2d.fromDegrees(angle);
         });
         builder.addDoubleProperty("Pivot Motor Percent", () -> pivotMotorPercent, null);
+        builder.addDoubleProperty("Belt Motor Speed", () -> beltMotor.get(), null);
+
     }
 }

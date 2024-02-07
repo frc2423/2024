@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 
 // Copyright (c) FIRST and other WPILib contributors.
@@ -37,7 +38,8 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 
 /** A robot arm subsystem that moves with a motion profile. */
 public class ShooterAngle extends SubsystemBase {
-  private final CANSparkMax shooter_Pivot;
+  // private final CANSparkMax shooter_Pivot;
+  // private final CANSparkMax shooter_Pivot2;
   public static final double kSVolts = 1;
   public static final double kGVolts = 1;
   public static final double kVVoltSecondPerRad = 0.5;// all things for feed forward is wrong, re do pls
@@ -58,6 +60,11 @@ public class ShooterAngle extends SubsystemBase {
   public static double shoot = 0;
   public static double handOff = 0;
   public static double neutral = 0;
+  private Rotation2d shooterPivotAngle = new Rotation2d(0);
+  public static double maxShooterPivotAngle = 0;
+  public static double minShooterPivotAngle = 0;
+  //private CANCoder shooterAngle = new CANCoder(0); //figure this out
+
   
 
   public static final double kArmOffsetRads = 0.5;
@@ -66,29 +73,32 @@ public class ShooterAngle extends SubsystemBase {
       kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
 
   /** Create a new ArmSubsystem. */
-  public ShooterAngle() {
-    shooter_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
+  // public ShooterAngle() {
+  //   shooter_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
     
-    shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
-    // Start arm at rest in neutral position
-    setpoint = Rotation2d.fromRadians(shoot); 
+  //   shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
+  //   // Start arm at rest in neutral position
+  //   setpoint = Rotation2d.fromRadians(shoot); 
 
-     Mechanism2d mech = new Mechanism2d(3, 3);
-        // the mechanism root node
-        MechanismRoot2d arm = mech.getRoot("arm", 1.5, 0.5);
-        pivot = arm.append(
-            new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kOrange)));
-        SmartDashboard.putData("Mech2d", mech);
-        pivotSimMotor.setInput(0);
-  }
+  //    Mechanism2d mech = new Mechanism2d(3, 3);
+  //       // the mechanism root node
+  //       MechanismRoot2d arm = mech.getRoot("shooter", 1.5, 0.5);
+  //       pivot = arm.append(
+  //           new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kOrange)));
+  //       SmartDashboard.putData("Mech2d", mech);
+  //       pivotSimMotor.setInput(0);
+  // }
 
   public void setAngle(double degrees){
     setpoint = Rotation2d.fromDegrees(degrees); 
   }
 
   private double calculatePid(Rotation2d angle) {
-    pivotAngle = Rotation2d.fromDegrees(shooter_Pivot.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle).getPosition());
-    return shooter_pivot_PID.calculate(pivotAngle.getDegrees(), angle.getDegrees());
+    updatePivotAngle();
+    double pid = shooter_pivot_PID.calculate(pivotAngle.getDegrees(), angle.getDegrees());
+    var setpoint = shooter_pivot_PID.getSetpoint();
+    double feedforward = m_feedforward.calculate(Math.toRadians(shooterPivotAngle.getDegrees()), setpoint.velocity);
+    return feedforward + pid;
   }
 
   @Override
@@ -102,10 +112,33 @@ public class ShooterAngle extends SubsystemBase {
     pivot.setAngle(pivotAngle.getDegrees() + 90);
   }
 
+  private void updatePivotAngle() {
+        if (RobotBase.isSimulation()) {
+            var encoderRateSign = 1;
+            var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() * encoderRateSign;
+            pivotAngle = pivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
+        } else {
+            //double encoderPosition = shooter_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition();
+            //pivotAngle = Rotation2d.fromDegrees(encoderPosition);
+        }
+
+    }
+
   @Override
   public void periodic(){
-    shooterPivotMotorPercent = calculatePid(new Rotation2d());
-    shooter_Pivot.set(-(shooterPivotMotorPercent)); 
+    shooterPivotMotorPercent = calculatePid(setpoint);
+
+    if (shooterPivotAngle.getDegrees() > maxShooterPivotAngle) {
+      shooterPivotMotorPercent = Math.min(shooterPivotMotorPercent, 0);
+    } else if (shooterPivotAngle.getDegrees() < minShooterPivotAngle) {
+      shooterPivotMotorPercent = Math.max(shooterPivotMotorPercent, 0);
+    }
+
+    double maxShooterSpeed = 0;
+    shooterPivotMotorPercent = Math.max(Math.min(maxShooterSpeed, shooterPivotMotorPercent), -maxShooterSpeed);
+
+    // shooter_Pivot.set(shooterPivotMotorPercent); 
+    // shooter_Pivot2.set(shooterPivotMotorPercent); 
   }
 
   // public Command feederAngleCommand(){

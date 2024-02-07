@@ -59,7 +59,9 @@ public class RobotContainer {
     configureBindings();
     intake.beltStop();
     SmartDashboard.putData("Intake", intake);
-    SmartDashboard.putData("SwerveSubsystem", drivebase);
+    SmartDashboard.putData("SwerveSubsystem", drivebase);    
+    SmartDashboard.putData("Shooter", shooter);
+
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
@@ -123,17 +125,21 @@ public class RobotContainer {
     // new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new
     // InstantCommand(drivebase::lock, drivebase)));
 
-    new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(new RunCommand(intake::intake))
+    new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intake.intakeIntake()) //intake.intakeIntake TOBA--dont delete
         .onFalse(new RunCommand(intake::beltStop));
     ;
-    new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(new RunCommand(intake::outtake))
+    new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(intake.intakeOuttake()) //intake.intakeOuttake
         .onFalse(new RunCommand(intake::beltStop));
     ;
-    new JoystickButton(driverXbox, XboxController.Button.kA.value).onTrue(new RunCommand(intake::extend));
-    new JoystickButton(driverXbox, XboxController.Button.kX.value).onTrue(new RunCommand(intake::retract));
+    new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intake.intakeDown());
+    new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intake.intakeUp());
+
+    
+
     Command shooterCommand = shooter.revAndShoot();
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).onTrue(shooterCommand)
-        .onFalse(new RunCommand(() -> shooterCommand.cancel()));
+    shooterCommand.setName("Rev and Shoot");
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommand);
+    shooter.setDefaultCommand(shooter.stopIt());
   }
 
   /**

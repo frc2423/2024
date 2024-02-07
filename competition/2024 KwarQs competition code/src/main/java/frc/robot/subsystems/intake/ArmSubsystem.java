@@ -10,10 +10,12 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 //import frc.robot.Constants.ArmConstants;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.devices.NeoMotor;
+
 
 /** A robot arm subsystem that moves with a motion profile. */
 public class ArmSubsystem extends ProfiledPIDSubsystem {
@@ -65,4 +67,6 @@ public class ArmSubsystem extends ProfiledPIDSubsystem {
   public double getMeasurement() {
     return m_motor.getDistance() + kArmOffsetRads;
   }
+
+  
 }

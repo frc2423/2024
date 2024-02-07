@@ -60,12 +60,15 @@
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
       "/LiveWindow/Ungrouped/Pigeon 2 [13]": "Gyro",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/Shuffleboard/Autonomous/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Intake": "Subsystem",
       "/SmartDashboard/Mech2d": "Mechanism2d",
       "/SmartDashboard/Pigeon 2 (v6) [13]": "Gyro",
       "/SmartDashboard/Pigeon 2 [13]": "Gyro",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
+      "/SmartDashboard/Shooter": "Subsystem",
+      "/SmartDashboard/SwerveSubsystem": "Subsystem",
       "/SmartDashboard/navX-Sensor[1]": "Gyro",
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     },
@@ -98,7 +101,17 @@
           "visible": true
         }
       },
+      "/SmartDashboard/Intake": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Mech2d": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Shooter": {
         "window": {
           "visible": true
         }
