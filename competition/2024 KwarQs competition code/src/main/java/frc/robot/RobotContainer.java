@@ -41,6 +41,7 @@ public class RobotContainer {
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(2);
+  private boolean canIntake = true;
 
   // A chooser for autonomous commands
   SendableChooser<String> m_chooser = new SendableChooser<>();
@@ -59,9 +60,8 @@ public class RobotContainer {
     configureBindings();
     intake.beltStop();
     SmartDashboard.putData("Intake", intake);
-    SmartDashboard.putData("SwerveSubsystem", drivebase);    
+    SmartDashboard.putData("SwerveSubsystem", drivebase);
     SmartDashboard.putData("Shooter", shooter);
-
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
@@ -124,17 +124,31 @@ public class RobotContainer {
     // .onTrue(new InstantCommand(drivebase::addFakeVisionReading));
     // new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new
     // InstantCommand(drivebase::lock, drivebase)));
+    new Trigger(() -> driverXbox.getYButtonPressed()).whileTrue(new RunCommand(intake::beltStop));
+    // new JoystickButton(driverXbox, XboxController.Button.kY.value)
+    //     .and(() -> !(intake.isBeamBroken() && intake.isIntakeDown())).whileTrue(intake.intakeIntake()) // intake.intakeIntake
+    //                                                                                                 // TOBA--dont delete PLEASE PLEASE PLEASE
+    //     .onFalse(new RunCommand(intake::beltStop));
+    ;
 
-    new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intake.intakeIntake()) //intake.intakeIntake TOBA--dont delete
+     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intake.intakeIntake()) // intake.intakeOuttake
         .onFalse(new RunCommand(intake::beltStop));
     ;
-    new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(intake.intakeOuttake()) //intake.intakeOuttake
+    new Trigger(() -> driverXbox.getBButton() && canIntake).whileTrue(intake.intakeOuttake()) // intake.intakeOuttake
         .onFalse(new RunCommand(intake::beltStop));
     ;
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intake.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intake.intakeUp());
 
-    
+    new Trigger(() -> intake.isBeamBroken() && intake.isIntakeDown()).onTrue(new InstantCommand(()-> {
+      canIntake = false;
+    }));
+
+    new Trigger(() -> driverXbox.getBButtonReleased()).onTrue(new InstantCommand(()-> {
+      canIntake = true;
+    })
+    );
+    // ;
 
     Command shooterCommand = shooter.revAndShoot();
     shooterCommand.setName("Rev and Shoot");

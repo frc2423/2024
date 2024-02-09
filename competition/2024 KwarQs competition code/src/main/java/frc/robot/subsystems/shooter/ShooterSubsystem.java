@@ -26,7 +26,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private double shooterSpeed = -.70;
     private double shooterSpeed2 = -.70;
     public static Timer timer;
-    public static double feederVoltage = -3;
+    public static double feederVoltage = -6;
     private final CANSparkMax feeder_Motor;
     public static final int kFeederMotorPort = 23;
     public double feederOnSec = 1.5;
