@@ -34,6 +34,9 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+// import com.ctre.phoenix6.sensors.CANCoder;
+// import com.ctre.phoenix6.sensors.CANCoderConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
 
 /** A robot arm subsystem that moves with a motion profile. */
 public class ShooterAngle extends SubsystemBase {
@@ -62,7 +65,7 @@ public class ShooterAngle extends SubsystemBase {
   private Rotation2d shooterPivotAngle = new Rotation2d(0);
   public static double maxShooterPivotAngle = 0;
   public static double minShooterPivotAngle = 0;
-  private CANCoder shooterAngle = new CANCoder(0); //figure this out
+  private CANcoder shooterAngle = new CANcoder(0); //figure this out
 
   
 
