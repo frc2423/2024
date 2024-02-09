@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -131,10 +132,10 @@ public class RobotContainer {
     //     .onFalse(new RunCommand(intake::beltStop));
     ;
 
-     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intake.intakeIntake()) // intake.intakeOuttake
+     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intake.intakeOuttake()) // intake.intakeOuttake
         .onFalse(new RunCommand(intake::beltStop));
     ;
-    new Trigger(() -> driverXbox.getBButton() && canIntake).whileTrue(intake.intakeOuttake()) // intake.intakeOuttake
+    new Trigger(() -> driverXbox.getBButton() && canIntake).whileTrue(intake.intakeIntake()) // intake.intakeOuttake
         .onFalse(new RunCommand(intake::beltStop));
     ;
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intake.intakeDown());
@@ -148,10 +149,15 @@ public class RobotContainer {
       canIntake = true;
     })
     );
-    // ;
 
-    Command shooterCommand = shooter.revAndShoot();
-    shooterCommand.setName("Rev and Shoot");
+    
+    // 
+    
+    Command shooterCommand = Commands.sequence(
+      Commands.parallel(shooter.rev(),intake.intakeInWithRevCommand()),
+      Commands.parallel(shooter.shoot(),intake.intakeOutWithShoot())
+      );
+    shooterCommand.setName("Rev,Intake,Shoot");
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommand);
     shooter.setDefaultCommand(shooter.stopIt());
   }
