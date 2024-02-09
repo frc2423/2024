@@ -1,0 +1,14 @@
+image:
+  file: .gitpod.Dockerfile
+
+vscode:
+  extensions:
+    - ms-python.black-formatter@2023.7.13471009
+    - ms-vscode.cpptools@1.19.1
+    - vscjava.vscode-java-debug@0.55.2023121302
+    - ms-python.isort@2023.11.13191009
+    - redhat.java@1.26.2023121408
+    - vscjava.vscode-java-dependency@0.23.2023120100
+    - ms-python.vscode-pylance@2023.12.100
+    - ms-python.python@2023.23.13481009
+    - wpilibsuite.vscode-wpilib@2024.1.1
