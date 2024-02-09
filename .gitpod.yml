@@ -1,5 +1,4 @@
-image:
-  file: .gitpod.Dockerfile
+image: agalili/wpilib-2024:v1
 
 vscode:
   extensions:
