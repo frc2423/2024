@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-//import frc.robot.Constants.ArmConstants;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -38,8 +37,8 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 
 /** A robot arm subsystem that moves with a motion profile. */
 public class ShooterAngle extends SubsystemBase {
-  // private final CANSparkMax shooter_Pivot;
-  // private final CANSparkMax shooter_Pivot2;
+  private final CANSparkMax shooter_Pivot;
+  private final CANSparkMax shooter_Pivot2;
   public static final double kSVolts = 1;
   public static final double kGVolts = 1;
   public static final double kVVoltSecondPerRad = 0.5;// all things for feed forward is wrong, re do pls
@@ -63,7 +62,7 @@ public class ShooterAngle extends SubsystemBase {
   private Rotation2d shooterPivotAngle = new Rotation2d(0);
   public static double maxShooterPivotAngle = 0;
   public static double minShooterPivotAngle = 0;
-  //private CANCoder shooterAngle = new CANCoder(0); //figure this out
+  private CANCoder shooterAngle = new CANCoder(0); //figure this out
 
   
 
@@ -73,21 +72,21 @@ public class ShooterAngle extends SubsystemBase {
       kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
 
   /** Create a new ArmSubsystem. */
-  // public ShooterAngle() {
-  //   shooter_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
+  public ShooterAngle() {
+    shooter_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
     
-  //   shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
-  //   // Start arm at rest in neutral position
-  //   setpoint = Rotation2d.fromRadians(shoot); 
+    shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
+    // Start arm at rest in neutral position
+    setpoint = Rotation2d.fromRadians(shoot); 
 
-  //    Mechanism2d mech = new Mechanism2d(3, 3);
-  //       // the mechanism root node
-  //       MechanismRoot2d arm = mech.getRoot("shooter", 1.5, 0.5);
-  //       pivot = arm.append(
-  //           new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kOrange)));
-  //       SmartDashboard.putData("Mech2d", mech);
-  //       pivotSimMotor.setInput(0);
-  // }
+     Mechanism2d mech = new Mechanism2d(3, 3);
+        // the mechanism root node
+        MechanismRoot2d arm = mech.getRoot("shooter", 1.5, 0.5);
+        pivot = arm.append(
+            new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kOrange)));
+        SmartDashboard.putData("Mech2d", mech);
+        pivotSimMotor.setInput(0);
+  }
 
   public void setAngle(double degrees){
     setpoint = Rotation2d.fromDegrees(degrees); 
@@ -118,8 +117,8 @@ public class ShooterAngle extends SubsystemBase {
             var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() * encoderRateSign;
             pivotAngle = pivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
         } else {
-            //double encoderPosition = shooter_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition();
-            //pivotAngle = Rotation2d.fromDegrees(encoderPosition);
+            double encoderPosition = shooter_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition();
+            pivotAngle = Rotation2d.fromDegrees(encoderPosition);
         }
 
     }
@@ -137,8 +136,8 @@ public class ShooterAngle extends SubsystemBase {
     double maxShooterSpeed = 0;
     shooterPivotMotorPercent = Math.max(Math.min(maxShooterSpeed, shooterPivotMotorPercent), -maxShooterSpeed);
 
-    // shooter_Pivot.set(shooterPivotMotorPercent); 
-    // shooter_Pivot2.set(shooterPivotMotorPercent); 
+    shooter_Pivot.set(shooterPivotMotorPercent); 
+    shooter_Pivot2.set(shooterPivotMotorPercent); 
   }
 
   // public Command feederAngleCommand(){
@@ -149,4 +148,5 @@ public class ShooterAngle extends SubsystemBase {
   // public Command climberAngleCommand(){
   //   return this.runOnce(()->this.setGoal(1));
   //   //put in actual value
+  // }
   }
