@@ -2,9 +2,6 @@ package frc.robot.subsystems.shooter;
 
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkAbsoluteEncoder;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -15,27 +12,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.devices.NeoMotor;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-// import com.ctre.phoenix6.sensors.CANCoder;
-// import com.ctre.phoenix6.sensors.CANCoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 
 /** A robot arm subsystem that moves with a motion profile. */
@@ -48,7 +36,8 @@ public class ShooterAngle extends SubsystemBase {
   public static final double kAVoltSecondSquaredPerRad = 0.1;
   public static final double kMaxVelocityRadPerSecond = 3;
   public static final double kMaxAccelerationRadPerSecSquared = 10;
-  public static final int kMotorPort = 20;
+  public static final int kMotorPort = 26; //right side
+   public static final int kMotorPort2 = 24; //left side
   public static final double kP = 0.1;
   public static final int kEncoderPPR = 256;
   public static final double kEncoderDistancePerPulse = 2.0 * Math.PI / kEncoderPPR;
@@ -65,9 +54,10 @@ public class ShooterAngle extends SubsystemBase {
   private Rotation2d shooterPivotAngle = new Rotation2d(0);
   public static double maxShooterPivotAngle = 0;
   public static double minShooterPivotAngle = 0;
-  private CANcoder shooterAngle = new CANcoder(0); //figure this out
-
-  
+  private CANcoder shooterAngle; //figured out? i think
+  public static double feedAngle = 36; //put correct number pls
+  public static double climbAngle = 245; //put correct number pls
+  public static double shootAngle = 57; //not good, make good
 
   public static final double kArmOffsetRads = 0.5;
   private final ArmFeedforward m_feedforward = new ArmFeedforward(
@@ -76,7 +66,9 @@ public class ShooterAngle extends SubsystemBase {
 
   /** Create a new ArmSubsystem. */
   public ShooterAngle() {
+    shooterAngle  = new CANcoder(25);
     shooter_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
+    shooter_Pivot2 = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
     
     shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
     // Start arm at rest in neutral position
@@ -120,7 +112,7 @@ public class ShooterAngle extends SubsystemBase {
             var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() * encoderRateSign;
             pivotAngle = pivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
         } else {
-            double encoderPosition = shooter_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition();
+            double encoderPosition = shooterAngle.getAbsolutePosition().getValueAsDouble();
             pivotAngle = Rotation2d.fromDegrees(encoderPosition);
         }
 
@@ -143,13 +135,19 @@ public class ShooterAngle extends SubsystemBase {
     shooter_Pivot2.set(shooterPivotMotorPercent); 
   }
 
-  // public Command feederAngleCommand(){
-  //   return this.runOnce(()->this.setGoal(1));
-  //   //put in actual value
-  // }
+  public Command feederAngleCommand(){
+    return this.runOnce(()-> this.setAngle(feedAngle));
+    //put in actual value
+  }
 
-  // public Command climberAngleCommand(){
-  //   return this.runOnce(()->this.setGoal(1));
-  //   //put in actual value
-  // }
+  public Command climberAngleCommand(){
+    return this.runOnce(()-> this.setAngle(climbAngle));
+    //put in actual value
+  }
+
+  public Command shooterAngleCommand(){
+    return this.runOnce(()-> this.setAngle(shootAngle));
+    //put in actual value
+  }
+
   }
