@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterCommands;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -52,7 +54,8 @@ public class RobotContainer {
   XboxController driverXbox = new XboxController(0);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
-
+  ShooterCommands shooterCommands = new ShooterCommands(shooter);
+  IntakeCommands intakeCommands = new IntakeCommands(intake);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -132,14 +135,14 @@ public class RobotContainer {
     //     .onFalse(new RunCommand(intake::beltStop));
     ;
 
-     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intake.intakeOuttake()) // intake.intakeOuttake
+     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()) // intake.intakeOuttake
         .onFalse(new RunCommand(intake::beltStop));
     ;
-    new Trigger(() -> driverXbox.getBButton() && canIntake).whileTrue(intake.intakeIntake()) // intake.intakeOuttake
+    new Trigger(() -> driverXbox.getBButton() && canIntake).whileTrue(intakeCommands.intakeIntake()) // intake.intakeOuttake
         .onFalse(new RunCommand(intake::beltStop));
     ;
-    new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intake.intakeDown());
-    new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intake.intakeUp());
+    new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
+    new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
 
     new Trigger(() -> intake.isBeamBroken() && intake.isIntakeDown()).onTrue(new InstantCommand(()-> {
       canIntake = false;
@@ -154,12 +157,12 @@ public class RobotContainer {
     // 
     
     Command shooterCommand = Commands.sequence(
-      Commands.parallel(shooter.rev(),intake.intakeInWithRevCommand()),
-      Commands.parallel(shooter.shoot(),intake.intakeOutWithShoot())
+      Commands.parallel(shooterCommands.rev(),intakeCommands.intakeInWithRevCommand()),
+      Commands.parallel(shooterCommands.shoot(),intakeCommands.intakeOutWithShoot())
       );
     shooterCommand.setName("Rev,Intake,Shoot");
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommand);
-    shooter.setDefaultCommand(shooter.stopIt());
+    shooter.setDefaultCommand(shooterCommands.stopIt());
   }
 
   /**

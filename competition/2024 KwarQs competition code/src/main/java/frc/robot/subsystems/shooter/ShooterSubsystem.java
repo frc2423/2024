@@ -31,7 +31,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public static final int kFeederMotorPort = 23;
     public double feederOnSec = 1.5;
     public double isDoneSec = .5; // for revving not for shooting
-    public double isDoneShoot = 2; //sec
+    public double isDoneShoot = 2; // sec
 
     public ShooterSubsystem() {
         feeder_Motor = new CANSparkMax(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
@@ -57,7 +57,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotorTwo.setSpeed(0);
     }
 
-    public void everythingOffPlease(){
+    public void everythingOffPlease() {
         shooterOff();
         stopFeederMotor();
     }
@@ -83,43 +83,5 @@ public class ShooterSubsystem extends SubsystemBase {
         feeder_Motor.setVoltage(0);
     }
 
-    public Command rev() {
-        Timer timer = new Timer();
-        return new FunctionalCommand(
-                () -> {
-                timer.start(); 
-                timer.restart();
-                },
-                () -> shooterOn(),
-                (interupted) -> {},
-                () -> timer.get() > isDoneSec,
-                this);
-    }
-
-     public Command stopIt() {
-        var command = Commands.run(() -> everythingOffPlease(), this);
-        command.setName("Stop it");
-        return command;
-    }
-
-    public Command shoot() {
-        Timer timer = new Timer();
-        return new FunctionalCommand(
-                () -> {
-                timer.start(); 
-                timer.restart();
-                },
-                () -> moveFeederMotor(),
-                (interupted) -> {},
-                () -> timer.get() > isDoneShoot,
-                this);
-    }
-
-    public Command revAndShoot() {
-        return Commands.sequence(
-           rev(),
-           shoot()
-        );
-    }
 
 }
