@@ -22,6 +22,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterAngle;
+import frc.robot.subsystems.shooter.ShooterAngleCommands;
 import frc.robot.subsystems.shooter.ShooterCommands;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -52,11 +53,13 @@ public class RobotContainer {
   // CommandJoystick driverController = new
   // CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT)
   XboxController driverXbox = new XboxController(0);
+  XboxController operator = new XboxController(1);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
   ShooterAngle shooterAngle = new ShooterAngle();
   IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, intakeCommands);
+  ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -140,6 +143,13 @@ public class RobotContainer {
 
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
     shooter.setDefaultCommand(shooterCommands.stopIt());
+
+    new JoystickButton(operator, XboxController.Button.kLeftBumper.value).whileTrue(shooterAngleCommands.moveShooterDown());
+    new JoystickButton(operator, XboxController.Button.kRightBumper.value).whileTrue(shooterAngleCommands.moveShooterUp());
+    
+    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(shooterAngleCommands.shooterAngleCommand());
+    new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(shooterAngleCommands.feederAngleCommand());
+    new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(shooterAngleCommands.climberAngleCommand());
   }
 
   /**

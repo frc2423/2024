@@ -43,15 +43,15 @@ public class ShooterAngle extends SubsystemBase {
   ProfiledPIDController shooter_pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? 0.001 : .005, 0, 0,
       new TrapezoidProfile.Constraints(100, 200)); // 360, 420
   private double shooterPivotMotorPercent = 0;
-  private static Rotation2d setpoint = Rotation2d.fromRadians(0); // Enter Rot2d value
+  public static Rotation2d setpoint = Rotation2d.fromRadians(0); // Enter Rot2d value
   private static double shoot = 0;
   private Rotation2d shooterPivotAngle = new Rotation2d(0);
   private static double maxShooterPivotAngle = 0;
   private static double minShooterPivotAngle = 0;
   private CANcoder shooterAngle; // figured out? i think
-  private static double feedAngle = 36; // put correct number pls
-  private static double climbAngle = 245; // put correct number pls
-  private static double shootAngle = 57; // not good, make good
+  public static double feedAngle = 36; // put correct number pls
+  public static double climbAngle = 245; // put correct number pls
+  public static double shootAngle = 57; // not good, make good
 
   private final ArmFeedforward m_feedforward = new ArmFeedforward(
       (Robot.isSimulation()) ? 0 : kSVolts, (Robot.isSimulation()) ? 0 : kGVolts,
@@ -64,7 +64,6 @@ public class ShooterAngle extends SubsystemBase {
     shooter_Pivot2 = new CANSparkMax(kMotorPort + 1, CANSparkLowLevel.MotorType.kBrushless);
 
     shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
-    shooter_pivot_PID.enableContinuousInput(-180 , 180);
     // Start arm at rest in neutral position
     setpoint = Rotation2d.fromRadians(shoot);
 
@@ -72,13 +71,15 @@ public class ShooterAngle extends SubsystemBase {
     // the mechanism root node
     MechanismRoot2d arm = mech.getRoot("shooter", 1.5, 0.5);
     pivot = arm.append(
-        new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kOrange)));
+        new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kCyan)));
     SmartDashboard.putData("Mech2dShooterAngle", mech);
     pivotSimMotor.setInput(0);
   }
 
   public void setAngle(double degrees) {
-    setpoint = Rotation2d.fromDegrees(degrees);
+    if (degrees < climbAngle + 5 && degrees > feedAngle-5){
+      setpoint = Rotation2d.fromDegrees(degrees);
+    }
   }
 
   private double calculatePid(Rotation2d angle) {
@@ -95,6 +96,9 @@ public class ShooterAngle extends SubsystemBase {
       var encoderRateSign = 1;
       var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() * encoderRateSign;
       pivotAngle = pivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
+      if (pivotAngle.getDegrees() < 0){
+        pivotAngle = Rotation2d.fromDegrees(360 + pivotAngle.getDegrees());
+    }
     } else {
       double encoderPosition = shooterAngle.getAbsolutePosition().getValueAsDouble();
       pivotAngle = Rotation2d.fromDegrees(encoderPosition);
@@ -127,21 +131,6 @@ public class ShooterAngle extends SubsystemBase {
     // shooterPivotMotorPercent), -maxShooterSpeed);
 
     setMotorPercent();
-  }
-
-  public Command feederAngleCommand() {
-    return this.runOnce(() -> this.setAngle(feedAngle));
-    // put in actual value
-  }
-
-  public Command climberAngleCommand() {
-    return this.runOnce(() -> this.setAngle(climbAngle));
-    // put in actual value
-  }
-
-  public Command shooterAngleCommand() {
-    return this.runOnce(() -> this.setAngle(shootAngle));
-    // put in actual value
   }
 
   @Override

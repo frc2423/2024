@@ -114,6 +114,11 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/ShooterAngle": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },
@@ -135,6 +140,9 @@
         }
       }
     }
+  },
+  "NetworkTables Info": {
+    "visible": true
   },
   "sourceNames": {
     "DIO[8]": "intake sensor"

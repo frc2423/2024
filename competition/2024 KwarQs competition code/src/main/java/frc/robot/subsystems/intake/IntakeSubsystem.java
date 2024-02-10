@@ -117,8 +117,6 @@ public class IntakeSubsystem extends SubsystemBase {
         isDown = true;
         intakeState = "Intaking";
         setpoint = Rotation2d.fromDegrees(downPositionDegrees);
-        System.out.println("EXTEND!");
-
     }
 
     public void retract() {
@@ -126,8 +124,6 @@ public class IntakeSubsystem extends SubsystemBase {
         isDown = false;
         intakeState = "Static";
         setpoint = Rotation2d.fromDegrees(upPositionDegrees);
-        System.out.println("RETRACT!");
-
     }
 
     public void intake() {
