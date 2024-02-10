@@ -29,8 +29,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
 public class IntakeSubsystem extends SubsystemBase {
-    public static final double kSVolts = 0.015;
-    public static final double kGVolts = 0.02;
+    public static final double kSVolts = Robot.isSimulation() ? 0 : 0.015;
+    public static final double kGVolts = Robot.isSimulation() ? 0 : 0.02;
     public static final double kVVoltSecondPerRad = 0.00;// 0.017;
     public static final double kAVoltSecondSquaredPerRad = 0.05;
     // public static final double kMaxVelocityRadPerSecond = 3;
@@ -62,7 +62,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private double pivotMotorPercent = 0;
     private double feedforwardValue = 0;
     private double outputValue = 0;
-    private double maxPivotAngle = 225; // degrees
+    private double maxPivotAngle = 290; // degrees
     private double minPivotAngle = 90; // still 
     private double intakeSpeed = .4;
     public double isDoneSec = .5; // for revving not for shooting
@@ -84,7 +84,7 @@ public class IntakeSubsystem extends SubsystemBase {
         MechanismRoot2d arm = mech.getRoot("arm", 1.5, .5);
         pivot = arm.append(
                 new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kOrange)));
-        SmartDashboard.putData("Mech2d", mech);
+        SmartDashboard.putData("Mech2dIntake", mech);
         pivotSimMotor.setInput(0);
 
     }
@@ -102,6 +102,9 @@ public class IntakeSubsystem extends SubsystemBase {
             var encoderRateSign = 1;
             var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() * encoderRateSign;
             pivotAngle = pivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
+            if (pivotAngle.getDegrees() < 0){
+                pivotAngle = Rotation2d.fromDegrees(360 + pivotAngle.getDegrees());
+            }
         } else {
             double encoderPosition = m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition();
             pivotAngle = Rotation2d.fromDegrees(encoderPosition);
