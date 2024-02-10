@@ -54,8 +54,9 @@ public class RobotContainer {
   XboxController driverXbox = new XboxController(0);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
-  ShooterCommands shooterCommands = new ShooterCommands(shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, intakeCommands);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -120,12 +121,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
     new JoystickButton(driverXbox, 1)
         .onTrue((new InstantCommand(drivebase::zeroGyro)));
-    // new JoystickButton(driverXbox, 3)
-    // .onTrue(new InstantCommand(drivebase::addFakeVisionReading));
     // new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new
     // InstantCommand(drivebase::lock, drivebase)));
     new Trigger(() -> driverXbox.getYButtonPressed()).whileTrue(new RunCommand(intake::beltStop));
@@ -133,14 +130,11 @@ public class RobotContainer {
     //     .and(() -> !(intake.isBeamBroken() && intake.isIntakeDown())).whileTrue(intake.intakeIntake()) // intake.intakeIntake
     //                                                                                                 // TOBA--dont delete PLEASE PLEASE PLEASE
     //     .onFalse(new RunCommand(intake::beltStop));
-    ;
 
      new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()) // intake.intakeOuttake
         .onFalse(new RunCommand(intake::beltStop));
-    ;
     new Trigger(() -> driverXbox.getBButton() && canIntake).whileTrue(intakeCommands.intakeIntake()) // intake.intakeOuttake
         .onFalse(new RunCommand(intake::beltStop));
-    ;
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
 
@@ -150,18 +144,9 @@ public class RobotContainer {
 
     new Trigger(() -> driverXbox.getBButtonReleased()).onTrue(new InstantCommand(()-> {
       canIntake = true;
-    })
-    );
+    }));
 
-    
-    // 
-    
-    Command shooterCommand = Commands.sequence(
-      Commands.parallel(shooterCommands.rev(),intakeCommands.intakeInWithRevCommand()),
-      Commands.parallel(shooterCommands.shoot(),intakeCommands.intakeOutWithShoot())
-      );
-    shooterCommand.setName("Rev,Intake,Shoot");
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommand);
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
     shooter.setDefaultCommand(shooterCommands.stopIt());
   }
 

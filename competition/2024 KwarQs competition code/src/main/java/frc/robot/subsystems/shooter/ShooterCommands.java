@@ -4,13 +4,17 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import frc.robot.subsystems.intake.IntakeCommands;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 
 public class ShooterCommands {
 
     private ShooterSubsystem shooter;
+    private IntakeCommands intake;
 
-    public ShooterCommands(ShooterSubsystem shooter) {
+    public ShooterCommands(ShooterSubsystem shooter, IntakeCommands intake) {
         this.shooter = shooter;
+        this.intake = intake;
     }
 
     public Command rev() {
@@ -36,5 +40,15 @@ public class ShooterCommands {
                 rev(),
                 shoot());
     }
+    
+    public Command shooterCommand() {
+        Command shooterCommand = Commands.sequence(
+        Commands.parallel(rev(),intake.intakeInWithRevCommand()),
+        Commands.parallel(shoot(),intake.intakeOutWithShoot())
+        );
+        shooterCommand.setName("Rev,Intake,Shoot");
+        return shooterCommand;
+    }
+
 
 }
