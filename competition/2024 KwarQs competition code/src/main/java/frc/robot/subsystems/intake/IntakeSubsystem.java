@@ -219,56 +219,6 @@ public class IntakeSubsystem extends SubsystemBase {
         pivot.setAngle(-pivotAngle.getDegrees() - 90);
     }
 
-    public Command intakeDown() {
-        var command = Commands.run(() -> extend(), this);
-        command.setName("Intake Down");
-        return command;
-    }
-
-    public Command intakeUp() {
-        var command = Commands.run(() -> retract(), this);
-        command.setName("Intake Up");
-        return command;
-    }
-
-    public Command intakeIntake() {
-        var command = Commands.run(() -> intake(), this);
-        command.setName("Intake Slurp");
-        return command;
-    }
-
-    public Command intakeOuttake() {
-        var command = Commands.run(() -> outtake(), this);
-        command.setName("Intake Barf");
-        return command;
-    }
-
-    public Command intakeInWithRevCommand() {
-        Timer timer = new Timer();
-        return new FunctionalCommand(
-                () -> {
-                timer.start(); 
-                timer.restart();
-                },
-                () -> intakeIntake(),
-                (interupted) -> {},
-                () -> timer.get() > isDoneSec ,
-                this);
-    }
-
-    public Command intakeOutWithShoot() {
-        Timer timer = new Timer();
-        return new FunctionalCommand(
-                () -> {
-                timer.start(); 
-                timer.restart();
-                },
-                () -> intakeIntake(),
-                (interupted) -> {},
-                () -> timer.get() > isDoneShoot,
-                this);
-    }
-
     @Override
     public void initSendable(SendableBuilder builder) {
         // This is used to add things to NetworkTables

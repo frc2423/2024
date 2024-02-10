@@ -136,9 +136,6 @@
       }
     }
   },
-  "NetworkTables Info": {
-    "visible": true
-  },
   "sourceNames": {
     "DIO[8]": "intake sensor"
   }
