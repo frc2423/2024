@@ -36,14 +36,26 @@ public class IntakeCommands {
     }
 
     public Command intakeInWithRevCommand() {
-        return Commands.run(() -> {
+        var command = Commands.run(() -> {
             intakeIntake();
-        }).withTimeout(intake.isDoneSec);
+        }, intake).withTimeout(intake.isDoneSec);
+        command.setName("Intake In With Rev");
+        return command;
     }
 
     public Command intakeOutWithShoot() {
-        return Commands.run(() -> {
+        var command = Commands.run(() -> {
             intakeIntake();
-        }).withTimeout(intake.isDoneShoot);
+        }, intake).withTimeout(intake.isDoneShoot);
+        command.setName("Intake Out To Shoot");
+        return command;
+    }
+
+     public Command intakeIntakeUntil() {
+        var command = Commands.run(() -> {
+            intakeIntake();
+        }, intake).until(intake::isBeamBroken);
+        command.setName("Intake untill");
+        return command;
     }
 }

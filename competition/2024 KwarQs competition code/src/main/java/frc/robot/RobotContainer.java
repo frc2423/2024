@@ -130,7 +130,7 @@ public class RobotContainer {
       .onFalse(new RunCommand(intake::beltStop));
     
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
-      .whileTrue(intakeCommands.intakeIntake().until(intake::isBeamBroken))
+      .whileTrue(intakeCommands.intakeIntakeUntil())
       .onFalse(new RunCommand(intake::beltStop));
    
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());

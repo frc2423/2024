@@ -119,6 +119,9 @@
   "NetworkTables Info": {
     "visible": true
   },
+  "NetworkTables View": {
+    "visible": false
+  },
   "sourceNames": {
     "DIO[8]": "intake sensor"
   }

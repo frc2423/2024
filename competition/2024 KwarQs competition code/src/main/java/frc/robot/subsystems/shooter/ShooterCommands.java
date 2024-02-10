@@ -18,9 +18,11 @@ public class ShooterCommands {
     }
 
     public Command rev() {
-        return Commands.run(() -> {
+        var command = Commands.run(() -> {
             shooter.shooterOn();
         }).withTimeout(shooter.isDoneSec);
+        command.setName("Revvvvv");
+        return command;
     }
 
     public Command stopIt() {
@@ -30,17 +32,21 @@ public class ShooterCommands {
     }
 
     public Command shoot() {
-        return Commands.run(() -> {
+        var command = Commands.run(() -> {
             shooter.moveFeederMotor();
-        }).withTimeout(shooter.isDoneShoot);
+        }, shooter).withTimeout(shooter.isDoneShoot);
+        command.setName("Shoot");
+        return command;
     }
 
     public Command revAndShoot() {
-        return Commands.sequence(
+        var command = Commands.sequence(
                 rev(),
                 shoot());
+        command.setName("Revvvvv and Shoot");
+        return command;
     }
-    
+
     public Command shooterCommand() {
         Command shooterCommand = Commands.sequence(
         Commands.parallel(rev(),intake.intakeInWithRevCommand()),
