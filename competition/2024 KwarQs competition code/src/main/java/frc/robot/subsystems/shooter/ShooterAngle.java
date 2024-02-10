@@ -57,11 +57,13 @@ public class ShooterAngle extends SubsystemBase {
       (Robot.isSimulation()) ? 0 : kSVolts, (Robot.isSimulation()) ? 0 : kGVolts,
       kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
 
+//25 encoder 24 26 motors
+
   /** Create a new ArmSubsystem. */
   public ShooterAngle() {
     shooterAngle = new CANcoder(25);
-    shooter_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
-    shooter_Pivot2 = new CANSparkMax(kMotorPort + 1, CANSparkLowLevel.MotorType.kBrushless);
+    shooter_Pivot = new CANSparkMax(26, CANSparkLowLevel.MotorType.kBrushless);
+    shooter_Pivot2 = new CANSparkMax(24, CANSparkLowLevel.MotorType.kBrushless);
 
     shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
     // Start arm at rest in neutral position
