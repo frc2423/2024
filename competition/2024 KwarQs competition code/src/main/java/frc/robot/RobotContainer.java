@@ -125,26 +125,16 @@ public class RobotContainer {
         .onTrue((new InstantCommand(drivebase::zeroGyro)));
     // new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new
     // InstantCommand(drivebase::lock, drivebase)));
-    new Trigger(() -> driverXbox.getYButtonPressed()).whileTrue(new RunCommand(intake::beltStop));
-    // new JoystickButton(driverXbox, XboxController.Button.kY.value)
-    //     .and(() -> !(intake.isBeamBroken() && intake.isIntakeDown())).whileTrue(intake.intakeIntake()) // intake.intakeIntake
-    //                                                                                                 // TOBA--dont delete PLEASE PLEASE PLEASE
-    //     .onFalse(new RunCommand(intake::beltStop));
 
-     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()) // intake.intakeOuttake
-        .onFalse(new RunCommand(intake::beltStop));
-    new Trigger(() -> driverXbox.getBButton() && canIntake).whileTrue(intakeCommands.intakeIntake()) // intake.intakeOuttake
-        .onFalse(new RunCommand(intake::beltStop));
+    new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()) // intake.intakeOuttake
+      .onFalse(new RunCommand(intake::beltStop));
+    
+    new JoystickButton(driverXbox, XboxController.Button.kB.value)
+      .whileTrue(intakeCommands.intakeIntake().until(intake::isBeamBroken))
+      .onFalse(new RunCommand(intake::beltStop));
+   
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
-
-    new Trigger(() -> intake.isBeamBroken() && intake.isIntakeDown()).onTrue(new InstantCommand(()-> {
-      canIntake = false;
-    }));
-
-    new Trigger(() -> driverXbox.getBButtonReleased()).onTrue(new InstantCommand(()-> {
-      canIntake = true;
-    }));
 
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
     shooter.setDefaultCommand(shooterCommands.stopIt());
@@ -152,7 +142,6 @@ public class RobotContainer {
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
