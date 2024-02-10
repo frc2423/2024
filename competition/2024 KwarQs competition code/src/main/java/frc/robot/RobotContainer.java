@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterAngle;
 import frc.robot.subsystems.shooter.ShooterCommands;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -43,7 +44,6 @@ public class RobotContainer {
 
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(2);
   private boolean canIntake = true;
 
   // A chooser for autonomous commands
@@ -54,6 +54,7 @@ public class RobotContainer {
   XboxController driverXbox = new XboxController(0);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
+  ShooterAngle shooterAngle = new ShooterAngle();
   IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, intakeCommands);
 
@@ -67,6 +68,7 @@ public class RobotContainer {
     SmartDashboard.putData("Intake", intake);
     SmartDashboard.putData("SwerveSubsystem", drivebase);
     SmartDashboard.putData("Shooter", shooter);
+    SmartDashboard.putData("ShooterAngle", shooterAngle);
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
