@@ -1,26 +1,11 @@
 {
   "HALProvider": {
+    "DIO": {
+      "window": {
+        "visible": true
+      }
+    },
     "Other Devices": {
-      "SPARK MAX [2]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [4]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [5]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [7]": {
-        "header": {
-          "open": true
-        }
-      },
       "Talon FX (v6)[2]/Rotor Sensor": {
         "header": {
           "open": true
@@ -60,17 +45,23 @@
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
       "/LiveWindow/Ungrouped/Pigeon 2 [13]": "Gyro",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/Shuffleboard/Autonomous/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Intake": "Subsystem",
       "/SmartDashboard/Mech2d": "Mechanism2d",
+      "/SmartDashboard/Mech2dIntake": "Mechanism2d",
+      "/SmartDashboard/Mech2dShooterAngle": "Mechanism2d",
       "/SmartDashboard/Pigeon 2 (v6) [13]": "Gyro",
       "/SmartDashboard/Pigeon 2 [13]": "Gyro",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
+      "/SmartDashboard/Shooter": "Subsystem",
+      "/SmartDashboard/ShooterAngle": "Subsystem",
+      "/SmartDashboard/SwerveSubsystem": "Subsystem",
       "/SmartDashboard/navX-Sensor[1]": "Gyro",
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     },
     "windows": {
-      "/FMSInfo": {
+      "/Shuffleboard/Autonomous/SendableChooser[0]": {
         "window": {
           "visible": true
         }
@@ -98,7 +89,28 @@
           "visible": true
         }
       },
+      "/SmartDashboard/Intake": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Mech2d": {
+        "window": {
+          "name": "Intake Arm",
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Mech2dIntake": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Mech2dShooterAngle": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Shooter": {
         "window": {
           "visible": true
         }
@@ -111,6 +123,12 @@
         "Field": {
           "open": true
         },
+        "Intake": {
+          "open": true
+        },
+        "ShooterAngle": {
+          "open": true
+        },
         "open": true,
         "swerve": {
           "open": true
@@ -118,7 +136,7 @@
       }
     }
   },
-  "NetworkTables Info": {
-    "visible": true
+  "sourceNames": {
+    "DIO[8]": "intake sensor"
   }
 }

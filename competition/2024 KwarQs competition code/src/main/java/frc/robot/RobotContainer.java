@@ -13,12 +13,16 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterAngle;
+import frc.robot.subsystems.shooter.ShooterCommands;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -40,7 +44,7 @@ public class RobotContainer {
 
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(2);
+  private boolean canIntake = true;
 
   // A chooser for autonomous commands
   SendableChooser<String> m_chooser = new SendableChooser<>();
@@ -50,6 +54,9 @@ public class RobotContainer {
   XboxController driverXbox = new XboxController(0);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
+  ShooterAngle shooterAngle = new ShooterAngle();
+  IntakeCommands intakeCommands = new IntakeCommands(intake);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, intakeCommands);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -60,6 +67,8 @@ public class RobotContainer {
     intake.beltStop();
     SmartDashboard.putData("Intake", intake);
     SmartDashboard.putData("SwerveSubsystem", drivebase);
+    SmartDashboard.putData("Shooter", shooter);
+    SmartDashboard.putData("ShooterAngle", shooterAngle);
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
@@ -114,31 +123,27 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
     new JoystickButton(driverXbox, 1)
         .onTrue((new InstantCommand(drivebase::zeroGyro)));
-    // new JoystickButton(driverXbox, 3)
-    // .onTrue(new InstantCommand(drivebase::addFakeVisionReading));
     // new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new
     // InstantCommand(drivebase::lock, drivebase)));
 
-    new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(new RunCommand(intake::intake))
-        .onFalse(new RunCommand(intake::beltStop));
-    ;
-    new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(new RunCommand(intake::outtake))
-        .onFalse(new RunCommand(intake::beltStop));
-    ;
-    new JoystickButton(driverXbox, XboxController.Button.kA.value).onTrue(new RunCommand(intake::extend));
-    new JoystickButton(driverXbox, XboxController.Button.kX.value).onTrue(new RunCommand(intake::retract));
-    Command shooterCommand = shooter.revAndShoot();
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).onTrue(shooterCommand)
-        .onFalse(new RunCommand(() -> shooterCommand.cancel()));
+    new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()) // intake.intakeOuttake
+      .onFalse(new RunCommand(intake::beltStop));
+    
+    new JoystickButton(driverXbox, XboxController.Button.kB.value)
+      .whileTrue(intakeCommands.intakeIntakeUntil())
+      .onFalse(new RunCommand(intake::beltStop));
+   
+    new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
+    new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
+
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
+    shooter.setDefaultCommand(shooterCommands.stopIt());
   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
