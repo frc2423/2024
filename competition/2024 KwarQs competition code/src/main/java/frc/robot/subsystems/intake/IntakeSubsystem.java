@@ -14,6 +14,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
@@ -63,6 +65,8 @@ public class IntakeSubsystem extends SubsystemBase {
     private double maxPivotAngle = 225; // degrees
     private double minPivotAngle = 90; // still 
     private double intakeSpeed = .4;
+    public double isDoneSec = .5; // for revving not for shooting
+    public double isDoneShoot = 2; //sec
     
 
     public IntakeSubsystem() {
@@ -125,12 +129,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void intake() {
         // slurp the note
-        intakeSpeed = .4;
+        intakeSpeed = -.4;
     }
 
     public void outtake() {
         // spit the note out
-        intakeSpeed = -.4;
+        intakeSpeed = .4;
     }
 
     public void beltStop() {
@@ -234,6 +238,32 @@ public class IntakeSubsystem extends SubsystemBase {
         var command = Commands.run(() -> outtake(), this);
         command.setName("Intake Barf");
         return command;
+    }
+
+    public Command intakeInWithRevCommand() {
+        Timer timer = new Timer();
+        return new FunctionalCommand(
+                () -> {
+                timer.start(); 
+                timer.restart();
+                },
+                () -> intakeIntake(),
+                (interupted) -> {},
+                () -> timer.get() > isDoneSec ,
+                this);
+    }
+
+    public Command intakeOutWithShoot() {
+        Timer timer = new Timer();
+        return new FunctionalCommand(
+                () -> {
+                timer.start(); 
+                timer.restart();
+                },
+                () -> intakeIntake(),
+                (interupted) -> {},
+                () -> timer.get() > isDoneShoot,
+                this);
     }
 
     @Override

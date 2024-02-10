@@ -1,26 +1,11 @@
 {
   "HALProvider": {
+    "DIO": {
+      "window": {
+        "visible": true
+      }
+    },
     "Other Devices": {
-      "SPARK MAX [2]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [4]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [5]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [7]": {
-        "header": {
-          "open": true
-        }
-      },
       "Talon FX (v6)[2]/Rotor Sensor": {
         "header": {
           "open": true
@@ -73,7 +58,7 @@
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     },
     "windows": {
-      "/FMSInfo": {
+      "/Shuffleboard/Autonomous/SendableChooser[0]": {
         "window": {
           "visible": true
         }
@@ -108,6 +93,7 @@
       },
       "/SmartDashboard/Mech2d": {
         "window": {
+          "name": "Intake Arm",
           "visible": true
         }
       },
@@ -124,14 +110,13 @@
         "Field": {
           "open": true
         },
-        "open": true,
         "swerve": {
           "open": true
         }
       }
     }
   },
-  "NetworkTables Info": {
-    "visible": true
+  "sourceNames": {
+    "DIO[8]": "intake sensor"
   }
 }
