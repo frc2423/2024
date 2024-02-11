@@ -10,14 +10,32 @@
     },
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Autonomous/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Intake": "Subsystem",
       "/SmartDashboard/Mech2d": "Mechanism2d",
+      "/SmartDashboard/Mech2dIntake": "Mechanism2d",
+      "/SmartDashboard/Shooter": "Subsystem",
+      "/SmartDashboard/SwerveSubsystem": "Subsystem",
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
+    },
+    "windows": {
+      "/SmartDashboard/Intake": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Mech2dIntake": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Shooter": {
+        "window": {
+          "visible": true
+        }
+      }
     }
-  },
-  "NetworkTables Info": {
-    "visible": true
   },
   "NetworkTables Settings": {
     "mode": "Client (NT4)",
@@ -34,7 +52,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 332,
+          "height": 745,
           "series": [
             {
               "color": [

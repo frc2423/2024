@@ -47,8 +47,7 @@ public class IntakeSubsystem extends SubsystemBase {
     ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : 0.0015, 0, 0.0001,
             new TrapezoidProfile.Constraints(350, 350));// noice
     private final ArmFeedforward m_feedforward = new ArmFeedforward(
-            kSVolts, kGVolts,
-            kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
+           0.02, 0.047, 0, 0);
     private CANSparkMax beltMotor;
     private double downPositionDegrees = 90;// .7, 0.755
     private double intake_Offset = 0.05;
@@ -64,7 +63,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private double outputValue = 0;
     private double maxPivotAngle = 290; // degrees
     private double minPivotAngle = 90; // still 
-    private double intakeSpeed = .4;
+    private double intakeSpeed = .25;
     public double isDoneSec = .5; // for revving not for shooting
     public double isDoneShoot = 2; //sec
     
@@ -117,7 +116,6 @@ public class IntakeSubsystem extends SubsystemBase {
         isDown = true;
         intakeState = "Intaking";
         setpoint = Rotation2d.fromDegrees(downPositionDegrees);
-        System.out.println("EXTEND!");
 
     }
 
@@ -126,7 +124,6 @@ public class IntakeSubsystem extends SubsystemBase {
         isDown = false;
         intakeState = "Static";
         setpoint = Rotation2d.fromDegrees(upPositionDegrees);
-        System.out.println("RETRACT!");
 
     }
 
