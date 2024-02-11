@@ -1,5 +1,8 @@
 image: agalili/wpilib-2024:v1
 
+tasks:
+  - init: ./install-extensions.sh
+
 vscode:
   extensions:
     - vscjava.vscode-java-debug@0.55.2023121302
