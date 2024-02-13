@@ -56,7 +56,7 @@ public class RobotContainer {
   XboxController operator = new XboxController(1);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
-  ShooterAngle shooterAngle = new ShooterAngle();
+  // ShooterAngle shooterAngle = new ShooterAngle();
   IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, intakeCommands);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
@@ -71,7 +71,7 @@ public class RobotContainer {
     SmartDashboard.putData("Intake", intake);
     SmartDashboard.putData("SwerveSubsystem", drivebase);
     SmartDashboard.putData("Shooter", shooter);
-    SmartDashboard.putData("ShooterAngle", shooterAngle);
+    // SmartDashboard.putData("ShooterAngle", shooterAngle);
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
@@ -126,23 +126,24 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new JoystickButton(driverXbox, 1)
+    new JoystickButton(driverXbox, XboxController.Button.kStart.value)
         .onTrue((new InstantCommand(drivebase::zeroGyro)));
     // new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new
     // InstantCommand(drivebase::lock, drivebase)));
 
-    new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()) // intake.intakeOuttake
-      .onFalse(new RunCommand(intake::beltStop));
+    new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()); // intake.intakeOuttake
+      // .onFalse(new RunCommand(intake::beltStop));
     
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
-      .whileTrue(intakeCommands.intakeIntakeUntil())
-      .onFalse(new RunCommand(intake::beltStop));
+      .whileTrue(intakeCommands.intakeIntakeUntil());
+      // .onFalse(new RunCommand(intake::beltStop));
    
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
 
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
     shooter.setDefaultCommand(shooterCommands.stopIt());
+<<<<<<< HEAD
 
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value).whileTrue(shooterAngleCommands.moveShooterDown());
     new JoystickButton(operator, XboxController.Button.kRightBumper.value).whileTrue(shooterAngleCommands.moveShooterUp());
@@ -150,6 +151,9 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(shooterAngleCommands.feederAngleCommand());
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(shooterAngleCommands.climberAngleCommand());
+=======
+    intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
+>>>>>>> main
   }
 
   /**
