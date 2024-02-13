@@ -56,6 +56,7 @@ public class IntakeCommands {
             intakeIntake();
         }, intake).until(intake::isBeamBroken);
         command.setName("Intake untill");
+        System.out.println("Hello world!");
         return command;
     }
 }
