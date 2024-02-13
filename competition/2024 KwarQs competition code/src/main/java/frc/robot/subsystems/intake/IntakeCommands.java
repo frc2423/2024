@@ -31,7 +31,7 @@ public class IntakeCommands {
 
     public Command intakeOuttake() {
         var command = Commands.run(() -> intake.outtake(), intake);
-        command.setName("Intake Barf");
+        command.setName("Intake Spit");
         return command;
     }
 
