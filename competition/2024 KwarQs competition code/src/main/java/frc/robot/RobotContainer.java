@@ -54,7 +54,7 @@ public class RobotContainer {
   XboxController driverXbox = new XboxController(0);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
-  ShooterAngle shooterAngle = new ShooterAngle();
+  // ShooterAngle shooterAngle = new ShooterAngle();
   IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, intakeCommands);
 
@@ -68,7 +68,7 @@ public class RobotContainer {
     SmartDashboard.putData("Intake", intake);
     SmartDashboard.putData("SwerveSubsystem", drivebase);
     SmartDashboard.putData("Shooter", shooter);
-    SmartDashboard.putData("ShooterAngle", shooterAngle);
+    // SmartDashboard.putData("ShooterAngle", shooterAngle);
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
@@ -123,23 +123,24 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new JoystickButton(driverXbox, 1)
+    new JoystickButton(driverXbox, XboxController.Button.kStart.value)
         .onTrue((new InstantCommand(drivebase::zeroGyro)));
     // new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new
     // InstantCommand(drivebase::lock, drivebase)));
 
-    new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()) // intake.intakeOuttake
-      .onFalse(new RunCommand(intake::beltStop));
+    new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()); // intake.intakeOuttake
+      // .onFalse(new RunCommand(intake::beltStop));
     
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
-      .whileTrue(intakeCommands.intakeIntakeUntil())
-      .onFalse(new RunCommand(intake::beltStop));
+      .whileTrue(intakeCommands.intakeIntakeUntil());
+      // .onFalse(new RunCommand(intake::beltStop));
    
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
 
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
     shooter.setDefaultCommand(shooterCommands.stopIt());
+    intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
   }
 
   /**
