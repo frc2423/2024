@@ -70,7 +70,7 @@ public class RobotContainer {
     SmartDashboard.putData("Intake", intake);
     SmartDashboard.putData("SwerveSubsystem", drivebase);
     SmartDashboard.putData("Shooter", shooter);
-    // SmartDashboard.putData("ShooterAngle", shooterAngle);
+    SmartDashboard.putData("ShooterAngle", shooterAngle);
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");

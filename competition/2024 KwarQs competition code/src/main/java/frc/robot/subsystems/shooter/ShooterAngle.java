@@ -40,7 +40,7 @@ public class ShooterAngle extends SubsystemBase {
   private double pivotMotorPercent = 0;
   private Rotation2d pivotAngle = new Rotation2d(0);
   private final FlywheelSim pivotSimMotor = new FlywheelSim(DCMotor.getNEO(1), 6.75, 0.025);
-  ProfiledPIDController shooter_pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? 0.001 : .005, 0, 0,
+  ProfiledPIDController shooter_pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? 0.001 : 0, 0, 0,
       new TrapezoidProfile.Constraints(100, 200)); // 360, 420
   private double shooterPivotMotorPercent = 0;
   public static Rotation2d setpoint = Rotation2d.fromRadians(0); // Enter Rot2d value
@@ -49,21 +49,22 @@ public class ShooterAngle extends SubsystemBase {
   private static double maxShooterPivotAngle = 0;
   private static double minShooterPivotAngle = 0;
   private CANcoder shooterAngle; // figured out? i think
-  public static double feedAngle = 36; // put correct number pls
+  public static double feedAngle = 0.435; // put correct number pls
   public static double climbAngle = 245; // put correct number pls
   public static double shootAngle = 57; // not good, make good
 
   private final ArmFeedforward m_feedforward = new ArmFeedforward(
-      (Robot.isSimulation()) ? 0 : kSVolts, (Robot.isSimulation()) ? 0 : kGVolts,
-      kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
+      (Robot.isSimulation()) ? 0 : 0.00, (Robot.isSimulation()) ? 0 : 0.0001, 0, 0);
 
-//25 encoder 24 26 motors
+  // 25 encoder 24 26 motors
 
   /** Create a new ArmSubsystem. */
   public ShooterAngle() {
     shooterAngle = new CANcoder(25);
     shooter_Pivot = new CANSparkMax(26, CANSparkLowLevel.MotorType.kBrushless);
     shooter_Pivot2 = new CANSparkMax(24, CANSparkLowLevel.MotorType.kBrushless);
+
+    shooter_Pivot.setInverted(true);
 
     shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
     // Start arm at rest in neutral position
@@ -79,7 +80,7 @@ public class ShooterAngle extends SubsystemBase {
   }
 
   public void setAngle(double degrees) {
-    if (degrees < climbAngle + 5 && degrees > feedAngle-5){
+    if (degrees < climbAngle + 5 && degrees > feedAngle - 5) {
       setpoint = Rotation2d.fromDegrees(degrees);
     }
   }
@@ -90,7 +91,7 @@ public class ShooterAngle extends SubsystemBase {
     var setpoint = shooter_pivot_PID.getSetpoint();
     double feedforward = m_feedforward.calculate(Math.toRadians(shooterPivotAngle.getDegrees()), setpoint.velocity);
     // return feedforward + pid;
-    return pid;
+    return feedforward / RobotController.getBatteryVoltage();
   }
 
   private void updatePivotAngle() {
@@ -98,11 +99,11 @@ public class ShooterAngle extends SubsystemBase {
       var encoderRateSign = 1;
       var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() * encoderRateSign;
       pivotAngle = pivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
-      if (pivotAngle.getDegrees() < 0){
+      if (pivotAngle.getDegrees() < 0) {
         pivotAngle = Rotation2d.fromDegrees(360 + pivotAngle.getDegrees());
-    }
+      }
     } else {
-      double encoderPosition = shooterAngle.getAbsolutePosition().getValueAsDouble();
+      double encoderPosition = shooterAngle.getAbsolutePosition().getValueAsDouble() * 360 + 178;
       pivotAngle = Rotation2d.fromDegrees(encoderPosition);
     }
 
@@ -110,8 +111,8 @@ public class ShooterAngle extends SubsystemBase {
 
   private void setMotorPercent() {
     if (RobotBase.isSimulation() == false) {
-      shooter_Pivot.set(shooterPivotMotorPercent);
-      shooter_Pivot2.set(shooterPivotMotorPercent);
+      shooter_Pivot.set(.02);
+      shooter_Pivot2.set(.02);
     } else {
       pivotSimMotor.setInputVoltage(shooterPivotMotorPercent * RobotController.getBatteryVoltage());
       pivotSimMotor.update(.02);
