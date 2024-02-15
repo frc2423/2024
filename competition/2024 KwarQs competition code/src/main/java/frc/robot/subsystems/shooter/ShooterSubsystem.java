@@ -12,6 +12,8 @@ package frc.robot.subsystems.shooter;
 
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.devices.NeoMotor;
@@ -23,10 +25,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private NeoMotor shooterMotorOne;
     private NeoMotor shooterMotorTwo;
-    private double shooterSpeed = -.70;
-    private double shooterSpeed2 = -.70;
+    private double shooterSpeed = -4.8 ;
+    private double shooterSpeed2 = -4.8 ;
     public static Timer timer;
-    public static double feederVoltage = -11.5;
+    public static double feederVoltage = -RobotController.getBatteryVoltage();
+    public static double feederFlopVoltage = 4;
     private final CANSparkMax feeder_Motor;
     public static final int kFeederMotorPort = 23;
     public double feederOnSec = 1.5;
@@ -47,8 +50,8 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void shooterOn() {
-        shooterMotorOne.setSpeed(shooterSpeed);
-        shooterMotorTwo.setSpeed(shooterSpeed2);
+        shooterMotorOne.setSpeed(shooterSpeed/ RobotController.getBatteryVoltage());
+        shooterMotorTwo.setSpeed(shooterSpeed2 / RobotController.getBatteryVoltage());
     }
 
     // stops the shooter
@@ -77,6 +80,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void moveFeederMotor() {
         feeder_Motor.setVoltage(feederVoltage);
+    }
+
+    public void moveFeederMotorBackwards() {
+        feeder_Motor.setVoltage(feederFlopVoltage);
     }
 
     public void stopFeederMotor() {

@@ -114,25 +114,24 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/ShooterAngle": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },
   "NetworkTables": {
     "transitory": {
       "SmartDashboard": {
-        "Field": {
-          "open": true
-        },
         "Intake": {
           "open": true
         },
         "ShooterAngle": {
           "open": true
         },
-        "open": true,
-        "swerve": {
-          "open": true
-        }
+        "open": true
       }
     }
   },

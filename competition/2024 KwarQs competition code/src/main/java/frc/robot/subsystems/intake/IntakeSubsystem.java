@@ -105,7 +105,6 @@ public class IntakeSubsystem extends SubsystemBase {
         isDown = true;
         intakeState = "Intaking";
         setpoint = Rotation2d.fromDegrees(downPositionDegrees);
-
     }
 
     public void retract() {
@@ -113,7 +112,6 @@ public class IntakeSubsystem extends SubsystemBase {
         isDown = false;
         intakeState = "Static";
         setpoint = Rotation2d.fromDegrees(upPositionDegrees);
-
     }
 
     public void intake() {
@@ -172,6 +170,7 @@ public class IntakeSubsystem extends SubsystemBase {
         double maxSpeed = .5;
         pivotMotorPercent = Math.max(Math.min(maxSpeed, pivotMotorPercent), -maxSpeed);
 
+        // m_Pivot.set(pivotMotorPercent);
         m_Pivot.set(pivotMotorPercent);
 
         // double m_Pivot_Pos = getMeasurement();

@@ -38,41 +38,42 @@ public class ShooterAngle extends SubsystemBase {
   private static final int kMotorPort = 26; // right side
   private MechanismLigament2d pivot;
   private double pivotMotorPercent = 0;
-  private Rotation2d pivotAngle = new Rotation2d(0);
   private final FlywheelSim pivotSimMotor = new FlywheelSim(DCMotor.getNEO(1), 6.75, 0.025);
-  ProfiledPIDController shooter_pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? 0.001 : .005, 0, 0,
-      new TrapezoidProfile.Constraints(100, 200)); // 360, 420
+  ProfiledPIDController shooter_pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? 0.001 : 0.32, 0, 0,
+      new TrapezoidProfile.Constraints(270, 400)); // 360, 420
   private double shooterPivotMotorPercent = 0;
-  private static Rotation2d setpoint = Rotation2d.fromRadians(0); // Enter Rot2d value
-  private static double shoot = 0;
   private Rotation2d shooterPivotAngle = new Rotation2d(0);
   private static double maxShooterPivotAngle = 0;
   private static double minShooterPivotAngle = 0;
   private CANcoder shooterAngle; // figured out? i think
-  private static double feedAngle = 36; // put correct number pls
-  private static double climbAngle = 245; // put correct number pls
-  private static double shootAngle = 57; // not good, make good
+  public static double feedAngle = 334; // is correct number now
+  public static double climbAngle = 205; // is correct number now
+  public static double shootAngle = 334; // is good
+  public static double ampAngle = 148; // maybe good
+
+  public static Rotation2d setpoint = Rotation2d.fromDegrees(feedAngle); // Enter Rot2d value
+
 
   private final ArmFeedforward m_feedforward = new ArmFeedforward(
-      (Robot.isSimulation()) ? 0 : kSVolts, (Robot.isSimulation()) ? 0 : kGVolts,
-      kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
+      (Robot.isSimulation()) ? 0 : 0.01 * 12, (Robot.isSimulation()) ? 0 : 0.02 * 12, 0, 0);
+
+  // 25 encoder 24 26 motors
 
   /** Create a new ArmSubsystem. */
   public ShooterAngle() {
     shooterAngle = new CANcoder(25);
-    shooter_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
-    shooter_Pivot2 = new CANSparkMax(kMotorPort + 1, CANSparkLowLevel.MotorType.kBrushless);
+    shooter_Pivot = new CANSparkMax(26, CANSparkLowLevel.MotorType.kBrushless);
+    shooter_Pivot2 = new CANSparkMax(24, CANSparkLowLevel.MotorType.kBrushless);
+
+    shooter_Pivot.setInverted(true);
 
     shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
-    shooter_pivot_PID.enableContinuousInput(-180 , 180);
-    // Start arm at rest in neutral position
-    setpoint = Rotation2d.fromRadians(shoot);
 
     Mechanism2d mech = new Mechanism2d(3, 3);
     // the mechanism root node
     MechanismRoot2d arm = mech.getRoot("shooter", 1.5, 0.5);
     pivot = arm.append(
-        new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kOrange)));
+        new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kCyan)));
     SmartDashboard.putData("Mech2dShooterAngle", mech);
     pivotSimMotor.setInput(0);
   }
@@ -83,21 +84,24 @@ public class ShooterAngle extends SubsystemBase {
 
   private double calculatePid(Rotation2d angle) {
     updatePivotAngle();
-    double pid = shooter_pivot_PID.calculate(pivotAngle.getDegrees(), angle.getDegrees());
+    double pid = shooter_pivot_PID.calculate(shooterPivotAngle.getDegrees(), angle.getDegrees());
     var setpoint = shooter_pivot_PID.getSetpoint();
-    double feedforward = m_feedforward.calculate(Math.toRadians(shooterPivotAngle.getDegrees()), setpoint.velocity);
+    double feedforward = m_feedforward.calculate(Math.toRadians(shooterPivotAngle.getDegrees() - 70), setpoint.velocity);
     // return feedforward + pid;
-    return pid;
+    return (feedforward + pid)/ RobotController.getBatteryVoltage();
   }
 
   private void updatePivotAngle() {
     if (RobotBase.isSimulation()) {
       var encoderRateSign = 1;
       var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() * encoderRateSign;
-      pivotAngle = pivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
+      shooterPivotAngle = shooterPivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
+      if (shooterPivotAngle.getDegrees() < 0) {
+        shooterPivotAngle = Rotation2d.fromDegrees(360 + shooterPivotAngle.getDegrees());
+      }
     } else {
-      double encoderPosition = shooterAngle.getAbsolutePosition().getValueAsDouble();
-      pivotAngle = Rotation2d.fromDegrees(encoderPosition);
+      double encoderPosition = shooterAngle.getAbsolutePosition().getValueAsDouble() * 360 + 178;
+      shooterPivotAngle = Rotation2d.fromDegrees(encoderPosition);
     }
 
   }
@@ -115,7 +119,7 @@ public class ShooterAngle extends SubsystemBase {
   @Override
   public void periodic() {
     shooterPivotMotorPercent = calculatePid(setpoint);
-    pivot.setAngle(-pivotAngle.getDegrees() - 90);
+    pivot.setAngle(-shooterPivotAngle.getDegrees() - 90);
     // if (shooterPivotAngle.getDegrees() > maxShooterPivotAngle) {
     // shooterPivotMotorPercent = Math.min(shooterPivotMotorPercent, 0);
     // } else if (shooterPivotAngle.getDegrees() < minShooterPivotAngle) {
@@ -129,21 +133,6 @@ public class ShooterAngle extends SubsystemBase {
     setMotorPercent();
   }
 
-  public Command feederAngleCommand() {
-    return this.runOnce(() -> this.setAngle(feedAngle));
-    // put in actual value
-  }
-
-  public Command climberAngleCommand() {
-    return this.runOnce(() -> this.setAngle(climbAngle));
-    // put in actual value
-  }
-
-  public Command shooterAngleCommand() {
-    return this.runOnce(() -> this.setAngle(shootAngle));
-    // put in actual value
-  }
-
   @Override
   public void initSendable(SendableBuilder builder) {
     // This is used to add things to NetworkTables
@@ -153,7 +142,7 @@ public class ShooterAngle extends SubsystemBase {
       setpoint = Rotation2d.fromDegrees(angle);
     });
     builder.addDoubleProperty("MotorPercentage", () -> shooterPivotMotorPercent, null);
-    builder.addDoubleProperty("Angle", () -> pivotAngle.getDegrees(), null);
+    builder.addDoubleProperty("Angle", () -> shooterPivotAngle.getDegrees(), null);
     builder.addDoubleProperty("Error", () -> shooter_pivot_PID.getPositionError(), null);
 
   }

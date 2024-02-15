@@ -31,6 +31,18 @@ public class ShooterCommands {
         return command;
     }
 
+    public Command shootAmp() {
+        var command = Commands.run(() -> shooter.moveFeederMotorBackwards(), shooter);
+        command.setName("Shooting amp");
+        return command;
+    }
+
+    public Command moveFeedMotor() {
+        var command = Commands.run(() -> shooter.moveFeederMotor(), shooter).withTimeout(.1);
+        command.setName("Feeding");
+        return command;
+    }
+
     public Command shoot() {
         var command = Commands.run(() -> {
             shooter.moveFeederMotor();
@@ -55,6 +67,18 @@ public class ShooterCommands {
         shooterCommand.setName("Rev,Intake,Shoot");
         return shooterCommand;
     }
+
+    public Command flopAmpCommand() {
+        var command = Commands.sequence(
+            intake.intakeInWithRevCommand(),
+            Commands.parallel(moveFeedMotor(),intake.intakeOutWithFeedCommand()),
+            intake.intakeDown()
+        );
+        command.setName("Get ready to flop");
+        return command;
+    }
+
+
 
 
 }

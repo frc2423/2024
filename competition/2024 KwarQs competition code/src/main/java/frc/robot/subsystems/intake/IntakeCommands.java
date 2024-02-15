@@ -42,6 +42,13 @@ public class IntakeCommands {
         return command;
     }
 
+    public Command intakeOutWithFeedCommand() {
+        var command = intakeOuttake().withTimeout(0.1)
+                .withTimeout(intake.isDoneSec);
+        command.setName("Intake out Fed");
+        return command;
+    }
+
     public Command intakeOutWithShoot() {
         var command = intakeOuttake().withTimeout(intake.isDoneShoot);
         command.setName("Intake Out To Shoot");
