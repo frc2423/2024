@@ -143,11 +143,15 @@ public class RobotContainer {
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
     shooter.setDefaultCommand(shooterCommands.stopIt());
 
+    new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootAmp());
+    shooter.setDefaultCommand(shooterCommands.stopIt());
+
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value).whileTrue(shooterAngleCommands.moveShooterDown());
     new JoystickButton(operator, XboxController.Button.kRightBumper.value).whileTrue(shooterAngleCommands.moveShooterUp());
     
     new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(shooterAngleCommands.feederAngleCommand());
+    new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(shooterAngleCommands.ampAngleCommand());
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(shooterAngleCommands.climberAngleCommand());
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
   }

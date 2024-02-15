@@ -31,6 +31,13 @@ public class ShooterAngleCommands {
     return command;
   }
 
+    public Command ampAngleCommand() {
+    var command = shooterAngle.runOnce(() -> shooterAngle.setAngle(shooterAngle.ampAngle));
+    // put in actual value
+    command.setName("Amp Angle");
+    return command;
+  }
+
   public Command moveShooterUp(){
     var command = shooterAngle.runOnce(() -> shooterAngle.setAngle(shooterAngle.setpoint.getDegrees() + 5));
     command.setName("Move Shooter Up");
