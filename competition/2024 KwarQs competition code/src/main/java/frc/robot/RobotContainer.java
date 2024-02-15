@@ -28,6 +28,8 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a "declarative" paradigm, very
@@ -77,6 +79,8 @@ public class RobotContainer {
     m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
     m_chooser.addOption("Yo Auto", "Yo Auto");
     m_chooser.addOption("YoYo Auto", "YoYo Auto");
+    m_chooser.addOption("Left Yo Auto", "Left Yo Auto");
+    m_chooser.addOption("Test Auto", "Test Auto");
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -121,6 +125,10 @@ public class RobotContainer {
     // auto commands
     // EXAMPLE: NamedCommands.registerCommand("useless",
     // exampleSubsystem.exampleCommand());
+NamedCommands.registerCommand("RevvvvvandShoot", shooterCommands.revAndShoot());
+NamedCommands.registerCommand("IntakeSlurp", intakeCommands.intakeIntake());
+NamedCommands.registerCommand("IntakeDown", intakeCommands.intakeDown());
+NamedCommands.registerCommand("IntakeUntill", intakeCommands.intakeIntakeUntil());
 
   }
 
