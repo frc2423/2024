@@ -5,6 +5,9 @@
         "Intake": {
           "open": true
         },
+        "ShooterAngle": {
+          "open": true
+        },
         "open": true
       }
     },
@@ -15,7 +18,9 @@
       "/SmartDashboard/Intake": "Subsystem",
       "/SmartDashboard/Mech2d": "Mechanism2d",
       "/SmartDashboard/Mech2dIntake": "Mechanism2d",
+      "/SmartDashboard/Mech2dShooterAngle": "Mechanism2d",
       "/SmartDashboard/Shooter": "Subsystem",
+      "/SmartDashboard/ShooterAngle": "Subsystem",
       "/SmartDashboard/SwerveSubsystem": "Subsystem",
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     },
@@ -37,10 +42,12 @@
       }
     }
   },
+  "NetworkTables Info": {
+    "visible": true
+  },
   "NetworkTables Settings": {
     "mode": "Client (NT4)",
-    "serverTeam": "2423",
-    "visible": false
+    "serverTeam": "2423"
   },
   "Plots": {
     "Plot <0>": {
@@ -52,7 +59,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 745,
+          "height": -46,
           "series": [
             {
               "color": [

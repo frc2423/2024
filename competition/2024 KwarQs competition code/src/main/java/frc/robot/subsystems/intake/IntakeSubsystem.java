@@ -170,7 +170,6 @@ public class IntakeSubsystem extends SubsystemBase {
         double maxSpeed = .5;
         pivotMotorPercent = Math.max(Math.min(maxSpeed, pivotMotorPercent), -maxSpeed);
 
-        // m_Pivot.set(pivotMotorPercent);
         m_Pivot.set(pivotMotorPercent);
 
         // double m_Pivot_Pos = getMeasurement();
