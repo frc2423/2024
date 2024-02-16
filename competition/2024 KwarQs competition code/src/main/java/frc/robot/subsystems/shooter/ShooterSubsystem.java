@@ -25,8 +25,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private NeoMotor shooterMotorOne;
     private NeoMotor shooterMotorTwo;
-    private double shooterSpeed = -4.8 ;
-    private double shooterSpeed2 = -4.8 ;
+    private double shooterSpeed = -4.3 ;
+    private double shooterSpeed2 = -4.3 ;
     public static Timer timer;
     public static double feederVoltage = -RobotController.getBatteryVoltage();
     public static double feederFlopVoltage = 4;
