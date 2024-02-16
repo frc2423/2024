@@ -175,6 +175,8 @@ NamedCommands.registerCommand("IntakeUp", intakeCommands.intakeUp().withTimeout(
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
+
+    new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.flopAmpCommand());
   }
 
   /**
