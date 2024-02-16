@@ -25,6 +25,7 @@ import frc.robot.subsystems.shooter.ShooterAngle;
 import frc.robot.subsystems.shooter.ShooterAngleCommands;
 import frc.robot.subsystems.shooter.ShooterCommands;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
@@ -56,9 +57,11 @@ public class RobotContainer {
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
   ShooterAngle shooterAngle = new ShooterAngle();
+  //SwerveSubsystem swerve = new SwerveSubsystem();
   IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, intakeCommands);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
+  SwerveCommands swerveCommands = new SwerveCommands(drivebase);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -111,7 +114,7 @@ public class RobotContainer {
               OperatorConstants.LEFT_X_DEADBAND);
           return m_xspeedLimiter.calculate(x);
         },
-        () -> driverXbox.getRawAxis(2));
+        () -> driverXbox.getRawAxis(4));
 
     drivebase.setDefaultCommand(
         !RobotBase.isSimulation()
@@ -139,20 +142,26 @@ public class RobotContainer {
    
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
+    new JoystickButton(driverXbox, XboxController.Button.kRightBumper.value).whileTrue(shooterAngleCommands.moveShooterDown());
+    new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value).whileTrue(shooterAngleCommands.moveShooterUp());
+
 
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
     shooter.setDefaultCommand(shooterCommands.stopIt());
+   
+    // new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(swerveCommands.setSlowMaxSpeed());
+    // // drivebase.setDefaultCommand(swerveCommands.setHighMaxSpeed());
 
-    new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootAmp());
-    shooter.setDefaultCommand(shooterCommands.stopIt());
+    // new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootAmp());
+    // shooter.setDefaultCommand(shooterCommands.stopIt());
 
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value).whileTrue(shooterAngleCommands.moveShooterDown());
     new JoystickButton(operator, XboxController.Button.kRightBumper.value).whileTrue(shooterAngleCommands.moveShooterUp());
     
-    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(shooterAngleCommands.shooterAngleCommand());
-    new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(shooterAngleCommands.feederAngleCommand());
-    new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(shooterAngleCommands.ampAngleCommand());
-    new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(shooterAngleCommands.climberAngleCommand());
+    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
+    new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(intakeCommands.intakeIntakeUntil());
+    new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
+    new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
   }
 
