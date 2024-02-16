@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3576779647621067,
-      "y": 5.537862667174266
+      "x": 5.0,
+      "y": 5.0
     },
-    "rotation": 0
+    "rotation": 40.0
   },
   "command": {
     "type": "sequential",
@@ -18,9 +18,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 2.0
+            "pathName": "random path"
           }
         },
         {
@@ -30,22 +30,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Retrieve"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeUntill"
-                }
-              }
-            ]
+            "name": "IntakeSlurp"
           }
         }
       ]

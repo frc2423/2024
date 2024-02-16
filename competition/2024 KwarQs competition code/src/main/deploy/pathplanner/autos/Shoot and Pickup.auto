@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3576779647621067,
-      "y": 5.537862667174266
+      "x": 0.67,
+      "y": 4.27
     },
-    "rotation": 0
+    "rotation": -12.199999999999989
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RevvvvvandShoot"
+            "name": "Revvvvv and Shoot"
           }
         },
         {
@@ -26,26 +26,19 @@
         {
           "type": "named",
           "data": {
-            "name": "IntakeDown"
+            "name": "Intake Down"
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Retrieve"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeUntill"
-                }
-              }
-            ]
+            "name": "Intake Slurp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": null
           }
         }
       ]

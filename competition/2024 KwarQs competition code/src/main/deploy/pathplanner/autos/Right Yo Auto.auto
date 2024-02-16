@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3576779647621067,
-      "y": 5.537862667174266
+      "x": 0.72,
+      "y": 6.7
     },
-    "rotation": 0
+    "rotation": 27.86
   },
   "command": {
     "type": "sequential",
@@ -36,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Retrieve"
+                  "pathName": "Right Retrieve"
                 }
               },
               {

@@ -29,6 +29,8 @@ import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a "declarative" paradigm, very
@@ -59,8 +61,8 @@ public class RobotContainer {
   ShooterAngle shooterAngle = new ShooterAngle();
   //SwerveSubsystem swerve = new SwerveSubsystem();
   IntakeCommands intakeCommands = new IntakeCommands(intake);
-  ShooterCommands shooterCommands = new ShooterCommands(shooter, intakeCommands);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
 
   /**
@@ -80,6 +82,11 @@ public class RobotContainer {
     m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
     m_chooser.addOption("Yo Auto", "Yo Auto");
     m_chooser.addOption("YoYo Auto", "YoYo Auto");
+    m_chooser.addOption("Left Yo Auto", "Left Yo Auto");
+    m_chooser.addOption("Test Auto", "Test Auto");
+    m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
+    m_chooser.addOption("Right Yo Auto", "Right Yo Auto");
+
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -124,6 +131,11 @@ public class RobotContainer {
     // auto commands
     // EXAMPLE: NamedCommands.registerCommand("useless",
     // exampleSubsystem.exampleCommand());
+NamedCommands.registerCommand("RevvvvvandShoot", shooterCommands.shooterCommand());
+NamedCommands.registerCommand("IntakeSlurp", intakeCommands.intakeIntake());
+NamedCommands.registerCommand("IntakeDown", intakeCommands.intakeDown().withTimeout(0.01));
+NamedCommands.registerCommand("IntakeUntill", intakeCommands.intakeIntakeUntil());
+NamedCommands.registerCommand("IntakeUp", intakeCommands.intakeUp().withTimeout(0.01));
 
   }
 
