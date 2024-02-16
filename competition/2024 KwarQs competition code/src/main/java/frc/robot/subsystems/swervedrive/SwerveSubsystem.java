@@ -472,4 +472,12 @@ public class SwerveSubsystem extends SubsystemBase {
         super.initSendable(builder);
         builder.addDoubleProperty("Front Left Speed", () -> swerveDrive.getStates()[0].speedMetersPerSecond, null);
   }
+
+  public void setSlowMaxSpeed() {
+    maximumSpeed = 2;
+  }
+
+  public void setHighMaxSpeed() {
+    maximumSpeed = 4.5;
+  }
 }
