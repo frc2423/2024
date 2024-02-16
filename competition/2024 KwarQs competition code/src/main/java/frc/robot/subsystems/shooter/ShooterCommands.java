@@ -10,11 +10,13 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 public class ShooterCommands {
 
     private ShooterSubsystem shooter;
+    private ShooterAngleCommands shooterAngle;
     private IntakeCommands intake;
 
-    public ShooterCommands(ShooterSubsystem shooter, IntakeCommands intake) {
+    public ShooterCommands(ShooterSubsystem shooter, ShooterAngleCommands shooterAngle, IntakeCommands intake) {
         this.shooter = shooter;
         this.intake = intake;
+        this.shooterAngle = shooterAngle;
     }
 
     public Command rev() {
@@ -72,7 +74,8 @@ public class ShooterCommands {
         var command = Commands.sequence(
             intake.intakeInWithRevCommand(),
             Commands.parallel(moveFeedMotor(),intake.intakeOutWithFeedCommand()),
-            intake.intakeDown()
+            intake.intakeDown(),
+            shooterAngle.ampAngleCommand()
         );
         command.setName("Get ready to flop");
         return command;

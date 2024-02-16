@@ -59,7 +59,7 @@ public class RobotContainer {
   ShooterSubsystem shooter = new ShooterSubsystem();
   ShooterAngle shooterAngle = new ShooterAngle();
   IntakeCommands intakeCommands = new IntakeCommands(intake);
-  ShooterCommands shooterCommands = new ShooterCommands(shooter, intakeCommands);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, Sh, intakeCommands);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
 
   /**
