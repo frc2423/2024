@@ -59,8 +59,8 @@ public class RobotContainer {
   ShooterSubsystem shooter = new ShooterSubsystem();
   ShooterAngle shooterAngle = new ShooterAngle();
   IntakeCommands intakeCommands = new IntakeCommands(intake);
-  ShooterCommands shooterCommands = new ShooterCommands(shooter, Sh, intakeCommands);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
