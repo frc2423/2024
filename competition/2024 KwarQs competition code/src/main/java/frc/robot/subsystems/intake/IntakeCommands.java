@@ -56,7 +56,7 @@ public class IntakeCommands {
     }
 
     public Command intakeIntakeUntil() {
-        var command =   intakeIntake().until(intake::isBeamBroken);
+        var command = intakeIntake().until(intake::isBeamBroken);
         command.setName("Intake untill");
         System.out.println("Hello world!");
         return command;

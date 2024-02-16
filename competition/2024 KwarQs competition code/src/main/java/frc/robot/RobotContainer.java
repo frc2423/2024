@@ -81,6 +81,9 @@ public class RobotContainer {
     m_chooser.addOption("YoYo Auto", "YoYo Auto");
     m_chooser.addOption("Left Yo Auto", "Left Yo Auto");
     m_chooser.addOption("Test Auto", "Test Auto");
+    m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
+    m_chooser.addOption("Right Yo Auto", "Right Yo Auto");
+
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -125,10 +128,11 @@ public class RobotContainer {
     // auto commands
     // EXAMPLE: NamedCommands.registerCommand("useless",
     // exampleSubsystem.exampleCommand());
-NamedCommands.registerCommand("RevvvvvandShoot", shooterCommands.revAndShoot());
+NamedCommands.registerCommand("RevvvvvandShoot", shooterCommands.shooterCommand());
 NamedCommands.registerCommand("IntakeSlurp", intakeCommands.intakeIntake());
-NamedCommands.registerCommand("IntakeDown", intakeCommands.intakeDown());
+NamedCommands.registerCommand("IntakeDown", intakeCommands.intakeDown().withTimeout(0.01));
 NamedCommands.registerCommand("IntakeUntill", intakeCommands.intakeIntakeUntil());
+NamedCommands.registerCommand("IntakeUp", intakeCommands.intakeUp().withTimeout(0.01));
 
   }
 

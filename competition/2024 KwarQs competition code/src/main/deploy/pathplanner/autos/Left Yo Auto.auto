@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.49,
-      "y": 4.11
+      "x": 0.7167669684840067,
+      "y": 4.403274541213847
     },
-    "rotation": -18.430000000000007
+    "rotation": -58.29857033049434
   },
   "command": {
     "type": "sequential",
@@ -26,13 +26,26 @@
         {
           "type": "named",
           "data": {
-            "name": "IntakeUntill"
+            "name": "IntakeDown"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Left Retrieve"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Retrieve"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeUntill"
+                }
+              }
+            ]
           }
         }
       ]

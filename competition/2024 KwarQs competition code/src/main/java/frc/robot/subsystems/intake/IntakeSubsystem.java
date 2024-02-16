@@ -73,6 +73,7 @@ public class IntakeSubsystem extends SubsystemBase {
         pivot = arm.append(
                 new MechanismLigament2d("pivot", Units.inchesToMeters(21), 0, 10, new Color8Bit(Color.kOrange)));
         SmartDashboard.putData("Mech2dIntake", mech);
+        setSetpointToCurrentAngle();
         pivotSimMotor.setInput(0);
 
     }
@@ -81,8 +82,13 @@ public class IntakeSubsystem extends SubsystemBase {
         updatePivotAngle();
         double pid = pivot_PID.calculate(pivotAngle.getDegrees(), angle.getDegrees());
         var setpoint = pivot_PID.getSetpoint();
-        double feedforward = m_feedforward.calculate(Math.toRadians(pivotAngle.getDegrees() - 100), 10);
+        double feedforward = m_feedforward.calculate(Math.toRadians(pivotAngle.getDegrees() - 100), setpoint.velocity);
         return feedforward + pid;
+    }
+
+    private void setSetpointToCurrentAngle() {
+        updatePivotAngle();
+        setpoint = pivotAngle;
     }
 
     private void updatePivotAngle() {
@@ -148,10 +154,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (RobotState.isDisabled()) {
-            return;
-        }
-
         // This method will be called once per scheduler run moo
         pivotMotorPercent = calculatePid(setpoint);
 
