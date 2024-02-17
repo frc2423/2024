@@ -58,7 +58,7 @@ public class RobotContainer {
   XboxController operator = new XboxController(1);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
-  ShooterAngle shooterAngle = new ShooterAngle();
+  ShooterAngle shooterAngle = new ShooterAngle(intake);
   //SwerveSubsystem swerve = new SwerveSubsystem();
   IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
@@ -161,8 +161,10 @@ NamedCommands.registerCommand("IntakeUp", intakeCommands.intakeUp().withTimeout(
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
     shooter.setDefaultCommand(shooterCommands.stopIt());
    
-    // new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(swerveCommands.setSlowMaxSpeed());
-    // // drivebase.setDefaultCommand(swerveCommands.setHighMaxSpeed());
+    new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
+    new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
+    new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
+   
 
     // new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootAmp());
     // shooter.setDefaultCommand(shooterCommands.stopIt());

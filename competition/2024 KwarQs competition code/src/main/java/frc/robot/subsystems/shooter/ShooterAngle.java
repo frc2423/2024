@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -52,6 +53,7 @@ public class ShooterAngle extends SubsystemBase {
   public static double climbAngle = 205; // is correct number now
   public static double shootAngle = 334; // is good
   public static double ampAngle = 148; // maybe good
+  private IntakeSubsystem intake;
 
   public static Rotation2d setpoint = Rotation2d.fromDegrees(feedAngle); // Enter Rot2d value
 
@@ -61,7 +63,8 @@ public class ShooterAngle extends SubsystemBase {
   // 25 encoder 24 26 motors
 
   /** Create a new ArmSubsystem. */
-  public ShooterAngle() {
+  public ShooterAngle(IntakeSubsystem intake) {
+    this.intake = intake;
     shooterAngle = new CANcoder(25);
     shooter_Pivot = new CANSparkMax(26, CANSparkLowLevel.MotorType.kBrushless);
     shooter_Pivot2 = new CANSparkMax(24, CANSparkLowLevel.MotorType.kBrushless);
@@ -122,6 +125,11 @@ public class ShooterAngle extends SubsystemBase {
   public void periodic() {
     shooterPivotMotorPercent = calculatePid(setpoint);
     pivot.setAngle(-shooterPivotAngle.getDegrees() - 90);
+    
+    if(intake.isIntakeDown() == false){
+      shooterPivotMotorPercent = Math.min(shooterPivotMotorPercent, 0);
+    }
+
     if (shooterPivotAngle.getDegrees() > maxShooterPivotAngle) {
       shooterPivotMotorPercent = Math.min(shooterPivotMotorPercent, 0);
     } else if (shooterPivotAngle.getDegrees() < minShooterPivotAngle) {
