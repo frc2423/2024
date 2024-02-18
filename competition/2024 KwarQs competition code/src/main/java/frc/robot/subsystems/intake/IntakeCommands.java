@@ -18,7 +18,11 @@ public class IntakeCommands {
     }
 
     public Command intakeUp() {
-        var command = Commands.run(() -> intake.retract(), intake);
+        var command = Commands.run(() -> {
+            intake.retract();
+                    System.out.println("INTAKE UP");
+
+        }, intake);
         command.setName("Intake Up");
         return command;
     }
@@ -58,7 +62,11 @@ public class IntakeCommands {
     public Command intakeIntakeUntil() {
         var command = intakeIntake().until(intake::isBeamBroken);
         command.setName("Intake untill");
-        System.out.println("Hello world!");
+        return command;
+    }
+
+    public Command beltStopCommand() {
+        var command = Commands.runOnce(intake::beltStop, intake);
         return command;
     }
 }

@@ -131,11 +131,11 @@ public class RobotContainer {
     // auto commands
     // EXAMPLE: NamedCommands.registerCommand("useless",
     // exampleSubsystem.exampleCommand());
-NamedCommands.registerCommand("RevvvvvandShoot", shooterCommands.shooterCommand());
+NamedCommands.registerCommand("RevvvvvandShoot", shooterCommands.shooterCommand().andThen(shooterCommands.stopIt().withTimeout(.1)));
 NamedCommands.registerCommand("IntakeSlurp", intakeCommands.intakeIntake());
 NamedCommands.registerCommand("IntakeDown", intakeCommands.intakeDown().withTimeout(0.01));
-NamedCommands.registerCommand("IntakeUntill", intakeCommands.intakeIntakeUntil());
-NamedCommands.registerCommand("IntakeUp", intakeCommands.intakeUp().withTimeout(0.01));
+NamedCommands.registerCommand("IntakeUntill", intakeCommands.intakeIntakeUntil().andThen(intakeCommands.beltStopCommand()));
+NamedCommands.registerCommand("IntakeUp", intakeCommands.intakeUp().withTimeout(2));
 
   }
 
