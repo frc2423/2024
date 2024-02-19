@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterAngle;
@@ -59,7 +60,6 @@ public class RobotContainer {
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
   ShooterAngle shooterAngle = new ShooterAngle(intake);
-  //SwerveSubsystem swerve = new SwerveSubsystem();
   IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands);
@@ -86,7 +86,6 @@ public class RobotContainer {
     m_chooser.addOption("Test Auto", "Test Auto");
     m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
     m_chooser.addOption("Right Yo Auto", "Right Yo Auto");
-
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -131,11 +130,17 @@ public class RobotContainer {
     // auto commands
     // EXAMPLE: NamedCommands.registerCommand("useless",
     // exampleSubsystem.exampleCommand());
-NamedCommands.registerCommand("RevvvvvandShoot", shooterCommands.shooterCommand().andThen(shooterCommands.stopIt().withTimeout(.1)));
-NamedCommands.registerCommand("IntakeSlurp", intakeCommands.intakeIntake());
-NamedCommands.registerCommand("IntakeDown", intakeCommands.intakeDown().withTimeout(0.01));
-NamedCommands.registerCommand("IntakeUntill", intakeCommands.intakeIntakeUntil().andThen(intakeCommands.beltStopCommand()));
-NamedCommands.registerCommand("IntakeUp", intakeCommands.intakeUp().withTimeout(2));
+    NamedCommands.registerCommand("RevvvvvandShoot",
+        new LoggedCommand(shooterCommands.shooterCommand().andThen(shooterCommands.stopIt().withTimeout(.1))
+            .withName("RevvvvvandShoot auto")));
+
+    NamedCommands.registerCommand("IntakeSlurp",
+        new LoggedCommand(intakeCommands.intakeIntake().withName("IntakeSlurp auto")));
+    NamedCommands.registerCommand("IntakeDown", new LoggedCommand(intakeCommands.intakeDown().withTimeout(0.01).withName("IntakeDown auto")));
+    NamedCommands.registerCommand("IntakeUntill",
+        new LoggedCommand(intakeCommands.intakeIntakeUntil().andThen(intakeCommands.beltStopCommand()).withName("IntakeUntill auto")));
+    NamedCommands.registerCommand("IntakeUp", new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
+    NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
 
   }
 
@@ -146,32 +151,35 @@ NamedCommands.registerCommand("IntakeUp", intakeCommands.intakeUp().withTimeout(
     // InstantCommand(drivebase::lock, drivebase)));
 
     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()); // intake.intakeOuttake
-      // .onFalse(new RunCommand(intake::beltStop));
-    
+    // .onFalse(new RunCommand(intake::beltStop));
+
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
-      .whileTrue(intakeCommands.intakeIntakeUntil());
-      // .onFalse(new RunCommand(intake::beltStop));
-   
+        .whileTrue(intakeCommands.intakeIntakeUntil());
+    // .onFalse(new RunCommand(intake::beltStop));
+
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
-    new JoystickButton(driverXbox, XboxController.Button.kRightBumper.value).whileTrue(shooterAngleCommands.moveShooterDown());
-    new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value).whileTrue(shooterAngleCommands.moveShooterUp());
-
+    new JoystickButton(driverXbox, XboxController.Button.kRightBumper.value)
+        .whileTrue(shooterAngleCommands.moveShooterDown());
+    new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value)
+        .whileTrue(shooterAngleCommands.moveShooterUp());
 
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
     shooter.setDefaultCommand(shooterCommands.stopIt());
-   
+
     new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
-   
 
-    // new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootAmp());
+    // new Trigger(() -> operator.getRightTriggerAxis() >
+    // .5).whileTrue(shooterCommands.shootAmp());
     // shooter.setDefaultCommand(shooterCommands.stopIt());
 
-    new JoystickButton(operator, XboxController.Button.kLeftBumper.value).whileTrue(shooterAngleCommands.moveShooterDown());
-    new JoystickButton(operator, XboxController.Button.kRightBumper.value).whileTrue(shooterAngleCommands.moveShooterUp());
-    
+    new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
+        .whileTrue(shooterAngleCommands.moveShooterDown());
+    new JoystickButton(operator, XboxController.Button.kRightBumper.value)
+        .whileTrue(shooterAngleCommands.moveShooterUp());
+
     new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(intakeCommands.intakeIntakeUntil());
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
@@ -183,6 +191,7 @@ NamedCommands.registerCommand("IntakeUp", intakeCommands.intakeUp().withTimeout(
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
+   * 
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
