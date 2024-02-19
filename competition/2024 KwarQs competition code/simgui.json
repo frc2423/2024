@@ -125,13 +125,28 @@
   "NetworkTables": {
     "transitory": {
       "SmartDashboard": {
-        "Intake": {
+        "Field": {
+          "double[]##v_/SmartDashboard/Field/Robot": {
+            "open": true
+          },
           "open": true
         },
         "ShooterAngle": {
           "open": true
         },
-        "open": true
+        "Swerve Drive": {
+          "open": true
+        },
+        "SwerveSubsystem": {
+          "open": true
+        },
+        "open": true,
+        "swerve": {
+          "double[]##v_/SmartDashboard/swerve/measuredChassisSpeeds": {
+            "open": true
+          },
+          "open": true
+        }
       }
     }
   },

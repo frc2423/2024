@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.72,
-        "y": 6.698598504187022
+        "x": 0.8690078435791664,
+        "y": 6.862550215827963
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4343610292926723,
-        "y": 7.0733452736520315
+        "x": 0.9828831775209882,
+        "y": 6.956236908194215
       },
       "isLocked": false,
-      "linkedName": "startLeftYoAuto"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.250886555981385,
-        "y": 6.979658581285779
+        "x": 2.3445732483476367,
+        "y": 7.003080254377342
       },
       "prevControl": {
-        "x": 0.9861162090369815,
-        "y": 6.9679477447399965
+        "x": 2.1220673539777875,
+        "y": 7.049923600560469
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Yo Autos",
   "previewStartingState": {
     "rotation": 59.85861444792467,
     "velocity": 0

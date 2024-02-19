@@ -47,10 +47,34 @@
               }
             ]
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeUp"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Retrieve Back"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RevvvvvandShoot"
+          }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Yo",
   "choreoAuto": false
 }

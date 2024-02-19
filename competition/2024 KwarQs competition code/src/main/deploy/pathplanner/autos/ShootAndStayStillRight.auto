@@ -2,24 +2,24 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 4.651608047866594,
-      "y": 6.159900023081073
+      "x": 0.7753211512129142,
+      "y": 6.722020177278586
     },
-    "rotation": -149.74356283647074
+    "rotation": 59.47029410006587
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "random path"
+            "name": "RevvvvvandShoot"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "ShootAndStayStill",
   "choreoAuto": false
 }
