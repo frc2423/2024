@@ -31,6 +31,7 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -143,6 +144,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("IntakeUp", new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
     NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
 
+    PathPlannerLogging.setLogActivePathCallback((poses) -> {
+      drivebase.getField().getObject("path").setPoses(poses);
+    });
   }
 
   private void configureBindings() {

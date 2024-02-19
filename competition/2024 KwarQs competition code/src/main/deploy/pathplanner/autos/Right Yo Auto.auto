@@ -5,7 +5,7 @@
       "x": 0.72,
       "y": 6.7
     },
-    "rotation": 27.86
+    "rotation": 63.69719737093483
   },
   "command": {
     "type": "sequential",
@@ -36,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Right Retrieve"
+                  "pathName": "Right"
                 }
               },
               {

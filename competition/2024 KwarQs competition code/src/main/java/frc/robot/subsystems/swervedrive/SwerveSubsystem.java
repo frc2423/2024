@@ -20,6 +20,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.io.File;
@@ -148,15 +149,15 @@ public class SwerveSubsystem extends SubsystemBase {
     // event markers.
     return AutoBuilder.followPath(path);
   }
-    public Command getAuto(String auto){
-       PathPlannerAuto path = new PathPlannerAuto(auto);
-       Pose2d pose = PathPlannerAuto.getStaringPoseFromAutoFile(auto);
-      //figure out what to do if pose is undefined
-       resetOdometry(pose);
 
-       return path;
+  public Command getAuto(String auto) {
+    PathPlannerAuto path = new PathPlannerAuto(auto);
+    Pose2d pose = PathPlannerAuto.getStaringPoseFromAutoFile(auto);
+    // figure out what to do if pose is undefined
+    resetOdometry(pose);
+
+    return path;
   }
-
 
   /**
    * Command to drive the robot using translative values and heading as a
@@ -307,6 +308,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param initialHolonomicPose The pose to set the odometry to
    */
   public void resetOdometry(Pose2d initialHolonomicPose) {
+    System.out.println("RESET ODOMETRY!!!");
     swerveDrive.resetOdometry(initialHolonomicPose);
   }
 
@@ -407,6 +409,10 @@ public class SwerveSubsystem extends SubsystemBase {
         maximumSpeed);
   }
 
+  public Field2d getField() {
+    return swerveDrive.field;
+  }
+
   /**
    * Gets the current field-relative velocity (x, y and omega) of the robot
    *
@@ -468,9 +474,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-        // This is used to add things to NetworkTables
-        super.initSendable(builder);
-        builder.addDoubleProperty("Front Left Speed", () -> swerveDrive.getStates()[0].speedMetersPerSecond, null);
+    // This is used to add things to NetworkTables
+    super.initSendable(builder);
+    builder.addDoubleProperty("Front Left Speed", () -> swerveDrive.getStates()[0].speedMetersPerSecond, null);
   }
 
   public void setSlowMaxSpeed() {
