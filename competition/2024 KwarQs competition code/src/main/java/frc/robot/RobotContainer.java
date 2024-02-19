@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
@@ -21,7 +22,11 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem;
+
 import java.io.File;
+
+import org.photonvision.EstimatedRobotPose;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -51,6 +56,7 @@ public class RobotContainer {
   XboxController driverXbox = new XboxController(0);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
+  VisionSubsystem visionSubsystem = new VisionSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -176,5 +182,17 @@ public class RobotContainer {
 
   public void zeroGyro() {
     drivebase.zeroGyro();
+  }
+
+  public void updateSimVision() {
+    // TODO Auto-generated method stub
+    //throw new UnsupportedOperationException("Unimplemented method 'updateSimVision'");
+    vi
+    EstimatedRobotPose estPose = visionSubsystem.getEstimatedRobotPose();
+    if(estPose != null && estPose.estimatedPose != null) {
+          drivebase.addCameraInput(visionSubsystem.getEstimatedRobotPose().estimatedPose.toPose2d(), visionSubsystem.getTimestampSeconds());
+
+    }
+
   }
 }

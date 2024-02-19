@@ -466,6 +466,10 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
 
+  public void addCameraInput(Pose2d visionPose, double timestamp){
+    swerveDrive.addVisionMeasurement(visionPose, timestamp);
+  }
+
   @Override
   public void initSendable(SendableBuilder builder) {
         // This is used to add things to NetworkTables

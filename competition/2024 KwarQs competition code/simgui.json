@@ -69,6 +69,7 @@
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/Shooter": "Subsystem",
       "/SmartDashboard/SwerveSubsystem": "Subsystem",
+      "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d",
       "/SmartDashboard/navX-Sensor[1]": "Gyro",
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     },

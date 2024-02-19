@@ -97,6 +97,7 @@ public class AbsoluteDrive extends Command
                                            swerve.getSwerveDriveConfiguration());
     SmartDashboard.putNumber("LimitedTranslation", translation.getX());
     SmartDashboard.putString("Translation", translation.toString());
+    System.out.println(swerve.getPose());
 
     // Make the robot move
     swerve.drive(translation, desiredSpeeds.omegaRadiansPerSecond, true);

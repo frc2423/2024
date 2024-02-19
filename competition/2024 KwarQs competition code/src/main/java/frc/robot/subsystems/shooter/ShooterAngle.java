@@ -40,8 +40,8 @@ import com.ctre.phoenix6.hardware.CANcoder;
 
 /** A robot arm subsystem that moves with a motion profile. */
 public class ShooterAngle extends SubsystemBase {
-  private final CANSparkMax shooter_Pivot;
-  private final CANSparkMax shooter_Pivot2;
+  private final CANSparkMax shooter_Pivot = new CANSparkMax(26,CANSparkLowLevel.MotorType.kBrushless);
+  private final CANSparkMax shooter_Pivot2 = new CANSparkMax(24,CANSparkLowLevel.MotorType.kBrushless);
   public static final double kSVolts = 1;
   public static final double kGVolts = 1;
   public static final double kVVoltSecondPerRad = 0.5;// all things for feed forward is wrong, re do pls
@@ -76,7 +76,7 @@ public class ShooterAngle extends SubsystemBase {
 
   /** Create a new ArmSubsystem. */
   public ShooterAngle() {
-    shooter_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
+   // shooter_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
     
     shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
     // Start arm at rest in neutral position
