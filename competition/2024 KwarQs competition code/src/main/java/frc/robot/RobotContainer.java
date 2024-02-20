@@ -187,6 +187,7 @@ public class RobotContainer {
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
 
     new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.flopAmpCommand());
+    new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(shooterCommands.shootAmp());
   }
 
   /**
