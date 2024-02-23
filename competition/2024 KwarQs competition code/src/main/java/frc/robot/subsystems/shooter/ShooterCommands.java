@@ -74,7 +74,7 @@ public class ShooterCommands {
         var command = Commands.sequence(
             intake.intakeInWithRevCommand(),
             Commands.parallel(moveFeedMotor(),intake.intakeOutWithFeedCommand()),
-            intake.intakeDown(),
+            intake.intakeDown().withTimeout(4),
             shooterAngle.ampAngleCommand()
         );
         command.setName("Get ready to flop");
