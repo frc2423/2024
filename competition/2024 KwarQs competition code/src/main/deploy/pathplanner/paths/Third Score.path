@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.25,
-        "y": 6.98
+        "x": 1.3576779647621067,
+        "y": 5.54
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4896821805055864,
-        "y": 6.979658581285779
+        "x": 2.2274648828898216,
+        "y": 6.183321696172636
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.7284778050297884,
-        "y": 6.733731013824367
+        "x": 2.4851032868970147,
+        "y": 6.534646792546081
       },
       "prevControl": {
-        "x": 0.9744053724911999,
-        "y": 7.108477783289376
+        "x": 1.7004772383296534,
+        "y": 5.714888234341374
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": 38.0,
+      "rotationDegrees": 47.844034734527405,
       "rotateFast": false
     }
   ],
@@ -45,14 +45,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 61.389540334034805,
+    "rotation": 46.73570458892841,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Yo Autos",
-  "previewStartingState": {
-    "rotation": -0.661948874504949,
-    "velocity": 0
-  },
-  "useDefaultConstraints": true
+  "folder": "Triple Yo Paths",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
 }

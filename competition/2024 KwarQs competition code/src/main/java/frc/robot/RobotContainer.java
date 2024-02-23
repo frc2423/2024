@@ -87,6 +87,8 @@ public class RobotContainer {
     m_chooser.addOption("ShootAndStayStillLeft", "ShootAndStayStillLeft");
     m_chooser.addOption("ShootAndStayStillRight", "ShootAndStayStillRight");
     m_chooser.addOption("YoYo Auto", "YoYo Auto");
+    m_chooser.addOption("Left YoYo Auto", "Left YoYo Auto");
+    m_chooser.addOption("Right YoYo Auto", "Right YoYo Auto");
     m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
 
     // Put the chooser on the dashboard
