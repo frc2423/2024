@@ -1,0 +1,110 @@
+<dashboard-tab
+    tab-name="TeleOperated"
+    slot="tab"
+    selected=""
+    source-provider="NetworkTables"
+><vaadin-number-field
+        label="Shooter angle setpoint"
+        value="0"
+        has-value=""
+        has-label=""
+        source-provider="NetworkTables"
+        style="transform: translate(26px, 22px); width: 208.8px; height: 83.4px;"
+        has-controls=""
+        source-key="/SmartDashboard/ShooterAngle/Setpoint"
+        placeholder=""
+        min="NaN"
+        max="NaN"
+        hascontrols=""
+    ><input
+            slot="input"
+            value="0"
+            type="number"
+            id="vaadin-number-field-2"
+            aria-labelledby="label-vaadin-number-field-2"
+            aria-describedby=""
+            min="undefined"
+            max="undefined"
+            step="any"
+        ><label
+            slot="label"
+            id="label-vaadin-number-field-2"
+            for="vaadin-number-field-2"
+        >Shooter angle setpoint</label>
+        <div
+            slot="error-message"
+            id="error-message-vaadin-number-field-2"
+            hidden=""
+        ></div>
+    </vaadin-number-field><vaadin-number-field
+        label="Shooter speed"
+        value="0"
+        has-value=""
+        step="0.1"
+        has-label=""
+        source-provider="NetworkTables"
+        style="transform: translate(398.8px, 17.6px);"
+        source-key="/SmartDashboard/Shooter/shooterSpeed"
+        has-controls=""
+        placeholder=""
+        min="NaN"
+        max="NaN"
+        hascontrols=""
+    ><input
+            slot="input"
+            value="0"
+            type="number"
+            id="vaadin-number-field-51"
+            aria-labelledby="label-vaadin-number-field-51"
+            aria-describedby=""
+            min="undefined"
+            max="undefined"
+            step="0.1"
+        ><label
+            slot="label"
+            id="label-vaadin-number-field-51"
+            for="vaadin-number-field-51"
+        >Shooter speed</label>
+        <div
+            slot="error-message"
+            id="error-message-vaadin-number-field-38"
+            hidden=""
+        ></div>
+    </vaadin-number-field><vaadin-number-field
+        label="Shooter angle"
+        value="0"
+        has-value=""
+        has-label=""
+        source-provider="NetworkTables"
+        style="transform: translate(247.8px, 20px);"
+        readonly=""
+        source-key="/SmartDashboard/ShooterAngle/Angle"
+        placeholder=""
+        min="NaN"
+        max="NaN"
+    ><input
+            slot="input"
+            value="0"
+            type="number"
+            id="vaadin-number-field-107"
+            aria-labelledby="label-vaadin-number-field-107"
+            aria-describedby=""
+            min="undefined"
+            max="undefined"
+            step="any"
+            readonly=""
+        ><label
+            slot="label"
+            id="label-vaadin-number-field-107"
+            for="vaadin-number-field-107"
+        >Shooter angle</label>
+        <div
+            slot="error-message"
+            id="error-message-vaadin-number-field-78"
+            hidden=""
+        ></div>
+    </vaadin-number-field></dashboard-tab><dashboard-tab
+    slot="tab"
+    tab-name="Autonomous"
+    source-provider="NetworkTables"
+></dashboard-tab>

@@ -1,0 +1,63 @@
+<dashboard-tab
+    tab-name="TeleOperated"
+    slot="tab"
+    selected=""
+    source-provider="NetworkTables"
+><frc-swerve-drivebase
+        source-provider="NetworkTables"
+        style="transform: translate(799px, 63.8px);"
+        source-key="/SmartDashboard/swerve"
+        wheellocations="[2.5,2,2.5,-2,-2.5,2,-2.5,-2]"
+        measuredstates="[0,0,0,0,0,0,0,0]"
+        desiredstates="[0,0,0,0,0,0,0,0]"
+        sizeleftright="4"
+        sizefrontback="5"
+    ></frc-swerve-drivebase><frc-line-chart
+        chart-title="Line Chart"
+        source-provider="NetworkTables"
+        style="transform: translate(53.2px, 235.2px);"
+        source-key="/SmartDashboard/Module[frontleft] Adjusted Absolute Encoder"
+    >
+        <frc-line-chart-legend source-provider="NetworkTables"></frc-line-chart-legend>
+        <frc-line-chart-axis
+            source-provider="NetworkTables"
+            min="-180"
+            max="180"
+            lock-min=""
+            lock-max=""
+            invert=""
+        ></frc-line-chart-axis>
+        <frc-line-chart-axis
+            side="right"
+            source-provider="NetworkTables"
+            min="-180"
+            max="180"
+            lock-min=""
+            lock-max=""
+            invert=""
+        ></frc-line-chart-axis>
+        <frc-line-chart-data
+            source-provider="NetworkTables"
+            display-name="set_point"
+            source-key="/SmartDashboard/Module[frontleft] Angle Setpoint"
+            color="#0ced45"
+            y-axis="1"
+        ></frc-line-chart-data>
+        <frc-line-chart-data
+            source-provider="NetworkTables"
+            display-name="measured"
+            source-key="/SmartDashboard/Module[frontright] Adjusted Absolute Encoder"
+            color="#feb07c"
+        ></frc-line-chart-data></frc-line-chart><frc-field-wrapper
+        source-key="/SmartDashboard/Field"
+        source-provider="NetworkTables"
+        game="Crescendo"
+        show-grid=""
+        grid-size="1"
+        crop-right="50"
+    >
+    </frc-field-wrapper></dashboard-tab><dashboard-tab
+    slot="tab"
+    tab-name="Autonomous"
+    source-provider="NetworkTables"
+></dashboard-tab>
