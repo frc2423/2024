@@ -70,11 +70,12 @@ public class RobotContainer {
   ShooterAngle shooterAngle = new ShooterAngle(intake);
   IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
-  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands,intake);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
 
-  public void JointReader(){
-    NTHelper.setDouble("/joints/intake", intake.getPivotAngle().getRadians() - Rotation2d.fromDegrees(130).getRadians());
+  public void JointReader() {
+    NTHelper.setDouble("/joints/intake",
+        intake.getPivotAngle().getRadians() - Rotation2d.fromDegrees(130).getRadians());
     NTHelper.setDouble("/joints/shooter", shooterAngle.getShooterAngle().getRadians() + (Math.PI / 2));
   }
 
@@ -152,10 +153,13 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("IntakeSlurp",
         new LoggedCommand(intakeCommands.intakeIntake().withName("IntakeSlurp auto")));
-    NamedCommands.registerCommand("IntakeDown", new LoggedCommand(intakeCommands.intakeDown().withTimeout(0.01).withName("IntakeDown auto")));
+    NamedCommands.registerCommand("IntakeDown",
+        new LoggedCommand(intakeCommands.intakeDown().withTimeout(0.01).withName("IntakeDown auto")));
     NamedCommands.registerCommand("IntakeUntill",
-        new LoggedCommand(intakeCommands.intakeIntakeUntil().andThen(intakeCommands.beltStopCommand()).withName("IntakeUntill auto")));
-    NamedCommands.registerCommand("IntakeUp", new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
+        new LoggedCommand(intakeCommands.intakeIntakeUntil().andThen(intakeCommands.beltStopCommand())
+            .withName("IntakeUntill auto")));
+    NamedCommands.registerCommand("IntakeUp",
+        new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
     NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
 
     PathPlannerLogging.setLogActivePathCallback((poses) -> {
@@ -232,13 +236,15 @@ public class RobotContainer {
   }
 
   public void updateSimVision() {
-    // TODO Auto-generated method stub
-    //throw new UnsupportedOperationException("Unimplemented method 'updateSimVision'");
-    EstimatedRobotPose estPose = visionSubsystem.getEstimatedRobotPose();
-    if(estPose != null && estPose.estimatedPose != null) {
-          drivebase.addCameraInput(visionSubsystem.getEstimatedRobotPose().estimatedPose.toPose2d(), visionSubsystem.getTimestampSeconds());
+    // throw new UnsupportedOperationException("Unimplemented method
+    // 'updateSimVision'");
+    visionSubsystem.simulationPeriodic(drivebase.getPose());
+    System.out.println(drivebase.getPose());
 
-    }
+  }
 
+  public void addVision() {
+    drivebase.addCameraInput(visionSubsystem.getEstimatedRobotPose().estimatedPose.toPose2d(),
+        visionSubsystem.getTimestampSeconds(), visionSubsystem.getStandardDeviations());
   }
 }

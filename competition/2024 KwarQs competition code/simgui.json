@@ -124,6 +124,12 @@
     }
   },
   "NetworkTables": {
+    "Retained Values": {
+      "open": false
+    },
+    "Transitory Values": {
+      "open": false
+    },
     "transitory": {
       "Shuffleboard": {
         "Autonomous": {
@@ -153,6 +159,15 @@
           },
           "open": true
         }
+      },
+      "photonvision": {
+        "YOUR CAMERA NAME": {
+          "double[]##v_/photonvision/YOUR CAMERA NAME/targetPose": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
       }
     }
   },
