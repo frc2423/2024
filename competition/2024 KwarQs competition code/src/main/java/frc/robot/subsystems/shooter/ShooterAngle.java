@@ -121,6 +121,10 @@ public class ShooterAngle extends SubsystemBase {
     }
   }
 
+    public Rotation2d getShooterAngle(){
+    return shooterPivotAngle;
+  }
+
   @Override
   public void periodic() {
     shooterPivotMotorPercent = calculatePid(setpoint);

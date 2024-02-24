@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7167669684840067,
-        "y": 6.698598504187022
+        "x": 0.7518994781213513,
+        "y": 4.368142031576503
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3491521419562083,
-        "y": 6.347273407813577
+        "x": 1.3842846515935525,
+        "y": 4.016816935203058
       },
-      "isLocked": false,
-      "linkedName": "startLeftYoAuto"
+      "isLocked": true,
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,22 +20,45 @@
         "y": 4.11050362756931
       },
       "prevControl": {
-        "x": 1.3491521419562087,
-        "y": 4.122214464115091
+        "x": 1.1969112668610487,
+        "y": 4.098792791023527
       },
       "nextControl": null,
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
-  "constraintZones": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.9,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.65,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 350.0,
+    "maxAngularAcceleration": 535.0
   },
   "goalEndState": {
     "velocity": 0,
@@ -43,7 +66,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Yo Autos",
   "previewStartingState": {
     "rotation": -60.64224645720873,
     "velocity": 0

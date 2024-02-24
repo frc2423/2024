@@ -2,11 +2,19 @@
   "robotWidth": 0.826,
   "robotLength": 0.83,
   "holonomicMode": true,
-  "pathFolders": [],
-  "autoFolders": [],
-  "defaultMaxVel": 3.0,
-  "defaultMaxAccel": 3.0,
-  "defaultMaxAngVel": 540.0,
-  "defaultMaxAngAccel": 720.0,
+  "pathFolders": [
+    "Amp",
+    "Triple Yo Paths",
+    "Yo Autos"
+  ],
+  "autoFolders": [
+    "YoYo",
+    "ShootAndStayStill",
+    "Yo"
+  ],
+  "defaultMaxVel": 2.0,
+  "defaultMaxAccel": 2.0,
+  "defaultMaxAngVel": 350.0,
+  "defaultMaxAngAccel": 535.0,
   "maxModuleSpeed": 4.5
 }

@@ -37,7 +37,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public static Rotation2d setpoint = Rotation2d.fromDegrees(upPositionDegrees);
     private final CANSparkMax m_Pivot;
     ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : 0.005, 0, .001,
-            new TrapezoidProfile.Constraints(350, 350));// noice
+            new TrapezoidProfile.Constraints(350, 275));// noice
     private final ArmFeedforward m_feedforward = new ArmFeedforward(
            0.004, 0.02, 0.000, 0);
     private CANSparkMax beltMotor;
@@ -61,7 +61,7 @@ public class IntakeSubsystem extends SubsystemBase {
         pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
 
         m_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
-        m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).setZeroOffset(0);
+        m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).setZeroOffset(58);
         m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).setPositionConversionFactor(360);
 
         // Start arm at rest in neutral position
@@ -149,7 +149,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean isIntakeDown(){
-        return setpoint.getDegrees() == downPositionDegrees;
+        return getPivotAngle().getDegrees() < 170;
     }
 
     @Override
@@ -207,13 +207,27 @@ public class IntakeSubsystem extends SubsystemBase {
         pivot.setAngle(-pivotAngle.getDegrees() - 90);
     }
 
+    public Rotation2d getPivotAngle() {
+
+        return pivotAngle;
+    }
+    public boolean isAngleGreat() {
+        if (pivotAngle.getDegrees() < 180) {
+        return true;
+    }
+        else return false;
+        
+    }
+    
+
+
     @Override
     public void initSendable(SendableBuilder builder) {
         // This is used to add things to NetworkTables
         super.initSendable(builder);
         builder.addBooleanProperty("Is down", () -> isDown, null);
         builder.addStringProperty("Intake state", () -> intakeState, null);
-        builder.addDoubleProperty("Pivot distance", () -> pivotAngle.getDegrees(), null);
+        builder.addDoubleProperty("Pivot angle", () -> pivotAngle.getDegrees(), null);
         builder.addDoubleProperty("Pivot raw encoder value",
                 () -> m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition(), null);
 

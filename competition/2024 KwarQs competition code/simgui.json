@@ -124,18 +124,44 @@
   },
   "NetworkTables": {
     "transitory": {
-      "SmartDashboard": {
-        "Intake": {
+      "Shuffleboard": {
+        "Autonomous": {
           "open": true
+        },
+        "open": true
+      },
+      "SmartDashboard": {
+        "Field": {
+          "double[]##v_/SmartDashboard/Field/Robot": {
+            "open": true
+          }
         },
         "ShooterAngle": {
           "open": true
         },
-        "open": true
+        "Swerve Drive": {
+          "open": true
+        },
+        "SwerveSubsystem": {
+          "open": true
+        },
+        "open": true,
+        "swerve": {
+          "double[]##v_/SmartDashboard/swerve/measuredChassisSpeeds": {
+            "open": true
+          },
+          "open": true
+        }
       }
     }
   },
   "NetworkTables Info": {
+    "Connections": {
+      "open": true
+    },
+    "Server": {
+      "open": true
+    },
     "visible": true
   },
   "sourceNames": {

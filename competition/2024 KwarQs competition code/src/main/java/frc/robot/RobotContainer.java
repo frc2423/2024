@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
@@ -31,6 +32,7 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -62,8 +64,13 @@ public class RobotContainer {
   ShooterAngle shooterAngle = new ShooterAngle(intake);
   IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
-  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands,intake);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
+
+  public void JointReader(){
+    NTHelper.setDouble("/joints/intake", intake.getPivotAngle().getRadians() - Rotation2d.fromDegrees(130).getRadians());
+    NTHelper.setDouble("/joints/shooter", shooterAngle.getShooterAngle().getRadians() + (Math.PI / 2));
+  }
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -79,13 +86,16 @@ public class RobotContainer {
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
-    m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
     m_chooser.addOption("Yo Auto", "Yo Auto");
-    m_chooser.addOption("YoYo Auto", "YoYo Auto");
-    m_chooser.addOption("Left Yo Auto", "Left Yo Auto");
-    m_chooser.addOption("Test Auto", "Test Auto");
-    m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
     m_chooser.addOption("Right Yo Auto", "Right Yo Auto");
+    m_chooser.addOption("Left Yo Auto", "Left Yo Auto");
+    m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
+    m_chooser.addOption("ShootAndStayStillLeft", "ShootAndStayStillLeft");
+    m_chooser.addOption("ShootAndStayStillRight", "ShootAndStayStillRight");
+    m_chooser.addOption("YoYo Auto", "YoYo Auto");
+    m_chooser.addOption("Left YoYo Auto", "Left YoYo Auto");
+    m_chooser.addOption("Right YoYo Auto", "Right YoYo Auto");
+    m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -142,6 +152,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("IntakeUp", new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
     NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
 
+    PathPlannerLogging.setLogActivePathCallback((poses) -> {
+      drivebase.getField().getObject("path").setPoses(poses);
+    });
   }
 
   private void configureBindings() {

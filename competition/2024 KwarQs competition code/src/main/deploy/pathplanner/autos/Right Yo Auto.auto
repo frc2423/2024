@@ -5,7 +5,7 @@
       "x": 0.72,
       "y": 6.7
     },
-    "rotation": 27.86
+    "rotation": 63.69719737093483
   },
   "command": {
     "type": "sequential",
@@ -47,10 +47,34 @@
               }
             ]
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeUp"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Retrieve Back"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RevvvvvandShoot"
+          }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Yo",
   "choreoAuto": false
 }

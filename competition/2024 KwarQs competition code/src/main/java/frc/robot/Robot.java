@@ -30,6 +30,8 @@ public class Robot extends TimedRobot {
 
   private Timer disabledTimer;
 
+  public Timer periodTimer;
+
   public Robot() {
     instance = this;
   }
@@ -53,6 +55,9 @@ public class Robot extends TimedRobot {
     // let the robot stop
     // immediately when disabled, but then also let it be pushed more
     disabledTimer = new Timer();
+    periodTimer = new Timer();
+
+    periodTimer.start();
 
     DataLogManager.start();
   }
@@ -77,6 +82,9 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    m_robotContainer.JointReader();
+
+    NTHelper.setDouble("/Time", periodTimer.get());
   }
 
   /**
@@ -87,6 +95,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.setMotorBrake(true);
     disabledTimer.reset();
     disabledTimer.start();
+
+    periodTimer.restart();
   }
 
   @Override
@@ -105,6 +115,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_robotContainer.setMotorBrake(true);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    periodTimer.restart();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -130,6 +142,8 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.setDriveMode();
     m_robotContainer.setMotorBrake(true);
+
+    periodTimer.restart();
   }
 
   /**
