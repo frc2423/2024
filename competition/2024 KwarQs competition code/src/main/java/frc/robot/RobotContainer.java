@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.Vision;
 import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -239,7 +240,8 @@ public class RobotContainer {
     // throw new UnsupportedOperationException("Unimplemented method
     // 'updateSimVision'");
     visionSubsystem.simulationPeriodic(drivebase.getPose());
-    System.out.println(drivebase.getPose());
+    visionSubsystem.getLatestResult();
+    // System.out.println(drivebase.getPose());
 
   }
 

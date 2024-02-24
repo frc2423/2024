@@ -44,4 +44,8 @@ public class VisionSubsystem extends SubsystemBase {
     public void simulationPeriodic(Pose2d pose) {
         visionInterface.simulationPeriodic(pose);
     }
+
+    public void getLatestResult() {
+        visionInterface.getLatestResult();
+    }
 }
