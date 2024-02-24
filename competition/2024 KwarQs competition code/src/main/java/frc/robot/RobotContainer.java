@@ -87,14 +87,14 @@ public class RobotContainer {
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
     m_chooser.addOption("Yo Auto", "Yo Auto");
-    m_chooser.addOption("Right Yo Auto", "Right Yo Auto");
-    m_chooser.addOption("Left Yo Auto", "Left Yo Auto");
+    m_chooser.addOption("Amp Yo Auto", "Amp Yo Auto");
+    m_chooser.addOption("Feeder Yo Auto", "Feeder Yo Auto");
     m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
-    m_chooser.addOption("ShootAndStayStillLeft", "ShootAndStayStillLeft");
-    m_chooser.addOption("ShootAndStayStillRight", "ShootAndStayStillRight");
+    m_chooser.addOption("ShootAndStayStillFeeder", "ShootAndStayStillFeeder");
+    m_chooser.addOption("ShootAndStayStillAmp", "ShootAndStayStillAmp");
     m_chooser.addOption("YoYo Auto", "YoYo Auto");
-    m_chooser.addOption("Left YoYo Auto", "Left YoYo Auto");
-    m_chooser.addOption("Right YoYo Auto", "Right YoYo Auto");
+    m_chooser.addOption("Feeder YoYo Auto", "Feeder YoYo Auto");
+    m_chooser.addOption("Amp YoYo Auto", "Amp YoYo Auto");
     m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
 
     // Put the chooser on the dashboard
