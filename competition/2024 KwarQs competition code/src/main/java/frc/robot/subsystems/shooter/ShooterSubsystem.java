@@ -12,6 +12,9 @@ package frc.robot.subsystems.shooter;
 
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.devices.NeoMotor;
@@ -23,15 +26,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private NeoMotor shooterMotorOne;
     private NeoMotor shooterMotorTwo;
-    private double shooterSpeed = -.70;
-    private double shooterSpeed2 = -.70;
+    private double shooterSpeed = -4.3 ;
+    private double shooterSpeed2 = -4.3 ;
     public static Timer timer;
-    public static double feederVoltage = -6;
+    public static double feederVoltage = -RobotController.getBatteryVoltage();
+    public static double feederFlopVoltage = 2;
     private final CANSparkMax feeder_Motor;
     public static final int kFeederMotorPort = 23;
     public double feederOnSec = 1.5;
     public double isDoneSec = .5; // for revving not for shooting
-    public double isDoneShoot = 2; //sec
+    public double isDoneShoot = 2; // sec
 
     public ShooterSubsystem() {
         feeder_Motor = new CANSparkMax(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
@@ -47,8 +51,13 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void shooterOn() {
-        shooterMotorOne.setSpeed(shooterSpeed);
-        shooterMotorTwo.setSpeed(shooterSpeed2);
+        shooterMotorOne.setSpeed(shooterSpeed/ RobotController.getBatteryVoltage());
+        shooterMotorTwo.setSpeed(shooterSpeed2 / RobotController.getBatteryVoltage());
+    }
+
+    public void shooterOnFlop() {
+        shooterMotorOne.setSpeed(feederFlopVoltage / RobotController.getBatteryVoltage());
+        shooterMotorTwo.setSpeed(feederFlopVoltage / RobotController.getBatteryVoltage());
     }
 
     // stops the shooter
@@ -57,7 +66,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotorTwo.setSpeed(0);
     }
 
-    public void everythingOffPlease(){
+    public void everythingOffPlease() {
         shooterOff();
         stopFeederMotor();
     }
@@ -79,47 +88,17 @@ public class ShooterSubsystem extends SubsystemBase {
         feeder_Motor.setVoltage(feederVoltage);
     }
 
+    public void moveFeederSlow() {
+        feeder_Motor.setVoltage(-feederFlopVoltage);
+    }
+
+    public void moveFeederMotorBackwards() {
+        feeder_Motor.setVoltage(feederFlopVoltage);
+    }
+
     public void stopFeederMotor() {
         feeder_Motor.setVoltage(0);
     }
 
-    public Command rev() {
-        Timer timer = new Timer();
-        return new FunctionalCommand(
-                () -> {
-                timer.start(); 
-                timer.restart();
-                },
-                () -> shooterOn(),
-                (interupted) -> {},
-                () -> timer.get() > isDoneSec,
-                this);
-    }
-
-     public Command stopIt() {
-        var command = Commands.run(() -> everythingOffPlease(), this);
-        command.setName("Stop it");
-        return command;
-    }
-
-    public Command shoot() {
-        Timer timer = new Timer();
-        return new FunctionalCommand(
-                () -> {
-                timer.start(); 
-                timer.restart();
-                },
-                () -> moveFeederMotor(),
-                (interupted) -> {},
-                () -> timer.get() > isDoneShoot,
-                this);
-    }
-
-    public Command revAndShoot() {
-        return Commands.sequence(
-           rev(),
-           shoot()
-        );
-    }
 
 }

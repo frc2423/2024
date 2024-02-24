@@ -12,20 +12,75 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "RevvvvvandShoot"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 2.0
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "IntakeDown"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeUntill"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Retrieve"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeUp"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Retrieve"
+            "pathName": "Back from note 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RevvvvvandShoot"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Yo",
   "choreoAuto": false
 }

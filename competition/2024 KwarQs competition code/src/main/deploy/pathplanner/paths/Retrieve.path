@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 1.3576779647621067,
-        "y": 5.537862667174266
+        "y": 5.54
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.689169744135214,
-        "y": 5.537862667174266
+        "y": 5.54
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 5.537862667174266
       },
       "prevControl": {
-        "x": 2.2059069296285876,
-        "y": 5.557362183607978
+        "x": 2.205211404348285,
+        "y": 5.537862667174266
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Yo Autos",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }

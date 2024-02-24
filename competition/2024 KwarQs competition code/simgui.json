@@ -1,26 +1,11 @@
 {
   "HALProvider": {
+    "DIO": {
+      "window": {
+        "visible": true
+      }
+    },
     "Other Devices": {
-      "SPARK MAX [2]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [4]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [5]": {
-        "header": {
-          "open": true
-        }
-      },
-      "SPARK MAX [7]": {
-        "header": {
-          "open": true
-        }
-      },
       "Talon FX (v6)[2]/Rotor Sensor": {
         "header": {
           "open": true
@@ -64,17 +49,20 @@
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Intake": "Subsystem",
       "/SmartDashboard/Mech2d": "Mechanism2d",
+      "/SmartDashboard/Mech2dIntake": "Mechanism2d",
+      "/SmartDashboard/Mech2dShooterAngle": "Mechanism2d",
       "/SmartDashboard/Pigeon 2 (v6) [13]": "Gyro",
       "/SmartDashboard/Pigeon 2 [13]": "Gyro",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/Shooter": "Subsystem",
+      "/SmartDashboard/ShooterAngle": "Subsystem",
       "/SmartDashboard/SwerveSubsystem": "Subsystem",
       "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d",
       "/SmartDashboard/navX-Sensor[1]": "Gyro",
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     },
     "windows": {
-      "/FMSInfo": {
+      "/Shuffleboard/Autonomous/SendableChooser[0]": {
         "window": {
           "visible": true
         }
@@ -109,10 +97,26 @@
       },
       "/SmartDashboard/Mech2d": {
         "window": {
+          "name": "Intake Arm",
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Mech2dIntake": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Mech2dShooterAngle": {
+        "window": {
           "visible": true
         }
       },
       "/SmartDashboard/Shooter": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/ShooterAngle": {
         "window": {
           "visible": true
         }
@@ -121,18 +125,47 @@
   },
   "NetworkTables": {
     "transitory": {
+      "Shuffleboard": {
+        "Autonomous": {
+          "open": true
+        },
+        "open": true
+      },
       "SmartDashboard": {
         "Field": {
+          "double[]##v_/SmartDashboard/Field/Robot": {
+            "open": true
+          }
+        },
+        "ShooterAngle": {
+          "open": true
+        },
+        "Swerve Drive": {
+          "open": true
+        },
+        "SwerveSubsystem": {
           "open": true
         },
         "open": true,
         "swerve": {
+          "double[]##v_/SmartDashboard/swerve/measuredChassisSpeeds": {
+            "open": true
+          },
           "open": true
         }
       }
     }
   },
   "NetworkTables Info": {
+    "Connections": {
+      "open": true
+    },
+    "Server": {
+      "open": true
+    },
     "visible": true
+  },
+  "sourceNames": {
+    "DIO[8]": "intake sensor"
   }
 }

@@ -1,0 +1,12 @@
+image: agalili/wpilib-2024:v1
+
+tasks:
+  - init: ./install-extensions.sh
+
+vscode:
+  extensions:
+    - vscjava.vscode-java-debug@0.55.2023121302
+    - redhat.java@1.26.2023121408
+    - vscjava.vscode-java-dependency@0.23.2023120100
+    - ms-python.python@2023.23.13481009
+    - wpilibsuite.vscode-wpilib@2024.1.1

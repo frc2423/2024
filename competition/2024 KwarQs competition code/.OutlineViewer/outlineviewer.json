@@ -8,6 +8,9 @@
       "Intake": {
         "open": true
       },
+      "ShooterAngle": {
+        "open": true
+      },
       "open": true
     }
   }

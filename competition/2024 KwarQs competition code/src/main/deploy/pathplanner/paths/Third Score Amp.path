@@ -1,0 +1,58 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.72,
+        "y": 6.71
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.735609747966998,
+        "y": 6.698598504187022
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.4851032868970147,
+        "y": 5.972526638348569
+      },
+      "prevControl": {
+        "x": 1.6770555652380905,
+        "y": 6.6751768310954605
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -42.5179247110474,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 350.0,
+    "maxAngularAcceleration": 535.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -43.025065989118076,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Triple Yo Paths",
+  "previewStartingState": {
+    "rotation": 59.71163872536959,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

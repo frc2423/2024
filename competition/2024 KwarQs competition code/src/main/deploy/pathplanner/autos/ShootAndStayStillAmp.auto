@@ -1,0 +1,25 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7753211512129142,
+      "y": 6.722020177278586
+    },
+    "rotation": 59.47029410006587
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "RevvvvvandShoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "ShootAndStayStill",
+  "choreoAuto": false
+}
