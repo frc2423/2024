@@ -36,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Right Retrieve"
+                  "pathName": "Amp Retrieve"
                 }
               },
               {
@@ -63,7 +63,62 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Retrieve Back"
+            "pathName": "Amp Retrieve Back"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RevvvvvandShoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeDown"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeUntill"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Third Score Amp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeUp"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Third Score Amp Back"
           }
         },
         {
@@ -75,6 +130,6 @@
       ]
     }
   },
-  "folder": "Yo",
+  "folder": "YoYo",
   "choreoAuto": false
 }

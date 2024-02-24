@@ -42,7 +42,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left Retrieve"
+                  "pathName": "Feeder Retrieve"
                 }
               },
               {
@@ -69,7 +69,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Retrieve Back"
+            "pathName": "Feeder Retrieve Back"
           }
         },
         {
