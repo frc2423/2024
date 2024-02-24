@@ -124,15 +124,17 @@
   },
   "NetworkTables": {
     "transitory": {
-      "FMSInfo": {
+      "Shuffleboard": {
+        "Autonomous": {
+          "open": true
+        },
         "open": true
       },
       "SmartDashboard": {
         "Field": {
           "double[]##v_/SmartDashboard/Field/Robot": {
             "open": true
-          },
-          "open": true
+          }
         },
         "ShooterAngle": {
           "open": true

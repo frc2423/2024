@@ -12,11 +12,13 @@ public class ShooterCommands {
     private ShooterSubsystem shooter;
     private ShooterAngleCommands shooterAngle;
     private IntakeCommands intake;
+    private IntakeSubsystem iintake;
 
-    public ShooterCommands(ShooterSubsystem shooter, ShooterAngleCommands shooterAngle, IntakeCommands intake) {
+    public ShooterCommands(ShooterSubsystem shooter, ShooterAngleCommands shooterAngle, IntakeCommands intake, IntakeSubsystem iintake) {
         this.shooter = shooter;
         this.intake = intake;
         this.shooterAngle = shooterAngle;
+        this.iintake = iintake;
     }
 
     public Command rev() {
@@ -45,6 +47,12 @@ public class ShooterCommands {
         return command;
     }
 
+    public Command moveFeedSlowCommand() {
+        var command = Commands.run(() -> shooter.moveFeederSlow(), shooter).withTimeout(.1);
+        command.setName("Feeding SLOW");
+        return command;
+    }
+
     public Command shoot() {
         var command = Commands.run(() -> {
             shooter.moveFeederMotor();
@@ -70,11 +78,18 @@ public class ShooterCommands {
         return shooterCommand;
     }
 
+     public Command shooterOnFlop() {
+        var command = Commands.run(() -> shooter.shooterOnFlop()).withTimeout(0.1);
+        command.setName("sPiNiNg");
+        return command;
+    }
+    
     public Command flopAmpCommand() {
+        
         var command = Commands.sequence(
             intake.intakeInWithRevCommand(),
-            Commands.parallel(moveFeedMotor(),intake.intakeOutWithFeedCommand()),
-            intake.intakeDown().withTimeout(4),
+            Commands.parallel(moveFeedSlowCommand(),intake.intakeOutWithFeedCommand(),shooterOnFlop()),
+            intake.intakeDown().until(() -> iintake.isAngleGreat()),
             shooterAngle.ampAngleCommand()
         );
         command.setName("Get ready to flop");

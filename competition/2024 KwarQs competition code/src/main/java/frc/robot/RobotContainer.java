@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
@@ -63,8 +64,13 @@ public class RobotContainer {
   ShooterAngle shooterAngle = new ShooterAngle(intake);
   IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
-  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands,intake);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
+
+  public void JointReader(){
+    NTHelper.setDouble("/joints/intake", intake.getPivotAngle().getRadians() - Rotation2d.fromDegrees(130).getRadians());
+    NTHelper.setDouble("/joints/shooter", shooterAngle.getShooterAngle().getRadians() + (Math.PI / 2));
+  }
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
