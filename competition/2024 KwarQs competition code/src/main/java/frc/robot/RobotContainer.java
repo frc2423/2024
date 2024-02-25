@@ -6,22 +6,18 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.Vision;
 import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -34,8 +30,6 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 
 import java.io.File;
-
-import org.photonvision.EstimatedRobotPose;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.PathPlannerLogging;
@@ -61,8 +55,6 @@ public class RobotContainer {
   // A chooser for autonomous commands
   SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  // CommandJoystick driverController = new
-  // CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT)
   XboxController driverXbox = new XboxController(0);
   XboxController operator = new XboxController(1);
   IntakeSubsystem intake = new IntakeSubsystem();
@@ -112,38 +104,19 @@ public class RobotContainer {
         () -> {
           double y = MathUtil.applyDeadband(
               -driverXbox.getLeftY(),
-              // Math.copySign(Math.pow(-driverXbox.getLeftY(), 2), -driverXbox.getLeftY()),
               OperatorConstants.LEFT_Y_DEADBAND);
           return m_yspeedLimiter.calculate(y);
         },
         () -> {
           double x = MathUtil.applyDeadband(
               -driverXbox.getLeftX(),
-              // Math.copySign(Math.pow(-driverXbox.getLeftX(), 2), -driverXbox.getLeftX()),
               OperatorConstants.LEFT_X_DEADBAND);
           return m_xspeedLimiter.calculate(x);
         },
         () -> -driverXbox.getRightX());
 
-    Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
-        () -> {
-          double y = MathUtil.applyDeadband(
-              -driverXbox.getLeftY(),
-              OperatorConstants.LEFT_Y_DEADBAND);
-          return m_yspeedLimiter.calculate(y);
-        },
-        () -> {
-          double x = MathUtil.applyDeadband(
-              driverXbox.getLeftX(),
-              OperatorConstants.LEFT_X_DEADBAND);
-          return m_xspeedLimiter.calculate(x);
-        },
-        () -> driverXbox.getRawAxis(4));
 
-    drivebase.setDefaultCommand(
-        !RobotBase.isSimulation()
-            ? driveFieldOrientedAnglularVelocity
-            : driveFieldOrientedDirectAngleSim);
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     // auto commands
     // EXAMPLE: NamedCommands.registerCommand("useless",

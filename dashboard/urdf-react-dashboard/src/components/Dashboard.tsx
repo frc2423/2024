@@ -2,6 +2,7 @@ import {
   useEntry,
   Field3d,
   Field3dUrdf,
+  Field3dPoseVisualizer,
   useJson,
   useNt4,
   SendableChooser
@@ -27,6 +28,7 @@ const Dashboard = () => {
   const [time] = useEntry('/Time', 0)
   const [isRedAlliance] = useEntry('/FMSInfo/IsRedAlliance', true)
   const origin = isRedAlliance ? 'red' : 'blue';
+  const [bestTargetPose] = useEntry('/best target/pose', [0,0,0]);
 
   const urdfRef = useRef<any>();
 
@@ -69,6 +71,7 @@ const Dashboard = () => {
             setJoint(key, 0);
           });
         })} />
+        <Field3dPoseVisualizer pose={bestTargetPose} />
       </Field3d>
     </div>
   );

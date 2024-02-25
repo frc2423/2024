@@ -32,6 +32,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -100,7 +102,19 @@ public class Vision {
 
     public PhotonPipelineResult getLatestResult() {
         if (camera.getLatestResult().hasTargets()) {
-            NTHelper.setDouble("best target", camera.getLatestResult().getBestTarget().getYaw());
+            var target = camera.getLatestResult().getBestTarget();
+            NTHelper.setDouble("/best target/yaw", target.getYaw());
+
+            var pose3d = kTagLayout.getTagPose(target.getFiducialId());
+            if (pose3d.isPresent()) {
+                double pitch = Rotation2d.fromDegrees(target.getPitch()).getRadians();                
+                double yaw = Rotation2d.fromDegrees(target.getYaw()).getRadians();
+                Transform3d transform = new Transform3d(new Translation3d(), new Rotation3d(0, pitch, yaw));
+                Pose3d newPose = pose3d.get().plus(transform);
+                NTHelper.setDoubleArray("/best target/pose", NTHelper.getDoubleArrayPose3d(newPose));
+            }
+        } else {
+            NTHelper.setDoubleArray("/best target/pose", new double[] { 0, 0, 100, 0, 0, 0, 0 });
         }
         return camera.getLatestResult();
     }

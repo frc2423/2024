@@ -3,9 +3,8 @@ package frc.robot;
 import java.util.EnumSet;
 import java.util.function.Consumer;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.Topic;
-import edu.wpi.first.networktables.NetworkTable.TableEventListener;
 import edu.wpi.first.networktables.NetworkTableEvent.Kind;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableEvent;
 
@@ -117,5 +116,12 @@ public class NTHelper {
      */
     public static void setDoubleArray(String key, double[] value) {
         getEntry(key).setDoubleArray(value);
+    }
+
+    public static double[] getDoubleArrayPose3d(Pose3d pose) {
+        var trans = pose.getTranslation();
+        var rot = pose.getRotation().getQuaternion();
+        return new double[] { trans.getX(), trans.getY(), trans.getZ(), rot.getW(), rot.getX(),
+                rot.getY(), rot.getZ() };
     }
 }
