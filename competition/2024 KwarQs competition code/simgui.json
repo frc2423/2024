@@ -131,8 +131,7 @@
       "Shuffleboard": {
         "Autonomous": {
           "open": true
-        },
-        "open": true
+        }
       },
       "SmartDashboard": {
         "Field": {

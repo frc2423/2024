@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import java.io.File;
+
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.PathPlannerLogging;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,11 +33,6 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
-
-import java.io.File;
-
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.util.PathPlannerLogging;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -65,6 +65,7 @@ public class RobotContainer {
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
+  DAS das = new DAS();
 
   public void JointReader() {
     NTHelper.setDouble("/joints/intake",
@@ -76,6 +77,12 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    DAS.MotorSettings as = das.calculateAS(1.3);
+    double asAngle = as.getAngle();
+    double asVoltage = as.getVoltage();
+    System.out.println("DASissupa");
+    System.out.println(asAngle +","+ asVoltage);
+
     // Configure the trigger bindings
     configureBindings();
     intake.beltStop();
