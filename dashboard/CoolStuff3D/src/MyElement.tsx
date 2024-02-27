@@ -1,6 +1,7 @@
 import { useEffect, useState, CSSProperties } from "react";
 import r2wc from "@r2wc/react-to-web-component";
 import { getAssetUrl } from "@frc-web-components/app";
+import './MyElement.css';
 
 function MyElement({ count = 0, blah = "blah" }: { count: number, blah: string }) {
   const [currentCount, setCount] = useState(0);

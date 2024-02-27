@@ -1,24 +1,13 @@
-import "./MyElement.tsx";
-import { addElements, addThemeRules } from "@frc-web-components/app";
+import { addElements, getAssetBasePath } from '@frc-web-components/app';
+import { getField3dDashboardConfigs, UrdfConfig } from '@frc-web-components/fwc/components/field3d';
 
-addElements({
-  "my-react-element": {
-    dashboard: {
-      displayName: "My React Element",
-    },
-    properties: {
-      count: { type: "Number" },
-      blah: { type: "String" },
-    },
+const urdfConfigs: UrdfConfig[] = [
+  {
+    name: "2423-simple",
+    position: [0, 0, 0],
+    rotations: [{ axis: "z", degrees: -90 }],
+    src: "/urdf-2423-simple/robot.urdf"
   },
-}, 'My Plugin');
+];
 
-addThemeRules('dark', {
-  '--my-react-element-background': 'cadetblue',
-  '--my-react-element-color': 'black',
-});
-
-addThemeRules('light', {
-  '--my-react-element-background': 'cornflowerblue',
-  '--my-react-element-color': 'white',
-});
+addElements(getField3dDashboardConfigs({ assetPathPrefix: getAssetBasePath(), urdfConfigs }), 'FRC');
