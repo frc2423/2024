@@ -23,7 +23,7 @@ const Dashboard = () => {
   const [, setJointNames] = useState<string[]>([]);
   const joints: Record<string, number> = useJson('/joints', {}, false);
   const { nt4Provider } = useNt4();
-  const [pose3d] = useEntry('/a/b', [0, 0, 0]);
+  const [pose3d] = useEntry('/SmartDashboard/SwerveSubsystem/Get Camera Pose3d', [0, 0, 0]);
   const [robotPose] = useEntry('/SmartDashboard/Field/Robot', [0, 0, 0]);
   const [time] = useEntry('/Time', 0)
   const [isRedAlliance] = useEntry('/FMSInfo/IsRedAlliance', true)
@@ -59,7 +59,7 @@ const Dashboard = () => {
       <Field3d origin={origin} urdfConfigs={urdfConfigs} style={{
         flex: '1',
         height: '100%',
-      }} cameraPose={pose3d} fixedCamera={false}>
+      }} cameraPose={pose3d} fixedCamera={true}>
         <Field3dUrdf name="2423-simple" pose={robotPose} onurdfload={((ev: any) => {
           const urdf = (ev as any).detail.urdf;
           urdfRef.current = urdf;

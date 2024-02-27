@@ -146,6 +146,9 @@
           "open": true
         },
         "SwerveSubsystem": {
+          "double[]##v_/SmartDashboard/SwerveSubsystem/Get Camera Pose3d": {
+            "open": true
+          },
           "open": true
         },
         "open": true,

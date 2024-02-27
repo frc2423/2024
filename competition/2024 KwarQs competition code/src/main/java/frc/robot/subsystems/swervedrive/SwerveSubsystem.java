@@ -13,6 +13,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -27,6 +28,10 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.NTHelper;
+
+import static frc.robot.Constants.Vision.kRobotToCam;
+
 import java.io.File;
 import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
@@ -326,6 +331,12 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.getPose();
   }
 
+  public Pose3d getCameraPose() {
+    Pose3d cameraPose3d = new Pose3d(getPose());
+    cameraPose3d = cameraPose3d.plus(kRobotToCam);
+    return cameraPose3d;
+  }
+
   /**
    * Set chassis speeds with closed-loop velocity control.
    *
@@ -417,6 +428,7 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.field;
   }
 
+
   /**
    * Gets the current field-relative velocity (x, y and omega) of the robot
    *
@@ -485,6 +497,7 @@ public class SwerveSubsystem extends SubsystemBase {
     // This is used to add things to NetworkTables
     super.initSendable(builder);
     builder.addDoubleProperty("Front Left Speed", () -> swerveDrive.getStates()[0].speedMetersPerSecond, null);
+    builder.addDoubleArrayProperty("Get Camera Pose3d", () ->  NTHelper.getDoubleArrayPose3d(getCameraPose()), null);
   }
 
   public void setSlowMaxSpeed() {

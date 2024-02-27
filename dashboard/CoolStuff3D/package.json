@@ -1,13 +1,25 @@
 {
-  "name": "react-custom-dashboard",
-  "displayName": "urdf-react-dashboard",
+  "name": "example-react-plugin",
+  "displayName": "CoolStuff3D",
   "private": true,
   "version": "0.0.0",
-  "description": "description",
-  "author": "amorygalili",
-  "email": "amorygalili@gmail.com",
+  "description": "This is the coolest 3d crap you have ever seen! 3d sim mostly...",
+  "author": "Ben Skraly & Cameron Burke",
+  "email": "benskraly@gmail.com",
   "license": "MIT",
   "type": "module",
+  "files": [
+    "plugin"
+  ],
+  "main": "./plugin/index.js",
+  "module": "./plugin/index.js",
+  "types": "./plugin/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./plugin/index.d.ts",
+      "import": "./plugin/index.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -15,9 +27,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@frc-web-components/fwc": "^2.3.3",
-    "@frc-web-components/react": "^0.7.0",
-    "@webbitjs/store": "^5.7.0",
+    "@frc-web-components/app": "^0.3.0",
+    "@r2wc/react-to-web-component": "^2.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -31,6 +42,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "vite": "^4.4.5",
+    "vite-plugin-dts": "^3.7.0"
   }
 }
