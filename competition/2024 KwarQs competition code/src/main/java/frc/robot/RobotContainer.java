@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -30,6 +31,9 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 
 import java.io.File;
+import java.util.Optional;
+
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.PathPlannerLogging;
@@ -114,7 +118,6 @@ public class RobotContainer {
           return m_xspeedLimiter.calculate(x);
         },
         () -> -driverXbox.getRightX());
-
 
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
@@ -221,5 +224,18 @@ public class RobotContainer {
   public void addVision() {
     drivebase.addCameraInput(visionSubsystem.getEstimatedRobotPose().estimatedPose.toPose2d(),
         visionSubsystem.getTimestampSeconds(), visionSubsystem.getStandardDeviations());
+  }
+
+  public void updateVision() {
+    // visionSubsystem.periodic();
+    Optional<Transform3d> bestResult = visionSubsystem.getLatestResult();
+    if (bestResult.isPresent()) {
+      Transform3d transform = bestResult.get();
+      NTHelper.setDouble("Measurments/april-tag-x", transform.getX());
+      NTHelper.setDouble("Measurments/april-tag-y", transform.getY());
+      NTHelper.setDouble("Measurments/april-tag-z", transform.getZ());
+
+    }
+    // NTHelper.setDouble("Measurments/april-tag-rot", bestResult.getRotation());
   }
 }

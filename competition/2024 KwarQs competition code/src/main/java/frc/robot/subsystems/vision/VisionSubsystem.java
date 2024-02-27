@@ -3,9 +3,11 @@ package frc.robot.subsystems.vision;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,7 +47,8 @@ public class VisionSubsystem extends SubsystemBase {
         visionInterface.simulationPeriodic(pose);
     }
 
-    public void getLatestResult() {
-        visionInterface.getLatestResult();
+    public Optional<Transform3d> getLatestResult() {
+        PhotonTrackedTarget getLatestResult = visionInterface.getLatestResult().getBestTarget();
+        return Optional.ofNullable(getLatestResult.getBestCameraToTarget());
     }
 }
