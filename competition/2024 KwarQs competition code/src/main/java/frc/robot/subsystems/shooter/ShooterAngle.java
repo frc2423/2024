@@ -159,4 +159,8 @@ public class ShooterAngle extends SubsystemBase {
 
   }
 
+  public boolean isShooterAtGoal() {
+    return(shooter_pivot_PID.atGoal());
+  }
+
 }

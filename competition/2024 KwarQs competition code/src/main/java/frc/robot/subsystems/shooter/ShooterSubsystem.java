@@ -100,5 +100,7 @@ public class ShooterSubsystem extends SubsystemBase {
         feeder_Motor.setVoltage(0);
     }
 
-
+    public boolean isRevatSpeed() {
+        return Math.abs(shooterMotorOne.getSpeed() - shooterSpeed)<0.2 ;
+    }
 }

@@ -62,10 +62,10 @@ public class RobotContainer {
   VisionSubsystem visionSubsystem = new VisionSubsystem();
   ShooterAngle shooterAngle = new ShooterAngle(intake);
   IntakeCommands intakeCommands = new IntakeCommands(intake);
-  ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
-  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake);
+  ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake, drivebase);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
-  DAS das = new DAS();
+  public static final DAS das = new DAS();
 
   public void JointReader() {
     NTHelper.setDouble("/joints/intake",
@@ -190,7 +190,7 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
 
-    new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.flopAmpCommand());
+    new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.autoFlopCommand());
     new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(shooterCommands.shootAmp());
   }
 
