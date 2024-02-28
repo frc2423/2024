@@ -49,9 +49,9 @@ public class ShooterAngle extends SubsystemBase {
   private static double minShooterPivotAngle = 140;
   private CANcoder shooterAngle; // figured out? i think
 
-  public static double feedAngle = 334; // is correct number now
+  public static double feedAngle = 333.5; // is correct number now
   public static double climbAngle = 205; // is correct number now
-  public static double shootAngle = 334; // is good
+  public static double shootAngle = 333.5; // is good
   public static double ampAngle = 148; // maybe good
   private IntakeSubsystem intake;
 
