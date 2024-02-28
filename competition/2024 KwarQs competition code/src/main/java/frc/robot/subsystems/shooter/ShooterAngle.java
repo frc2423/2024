@@ -30,8 +30,8 @@ import com.ctre.phoenix6.hardware.CANcoder;
 
 /** A robot arm subsystem that moves with a motion profile. */
 public class ShooterAngle extends SubsystemBase {
-  private final CANSparkMax shooter_Pivot;
-  private final CANSparkMax shooter_Pivot2;
+  private final CANSparkMax shooter_Pivot = new CANSparkMax(26,CANSparkLowLevel.MotorType.kBrushless);
+  private final CANSparkMax shooter_Pivot2 = new CANSparkMax(24,CANSparkLowLevel.MotorType.kBrushless);
   private static final double kSVolts = 1;
   private static final double kGVolts = 1;
   private static final double kVVoltSecondPerRad = 0.5;// all things for feed forward is wrong, re do pls
@@ -49,10 +49,10 @@ public class ShooterAngle extends SubsystemBase {
   private static double minShooterPivotAngle = 140;
   private CANcoder shooterAngle; // figured out? i think
 
-  public static double feedAngle = 334; // is correct number now
+  public static double feedAngle = 333.5; // is correct number now
   public static double climbAngle = 205; // is correct number now
-  public static double shootAngle = 334; // is good
-  public static double ampAngle = 148; // maybe good
+  public static double shootAngle = 333.5; // is good
+  public static double ampAngle = 141; // maybe good
   private IntakeSubsystem intake;
 
   public static Rotation2d setpoint = Rotation2d.fromDegrees(feedAngle); // Enter Rot2d value
@@ -66,8 +66,6 @@ public class ShooterAngle extends SubsystemBase {
   public ShooterAngle(IntakeSubsystem intake) {
     this.intake = intake;
     shooterAngle = new CANcoder(25);
-    shooter_Pivot = new CANSparkMax(26, CANSparkLowLevel.MotorType.kBrushless);
-    shooter_Pivot2 = new CANSparkMax(24, CANSparkLowLevel.MotorType.kBrushless);
 
     shooter_Pivot.setInverted(true);
 
@@ -159,6 +157,10 @@ public class ShooterAngle extends SubsystemBase {
     builder.addDoubleProperty("Angle", () -> shooterPivotAngle.getDegrees(), null);
     builder.addDoubleProperty("Error", () -> shooter_pivot_PID.getPositionError(), null);
 
+  }
+
+  public boolean isShooterAtGoal() {
+    return(shooter_pivot_PID.atGoal());
   }
 
 }

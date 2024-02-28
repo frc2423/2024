@@ -27,11 +27,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private NeoMotor shooterMotorOne;
     private NeoMotor shooterMotorTwo;
-    private double shooterSpeed = -4.3 ;
-    private double shooterSpeed2 = -4.3 ;
+    private double shooterSpeed = -4.3;
+    private double shooterSpeed2 = -4.3;
     public static Timer timer;
     public static double feederVoltage = -RobotController.getBatteryVoltage();
     public static double feederFlopVoltage = 2;
+    public static double feederFlopVoltageBackwards = 4;
     private final CANSparkMax feeder_Motor;
     public static final int kFeederMotorPort = 23;
     public double feederOnSec = 1.5;
@@ -52,7 +53,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void shooterOn() {
-        shooterMotorOne.setSpeed(shooterSpeed/ RobotController.getBatteryVoltage());
+        shooterMotorOne.setSpeed(shooterSpeed / RobotController.getBatteryVoltage());
         shooterMotorTwo.setSpeed(shooterSpeed2 / RobotController.getBatteryVoltage());
     }
 
@@ -94,22 +95,26 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void moveFeederMotorBackwards() {
-        feeder_Motor.setVoltage(feederFlopVoltage);
+        feeder_Motor.setVoltage(feederFlopVoltageBackwards);
     }
 
     public void stopFeederMotor() {
         feeder_Motor.setVoltage(0);
     }
 
-    @Override
-  public void initSendable(SendableBuilder builder) {
-    // This is used to add things to NetworkTables
-    super.initSendable(builder);
+    public boolean isRevatSpeed() {
+        return Math.abs(shooterMotorOne.getSpeed() - shooterSpeed) < 0.2;
+    }
 
-    builder.addDoubleProperty("shooterSpeed", () -> shooterSpeed, (shooterSpeed) -> {
-      this.shooterSpeed = shooterSpeed;
-      this.shooterSpeed2 = shooterSpeed;
-    });
-  }
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        // This is used to add things to NetworkTables
+        super.initSendable(builder);
+
+        builder.addDoubleProperty("shooterSpeed", () -> shooterSpeed, (shooterSpeed) -> {
+            this.shooterSpeed = shooterSpeed;
+            this.shooterSpeed2 = shooterSpeed;
+        });
+    }
 
 }

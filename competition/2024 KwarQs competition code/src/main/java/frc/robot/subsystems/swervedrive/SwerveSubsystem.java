@@ -10,11 +10,16 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -23,6 +28,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.DAS;
+import frc.robot.NTHelper;
+
+import static frc.robot.Constants.Vision.kRobotToCam;
+
 import java.io.File;
 import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
@@ -322,6 +332,12 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.getPose();
   }
 
+  public Pose3d getCameraPose() {
+    Pose3d cameraPose3d = new Pose3d(getPose());
+    cameraPose3d = cameraPose3d.plus(kRobotToCam);
+    return cameraPose3d;
+  }
+
   /**
    * Set chassis speeds with closed-loop velocity control.
    *
@@ -413,6 +429,7 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.field;
   }
 
+
   /**
    * Gets the current field-relative velocity (x, y and omega) of the robot
    *
@@ -472,11 +489,16 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
 
+  public void addCameraInput(Pose2d visionPose, double timestamp, Matrix<N3, N1> standardDeviations) {
+    swerveDrive.addVisionMeasurement(visionPose, timestamp, standardDeviations);
+  }
+
   @Override
   public void initSendable(SendableBuilder builder) {
     // This is used to add things to NetworkTables
     super.initSendable(builder);
     builder.addDoubleProperty("Front Left Speed", () -> swerveDrive.getStates()[0].speedMetersPerSecond, null);
+    builder.addDoubleArrayProperty("Get Camera Pose3d", () ->  NTHelper.getDoubleArrayPose3d(getCameraPose()), null);
   }
 
   public void setSlowMaxSpeed() {
@@ -485,5 +507,13 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void setHighMaxSpeed() {
     maximumSpeed = 4.5;
+  }
+
+  public double getDistanceDAS(){
+        double ydistance = this.getPose().getY() - 5.53;
+        double xdistance = this.getPose().getX();
+        double distance = Math.sqrt(Math.pow(ydistance, 2) + Math.pow(xdistance, 2));
+       
+        return (distance);
   }
 }

@@ -4,17 +4,20 @@
 
 package frc.robot;
 
+import java.io.File;
+
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.PathPlannerLogging;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -29,10 +32,7 @@ import frc.robot.subsystems.shooter.ShooterCommands;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import java.io.File;
-
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.util.PathPlannerLogging;
+import frc.robot.subsystems.vision.VisionSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -55,20 +55,21 @@ public class RobotContainer {
   // A chooser for autonomous commands
   SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  // CommandJoystick driverController = new
-  // CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT)
   XboxController driverXbox = new XboxController(0);
   XboxController operator = new XboxController(1);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
+  VisionSubsystem visionSubsystem = new VisionSubsystem();
   ShooterAngle shooterAngle = new ShooterAngle(intake);
   IntakeCommands intakeCommands = new IntakeCommands(intake);
-  ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
-  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands,intake);
+  ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake, drivebase);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
+  public static final DAS das = new DAS();
 
-  public void JointReader(){
-    NTHelper.setDouble("/joints/intake", intake.getPivotAngle().getRadians() - Rotation2d.fromDegrees(130).getRadians());
+  public void JointReader() {
+    NTHelper.setDouble("/joints/intake",
+        intake.getPivotAngle().getRadians() - Rotation2d.fromDegrees(130).getRadians());
     NTHelper.setDouble("/joints/shooter", shooterAngle.getShooterAngle().getRadians() + (Math.PI / 2));
   }
 
@@ -76,6 +77,12 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    DAS.MotorSettings as = das.calculateAS(1.3);
+    double asAngle = as.getAngle();
+    double asVoltage = as.getVoltage();
+    System.out.println("DASissupa");
+    System.out.println(asAngle +","+ asVoltage);
+
     // Configure the trigger bindings
     configureBindings();
     intake.beltStop();
@@ -104,38 +111,19 @@ public class RobotContainer {
         () -> {
           double y = MathUtil.applyDeadband(
               -driverXbox.getLeftY(),
-              // Math.copySign(Math.pow(-driverXbox.getLeftY(), 2), -driverXbox.getLeftY()),
               OperatorConstants.LEFT_Y_DEADBAND);
           return m_yspeedLimiter.calculate(y);
         },
         () -> {
           double x = MathUtil.applyDeadband(
               -driverXbox.getLeftX(),
-              // Math.copySign(Math.pow(-driverXbox.getLeftX(), 2), -driverXbox.getLeftX()),
               OperatorConstants.LEFT_X_DEADBAND);
           return m_xspeedLimiter.calculate(x);
         },
         () -> -driverXbox.getRightX());
 
-    Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
-        () -> {
-          double y = MathUtil.applyDeadband(
-              -driverXbox.getLeftY(),
-              OperatorConstants.LEFT_Y_DEADBAND);
-          return m_yspeedLimiter.calculate(y);
-        },
-        () -> {
-          double x = MathUtil.applyDeadband(
-              driverXbox.getLeftX(),
-              OperatorConstants.LEFT_X_DEADBAND);
-          return m_xspeedLimiter.calculate(x);
-        },
-        () -> driverXbox.getRawAxis(4));
 
-    drivebase.setDefaultCommand(
-        !RobotBase.isSimulation()
-            ? driveFieldOrientedAnglularVelocity
-            : driveFieldOrientedDirectAngleSim);
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     // auto commands
     // EXAMPLE: NamedCommands.registerCommand("useless",
@@ -146,10 +134,13 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("IntakeSlurp",
         new LoggedCommand(intakeCommands.intakeIntake().withName("IntakeSlurp auto")));
-    NamedCommands.registerCommand("IntakeDown", new LoggedCommand(intakeCommands.intakeDown().withTimeout(0.01).withName("IntakeDown auto")));
+    NamedCommands.registerCommand("IntakeDown",
+        new LoggedCommand(intakeCommands.intakeDown().withTimeout(0.01).withName("IntakeDown auto")));
     NamedCommands.registerCommand("IntakeUntill",
-        new LoggedCommand(intakeCommands.intakeIntakeUntil().andThen(intakeCommands.beltStopCommand()).withName("IntakeUntill auto")));
-    NamedCommands.registerCommand("IntakeUp", new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
+        new LoggedCommand(intakeCommands.intakeIntakeUntil().andThen(intakeCommands.beltStopCommand())
+            .withName("IntakeUntill auto")));
+    NamedCommands.registerCommand("IntakeUp",
+        new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
     NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
 
     PathPlannerLogging.setLogActivePathCallback((poses) -> {
@@ -183,6 +174,7 @@ public class RobotContainer {
     new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
+    new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
 
     // new Trigger(() -> operator.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shootAmp());
@@ -199,8 +191,11 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
 
-    new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.flopAmpCommand());
+    new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.autoFlopCommand());
     new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(shooterCommands.shootAmp());
+
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
+    shooter.setDefaultCommand(shooterCommands.stopIt());
   }
 
   /**
@@ -223,5 +218,19 @@ public class RobotContainer {
 
   public void zeroGyro() {
     drivebase.zeroGyro();
+  }
+
+  public void updateSimVision() {
+    // throw new UnsupportedOperationException("Unimplemented method
+    // 'updateSimVision'");
+    visionSubsystem.simulationPeriodic(drivebase.getPose());
+    visionSubsystem.getLatestResult();
+    // System.out.println(drivebase.getPose());
+
+  }
+
+  public void addVision() {
+    drivebase.addCameraInput(visionSubsystem.getEstimatedRobotPose().estimatedPose.toPose2d(),
+        visionSubsystem.getTimestampSeconds(), visionSubsystem.getStandardDeviations());
   }
 }
