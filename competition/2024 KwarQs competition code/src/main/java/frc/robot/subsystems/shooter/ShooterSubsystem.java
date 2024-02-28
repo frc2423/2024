@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,8 +27,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private NeoMotor shooterMotorOne;
     private NeoMotor shooterMotorTwo;
-    private double shooterSpeed = -4.3 ;
-    private double shooterSpeed2 = -4.3 ;
+    private double shooterSpeed = -4.3;
+    private double shooterSpeed2 = -4.3;
     public static Timer timer;
     public static double feederVoltage = -RobotController.getBatteryVoltage();
     public static double feederFlopVoltage = 2;
@@ -52,7 +53,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void shooterOn() {
-        shooterMotorOne.setSpeed(shooterSpeed/ RobotController.getBatteryVoltage());
+        shooterMotorOne.setSpeed(shooterSpeed / RobotController.getBatteryVoltage());
         shooterMotorTwo.setSpeed(shooterSpeed2 / RobotController.getBatteryVoltage());
     }
 
@@ -102,6 +103,18 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean isRevatSpeed() {
-        return Math.abs(shooterMotorOne.getSpeed() - shooterSpeed)<0.2 ;
+        return Math.abs(shooterMotorOne.getSpeed() - shooterSpeed) < 0.2;
     }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        // This is used to add things to NetworkTables
+        super.initSendable(builder);
+
+        builder.addDoubleProperty("shooterSpeed", () -> shooterSpeed, (shooterSpeed) -> {
+            this.shooterSpeed = shooterSpeed;
+            this.shooterSpeed2 = shooterSpeed;
+        });
+    }
+
 }
