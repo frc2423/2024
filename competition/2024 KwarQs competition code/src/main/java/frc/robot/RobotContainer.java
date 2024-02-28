@@ -217,6 +217,7 @@ public class RobotContainer {
     // 'updateSimVision'");
     visionSubsystem.simulationPeriodic(drivebase.getPose());
     visionSubsystem.getLatestResult();
+    
     // System.out.println(drivebase.getPose());
 
   }
@@ -229,12 +230,12 @@ public class RobotContainer {
   public void updateVision() {
     // visionSubsystem.periodic();
     Optional<Transform3d> bestResult = visionSubsystem.getLatestResult();
-    if (bestResult.isPresent()) {
+    if (bestResult != null && bestResult.isPresent()) {
       Transform3d transform = bestResult.get();
       NTHelper.setDouble("Measurments/april-tag-x", transform.getX());
       NTHelper.setDouble("Measurments/april-tag-y", transform.getY());
       NTHelper.setDouble("Measurments/april-tag-z", transform.getZ());
-
+      NTHelper.setDouble("Measurments/april-tag-id", visionSubsystem.getLatestId);
     }
     // NTHelper.setDouble("Measurments/april-tag-rot", bestResult.getRotation());
   }

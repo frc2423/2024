@@ -4,11 +4,48 @@
     "serverTeam": "2423"
   },
   "transitory": {
+    "FMSInfo": {
+      "open": true
+    },
+    "LiveWindow": {
+      "open": true
+    },
+    "Shuffleboard": {
+      "open": true
+    },
     "SmartDashboard": {
+      "DB": {
+        "open": true
+      },
+      "Encoders": {
+        "open": true
+      },
+      "Field": {
+        "open": true
+      },
+      "IMU": {
+        "open": true
+      },
       "Intake": {
         "open": true
       },
       "ShooterAngle": {
+        "open": true
+      }
+    },
+    "best target": {
+      "double[]##v_/best target/pose": {
+        "open": true
+      }
+    },
+    "joints": {
+      "open": true
+    },
+    "photonvision": {
+      "Arducam_OV9281_USB_Camera": {
+        "open": true
+      },
+      "YOUR CAMERA NAME": {
         "open": true
       },
       "open": true

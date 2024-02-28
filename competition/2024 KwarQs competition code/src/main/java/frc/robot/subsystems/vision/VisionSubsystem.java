@@ -15,7 +15,7 @@ import frc.robot.vision.Vision;
 
 public class VisionSubsystem extends SubsystemBase {
     private Vision visionInterface = new Vision();
-
+    public double getLatestId = 0;
     public VisionSubsystem() {
     }
 
@@ -49,6 +49,11 @@ public class VisionSubsystem extends SubsystemBase {
 
     public Optional<Transform3d> getLatestResult() {
         PhotonTrackedTarget getLatestResult = visionInterface.getLatestResult().getBestTarget();
-        return Optional.ofNullable(getLatestResult.getBestCameraToTarget());
+        if (getLatestResult != null){
+            getLatestId = getLatestResult.getFiducialId();
+            System.out.println("DOIjsdiajojaijsdoiasdj adam wow");
+            return Optional.ofNullable(getLatestResult.getBestCameraToTarget());
+        }
+        return null;
     }
 }
