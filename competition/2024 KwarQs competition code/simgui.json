@@ -132,6 +132,9 @@
     "transitory": {
       "Shuffleboard": {
         "Autonomous": {
+          "SendableChooser[0]": {
+            "open": true
+          },
           "open": true
         }
       },
@@ -153,11 +156,32 @@
           },
           "open": true
         },
-        "open": true,
         "swerve": {
           "double[]##v_/SmartDashboard/swerve/measuredChassisSpeeds": {
             "open": true
           },
+          "open": true
+        }
+      },
+      "best target": {
+        "a": {
+          "angles": {
+            "open": true
+          }
+        },
+        "c": {
+          "joints": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      },
+      "joints": {
+        "angles": {
+          "open": true
+        },
+        "joints": {
           "open": true
         }
       },

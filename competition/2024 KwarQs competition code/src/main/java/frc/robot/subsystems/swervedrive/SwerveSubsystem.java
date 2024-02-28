@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.DAS;
 import frc.robot.NTHelper;
 
 import static frc.robot.Constants.Vision.kRobotToCam;
@@ -506,5 +507,13 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void setHighMaxSpeed() {
     maximumSpeed = 4.5;
+  }
+
+  public double getDistanceDAS(){
+        double ydistance = this.getPose().getY() - 5.53;
+        double xdistance = this.getPose().getX();
+        double distance = Math.sqrt(Math.pow(ydistance, 2) + Math.pow(xdistance, 2));
+       
+        return (distance);
   }
 }
