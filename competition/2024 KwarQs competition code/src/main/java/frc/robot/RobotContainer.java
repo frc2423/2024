@@ -174,6 +174,7 @@ public class RobotContainer {
     new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
+    new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
 
     // new Trigger(() -> operator.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shootAmp());
@@ -192,6 +193,9 @@ public class RobotContainer {
 
     new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.autoFlopCommand());
     new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(shooterCommands.shootAmp());
+
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
+    shooter.setDefaultCommand(shooterCommands.stopIt());
   }
 
   /**

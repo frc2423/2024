@@ -27,6 +27,16 @@ public class IntakeCommands {
         return command;
     }
 
+    public Command intakeOutOfTheWayCommand() {
+        var command = Commands.run(() -> {
+            intake.outOfTheWay();
+                    System.out.println("INTAKE OUT OF THE WAY");
+
+        }, intake);
+        command.setName("Intake Out of The Way");
+        return command;
+    }
+
     public Command intakeIntake() {
         var command = Commands.run(() -> intake.intake(), intake);
         command.setName("Intake Slurp");

@@ -91,6 +91,18 @@ public class ShooterCommands {
         command.setName("sPiNiNg");
         return command;
     }
+    
+    public Command handOffCommand() {
+        
+        var command = Commands.sequence(
+            intake.intakeInWithRevCommand(),
+            Commands.parallel(moveFeedSlowCommand(),intake.intakeOutWithFeedCommand(),shooterOnFlop()),
+            intake.intakeOutOfTheWayCommand().until(() -> iintake.isAngleGreat())
+        );
+        command.setName("Hand Off");
+        return command;
+    }
+
 
     public Command flopAmpCommand() {
 
