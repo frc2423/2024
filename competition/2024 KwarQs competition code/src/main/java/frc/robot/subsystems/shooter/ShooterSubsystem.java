@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -100,5 +101,15 @@ public class ShooterSubsystem extends SubsystemBase {
         feeder_Motor.setVoltage(0);
     }
 
+    @Override
+  public void initSendable(SendableBuilder builder) {
+    // This is used to add things to NetworkTables
+    super.initSendable(builder);
+
+    builder.addDoubleProperty("shooterSpeed", () -> shooterSpeed, (shooterSpeed) -> {
+      this.shooterSpeed = shooterSpeed;
+      this.shooterSpeed2 = shooterSpeed;
+    });
+  }
 
 }
