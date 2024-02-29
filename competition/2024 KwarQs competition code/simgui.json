@@ -35,6 +35,9 @@
         "header": {
           "open": true
         }
+      },
+      "window": {
+        "visible": false
       }
     }
   },
@@ -79,12 +82,11 @@
           "arrowWeight": 3.0,
           "style": "Hidden"
         },
-        "bottom": 544,
-        "builtin": "2024 Crescendo",
-        "height": 8.013679504394531,
-        "left": 46,
-        "right": 1088,
-        "top": 36,
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
         "width": 16.541748046875,
         "window": {
           "visible": true
@@ -130,9 +132,11 @@
     "transitory": {
       "Shuffleboard": {
         "Autonomous": {
+          "SendableChooser[0]": {
+            "open": true
+          },
           "open": true
-        },
-        "open": true
+        }
       },
       "SmartDashboard": {
         "Field": {
@@ -147,13 +151,37 @@
           "open": true
         },
         "SwerveSubsystem": {
+          "double[]##v_/SmartDashboard/SwerveSubsystem/Get Camera Pose3d": {
+            "open": true
+          },
           "open": true
         },
-        "open": true,
         "swerve": {
           "double[]##v_/SmartDashboard/swerve/measuredChassisSpeeds": {
             "open": true
           },
+          "open": true
+        }
+      },
+      "best target": {
+        "a": {
+          "angles": {
+            "open": true
+          }
+        },
+        "c": {
+          "joints": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      },
+      "joints": {
+        "angles": {
+          "open": true
+        },
+        "joints": {
           "open": true
         }
       },
@@ -173,8 +201,7 @@
     },
     "Server": {
       "open": true
-    },
-    "visible": true
+    }
   },
   "sourceNames": {
     "DIO[8]": "intake sensor"

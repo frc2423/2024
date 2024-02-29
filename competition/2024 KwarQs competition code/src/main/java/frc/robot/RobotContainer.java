@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import java.io.File;
+
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.PathPlannerLogging;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -30,6 +35,7 @@ import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 
+<<<<<<< HEAD
 import java.io.File;
 import java.util.Optional;
 
@@ -38,6 +44,8 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
+=======
+>>>>>>> main
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a "declarative" paradigm, very
@@ -66,9 +74,10 @@ public class RobotContainer {
   VisionSubsystem visionSubsystem = new VisionSubsystem();
   ShooterAngle shooterAngle = new ShooterAngle(intake);
   IntakeCommands intakeCommands = new IntakeCommands(intake);
-  ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle);
-  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake);
+  ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake, drivebase);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
+  public static final DAS das = new DAS();
 
   public void JointReader() {
     NTHelper.setDouble("/joints/intake",
@@ -80,6 +89,12 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    DAS.MotorSettings as = das.calculateAS(1.3);
+    double asAngle = as.getAngle();
+    double asVoltage = as.getVoltage();
+    System.out.println("DASissupa");
+    System.out.println(asAngle +","+ asVoltage);
+
     // Configure the trigger bindings
     configureBindings();
     intake.beltStop();
@@ -170,6 +185,7 @@ public class RobotContainer {
     new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
+    new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
 
     // new Trigger(() -> operator.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shootAmp());
@@ -186,8 +202,11 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
 
-    new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.flopAmpCommand());
+    new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.autoFlopCommand());
     new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(shooterCommands.shootAmp());
+
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
+    shooter.setDefaultCommand(shooterCommands.stopIt());
   }
 
   /**

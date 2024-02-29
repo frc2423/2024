@@ -33,7 +33,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public static final double kAVoltSecondSquaredPerRad = 0.05;
     public static final int kMotorPort = 20;
 
-    public static final double upPositionDegrees = 290;// .4//0.3
+    public static final double upPositionDegrees = 290;// .4//0.3 //290
     public static Rotation2d setpoint = Rotation2d.fromDegrees(upPositionDegrees);
     private final CANSparkMax m_Pivot;
     ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : 0.005, 0, .001,
@@ -118,6 +118,13 @@ public class IntakeSubsystem extends SubsystemBase {
         isDown = false;
         intakeState = "Static";
         setpoint = Rotation2d.fromDegrees(upPositionDegrees);
+    }
+
+     public void outOfTheWay() {
+        // make it up angle
+        isDown = false;
+        intakeState = "Static";
+        setpoint = Rotation2d.fromDegrees(170);
     }
 
     public void intake() {
