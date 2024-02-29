@@ -4,6 +4,7 @@ import java.util.EnumSet;
 import java.util.function.Consumer;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableEvent.Kind;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableEvent;
@@ -123,5 +124,11 @@ public class NTHelper {
         var rot = pose.getRotation().getQuaternion();
         return new double[] { trans.getX(), trans.getY(), trans.getZ(), rot.getW(), rot.getX(),
                 rot.getY(), rot.getZ() };
+    }
+    
+    public static double[] getDoubleArrayPose2d(Pose2d pose) {
+        var trans = pose.getTranslation();
+        var rot = pose.getRotation();
+        return new double[] { trans.getX(), trans.getY(), rot.getDegrees() };
     }
 }

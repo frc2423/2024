@@ -201,7 +201,8 @@
     },
     "Server": {
       "open": true
-    }
+    },
+    "visible": true
   },
   "sourceNames": {
     "DIO[8]": "intake sensor"

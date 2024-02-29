@@ -35,7 +35,6 @@ import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 
-<<<<<<< HEAD
 import java.io.File;
 import java.util.Optional;
 
@@ -44,8 +43,6 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
-=======
->>>>>>> main
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a "declarative" paradigm, very
@@ -80,9 +77,10 @@ public class RobotContainer {
   public static final DAS das = new DAS();
 
   public void JointReader() {
-    NTHelper.setDouble("/joints/intake",
+    NTHelper.setDouble("/urdf/joints/intake",
         intake.getPivotAngle().getRadians() - Rotation2d.fromDegrees(130).getRadians());
-    NTHelper.setDouble("/joints/shooter", shooterAngle.getShooterAngle().getRadians() + (Math.PI / 2));
+    NTHelper.setDouble("/urdf/joints/shooter", shooterAngle.getShooterAngle().getRadians() + (Math.PI / 2));
+    NTHelper.setDoubleArray("/urdf/pose", NTHelper.getDoubleArrayPose2d(drivebase.getPose()));
   }
 
   /**
