@@ -100,6 +100,7 @@ public class RobotContainer {
     SmartDashboard.putData("SwerveSubsystem", drivebase);
     SmartDashboard.putData("Shooter", shooter);
     SmartDashboard.putData("ShooterAngle", shooterAngle);
+    SmartDashboard.putData("VisionSubsystem", visionSubsystem);
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
@@ -240,8 +241,16 @@ public class RobotContainer {
   }
 
   public void addVision() {
-    drivebase.addCameraInput(visionSubsystem.getEstimatedRobotPose().estimatedPose.toPose2d(),
-        visionSubsystem.getTimestampSeconds(), visionSubsystem.getStandardDeviations());
+    var estimatedPose = visionSubsystem.getEstimatedRobotPose();
+    var std = visionSubsystem.getStandardDeviations();
+    if (estimatedPose.isPresent() && std.isPresent()) {
+      var pose = estimatedPose.get().estimatedPose.toPose2d();
+      NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));      
+      // NTHelper.setDoubleArray("Measurments/std", NTHelper.getDoubleArrayPose2d(pose));
+
+      drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),
+          visionSubsystem.getTimestampSeconds(), std.get());
+    }
   }
 
   public void updateVision() {
@@ -253,6 +262,7 @@ public class RobotContainer {
       NTHelper.setDouble("Measurments/april-tag-y", transform.getY());
       NTHelper.setDouble("Measurments/april-tag-z", transform.getZ());
       NTHelper.setDouble("Measurments/april-tag-id", visionSubsystem.getLatestId);
+      addVision();
     }
     // NTHelper.setDouble("Measurments/april-tag-rot", bestResult.getRotation());
   }

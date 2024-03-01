@@ -10,12 +10,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.vision.Vision;
 
 public class VisionSubsystem extends SubsystemBase {
     private Vision visionInterface = new Vision();
     public double getLatestId = 0;
+
     public VisionSubsystem() {
     }
 
@@ -24,18 +26,17 @@ public class VisionSubsystem extends SubsystemBase {
         Optional<EstimatedRobotPose> pose = visionInterface.getEstimatedGlobalPose();
     }
 
-    public EstimatedRobotPose getEstimatedRobotPose() {
+    public Optional<EstimatedRobotPose> getEstimatedRobotPose() {
         Optional<EstimatedRobotPose> pose = visionInterface.getEstimatedGlobalPose();
-        if (pose.isEmpty())
-            return null;
-        else {
-            return pose.get();
-        }
-
+        return pose;
     }
 
-    public Matrix<N3, N1> getStandardDeviations() {
-        return visionInterface.getEstimationStdDevs(getEstimatedRobotPose().estimatedPose.toPose2d());
+    public Optional<Matrix<N3, N1>> getStandardDeviations() {
+        Optional<EstimatedRobotPose> pose = getEstimatedRobotPose();
+        if (pose.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(visionInterface.getEstimationStdDevs(pose.get().estimatedPose.toPose2d()));
     }
 
     public double getTimestampSeconds() {
@@ -48,12 +49,24 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public Optional<Transform3d> getLatestResult() {
+        if (!visionInterface.getLatestResult().hasTargets()) {
+            return null;
+        }
         PhotonTrackedTarget getLatestResult = visionInterface.getLatestResult().getBestTarget();
-        if (getLatestResult != null){
+        if (getLatestResult != null) {
             getLatestId = getLatestResult.getFiducialId();
-            System.out.println("DOIjsdiajojaijsdoiasdj adam wow");
             return Optional.ofNullable(getLatestResult.getBestCameraToTarget());
         }
         return null;
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        // This is used to add things to NetworkTables
+        super.initSendable(builder);
+
+        builder.addBooleanProperty("has targets", () -> visionInterface.getLatestResult().hasTargets(), null);
+        builder.addBooleanProperty("is connected", () -> visionInterface.getCamera().isConnected(), null);
+        builder.addIntegerProperty("pipeline index", () -> visionInterface.getCamera().getPipelineIndex(), null);
     }
 }

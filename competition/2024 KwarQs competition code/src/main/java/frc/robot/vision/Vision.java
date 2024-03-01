@@ -64,7 +64,7 @@ public class Vision {
     public Vision() {
         camera = new PhotonCamera(kCameraName);
 
-        photonEstimator = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_RIO, camera, kRobotToCam);
+        photonEstimator = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, kRobotToCam);
         photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
         // ----- Simulation
@@ -181,6 +181,10 @@ public class Vision {
             estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
 
         return estStdDevs;
+    }
+
+    public PhotonCamera getCamera() {
+        return camera;
     }
 
     // ----- Simulation
