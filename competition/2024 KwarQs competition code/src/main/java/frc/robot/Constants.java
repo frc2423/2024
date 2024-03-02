@@ -59,22 +59,24 @@ public final class Constants {
   public static class IntakeConstants {
 
   }
-   public static class Vision {
-    public static final String kCameraName = "YOUR CAMERA NAME";
-    // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-    public static final Transform3d kRobotToCam =
-            new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
+
+  public static class Vision {
+    public static final String kCameraName = "Arducam_OV9281_USB_Camera";
+    // Assumed the origin point was on the floor -(^o^)-
+    public static final Transform3d kRobotToCam = new Transform3d(new Translation3d(-0.229, 0, 0.394),
+        new Rotation3d(0, -0.419, Math.PI));
 
     // The layout of the AprilTags on the field
     public static final AprilTagFieldLayout kTagLayout;
 
     static {
-        kTagLayout = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
+      kTagLayout = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
     }
 
-    // The standard deviations of our vision estimated poses, which affect correction rate
+    // The standard deviations of our vision estimated poses, which affect
+    // correction rate
     // (Fake values. Experiment and determine estimation noise on an actual robot.)
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
-}
+  }
 }

@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -10,7 +11,6 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-
 
 public class ShooterCommands {
 
@@ -91,18 +91,16 @@ public class ShooterCommands {
         command.setName("sPiNiNg");
         return command;
     }
-    
+
     public Command handOffCommand() {
-        
+
         var command = Commands.sequence(
-            intake.intakeInWithRevCommand(),
-            Commands.parallel(moveFeedSlowCommand(),intake.intakeOutWithFeedCommand(),shooterOnFlop()),
-            intake.intakeOutOfTheWayCommand().until(() -> iintake.isAngleGreat())
-        );
+                intake.intakeInWithRevCommand(),
+                Commands.parallel(moveFeedSlowCommand(), intake.intakeOutWithFeedCommand(), shooterOnFlop()),
+                intake.intakeOutOfTheWayCommand().until(() -> iintake.isAngleGreat()));
         command.setName("Hand Off");
         return command;
     }
-
 
     public Command flopAmpCommand() {
 
@@ -125,30 +123,40 @@ public class ShooterCommands {
         return command;
     }
 
-
     private Command revSpeedFromDAS() {
-    
-        return new FunctionalCommand(
-            () -> {
+        return Commands.run(() -> {
+            double distance = drivebase.getDistanceDAS();
+            DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
+            shooter.setSpeed(as.getVoltage());
+            // ShooterAngle.moveShooterAngle
+            // code to run while running
+        }).withTimeout(0.375);
+        // return new FunctionalCommand(
+        // () -> {
 
-                // code to run on init
-            },
-            () -> {
-                double distance = drivebase.getDistanceDAS();
-                DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
-                shooter.setSpeed(as.getVoltage());
-                // ShooterAngle.moveShooterAngle
-                // code to run while running
-            },
-            (interrupted) -> {
-                // code to run when ending
-            },
-            () -> {
-                // return true when finished
-                return shooter.isRevatSpeed();
-                //return shooter.isShooterAtGoal
-            }
-        );
+        // // code to run on init
+        // },
+        // () -> {
+        // double distance = drivebase.getDistanceDAS();
+        // DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
+        // shooter.setSpeed(as.getVoltage());
+        // // ShooterAngle.moveShooterAngle
+        // // code to run while running
+        // },
+        // (interrupted) -> {
+        // // code to run when ending
+        // },
+        // () -> {
+        // // return true when finished
+        // return shooter.isRevatSpeed();
+        // //return shooter.isShooterAtGoal
+        // }
+        // );
     }
 
+    public Command shootFromDAS(){
+        return Commands.parallel(
+            revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS()
+        );
+    }
 }

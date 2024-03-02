@@ -1,0 +1,44 @@
+<dashboard-tab
+    tab-name="TeleOperated"
+    slot="tab"
+    selected=""
+    source-provider="NetworkTables"
+><frc-field-wrapper
+        source-key="/SmartDashboard/Field"
+        source-provider="NetworkTables"
+        style="transform: translate(17.6px, 8.60002px); width: 363.987px; height: 636.2px;"
+        game="Crescendo"
+        rotation="90"
+        grid-size="1"
+        origin="red"
+        crop-left="13"
+        crop-right="88"
+    >
+    </frc-field-wrapper><frc-field3d
+        source-provider="NetworkTables"
+        style="transform: translate(389.6px, 130.2px);"
+        camera-pose="[]"
+        source-key="/field3d/field"
+        origin="blue"
+    ><frc-field3d-urdf-wrapper
+            source-provider="NetworkTables"
+            source-key="/field3d/urdf"
+            pose="[0,0,0]"
+            name=""
+        ><!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
+            <!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
+            <!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
+            <!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
+        </frc-field3d-urdf-wrapper><frc-field3d-pose-visualizer
+            source-provider="NetworkTables"
+            source-key="/best target"
+            pose="[0,0,0]"
+        ></frc-field3d-pose-visualizer></frc-field3d></dashboard-tab><dashboard-tab
+    slot="tab"
+    tab-name="Autonomous"
+    source-provider="NetworkTables"
+></dashboard-tab>

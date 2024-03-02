@@ -1,12 +1,11 @@
 package frc.robot;
 
-import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
 // DAS means distance angle speed table
 public class DAS {
-    class MotorSettings {
+    public class MotorSettings {
         double angle; // in degrees
         double voltage; // in volts
 
@@ -33,8 +32,10 @@ public class DAS {
 
     private void initializeMap() {
         // Example values, replace these with your actual mappings
-        distanceMap.put(1.0, new MotorSettings(30.0, 5.0)); // fix values
-        distanceMap.put(2.0, new MotorSettings(45.0, 5.5));
+        distanceMap.put(1.0, new MotorSettings(323, -8)); // fix values
+        distanceMap.put(2.0, new MotorSettings(318, -8));
+        distanceMap.put(3.0, new MotorSettings(313, -9));
+        distanceMap.put(4.0, new MotorSettings(310, -9));
     }
 
     public MotorSettings calculateAS(double distance) {

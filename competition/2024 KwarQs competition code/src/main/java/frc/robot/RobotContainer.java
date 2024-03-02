@@ -11,13 +11,17 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -33,6 +37,14 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
+
+import java.io.File;
+import java.util.Optional;
+
+import org.photonvision.targeting.PhotonPipelineResult;
+
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -68,9 +80,12 @@ public class RobotContainer {
   public static final DAS das = new DAS();
 
   public void JointReader() {
-    NTHelper.setDouble("/joints/intake",
+    NTHelper.setDouble("/field3d/urdf/joints/intake",
         intake.getPivotAngle().getRadians() - Rotation2d.fromDegrees(130).getRadians());
-    NTHelper.setDouble("/joints/shooter", shooterAngle.getShooterAngle().getRadians() + (Math.PI / 2));
+    NTHelper.setDouble("/field3d/urdf/joints/shooter", shooterAngle.getShooterAngle().getRadians() + (Math.PI / 2));
+    NTHelper.setDoubleArray("/field3d/urdf/pose", NTHelper.getDoubleArrayPose2d(drivebase.getPose()));
+    Pose3d cameraPose = new Pose3d(drivebase.getPose()).plus(Constants.Vision.kRobotToCam);
+    NTHelper.setDoubleArray("/field3d/field/cameraPose", NTHelper.getDoubleArrayPose3d(cameraPose));
   }
 
   /**
@@ -90,6 +105,7 @@ public class RobotContainer {
     SmartDashboard.putData("SwerveSubsystem", drivebase);
     SmartDashboard.putData("Shooter", shooter);
     SmartDashboard.putData("ShooterAngle", shooterAngle);
+    SmartDashboard.putData("VisionSubsystem", visionSubsystem);
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
@@ -122,7 +138,6 @@ public class RobotContainer {
         },
         () -> -driverXbox.getRightX());
 
-
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     // auto commands
@@ -149,6 +164,12 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+
+
+
+
+
+
     new JoystickButton(driverXbox, XboxController.Button.kStart.value)
         .onTrue((new InstantCommand(drivebase::zeroGyro)));
     // new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new
@@ -168,7 +189,8 @@ public class RobotContainer {
     new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterUp());
 
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
+    // new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS());
     shooter.setDefaultCommand(shooterCommands.stopIt());
 
     new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
@@ -176,6 +198,14 @@ public class RobotContainer {
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
     new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
 
+
+    new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
+      operator.setRumble(RumbleType.kBothRumble, 1);
+      driverXbox.setRumble(RumbleType.kBothRumble, 1);
+    }).withTimeout(0.375).andThen(Commands.runOnce(() -> {
+      operator.setRumble(RumbleType.kBothRumble, 0);
+      driverXbox.setRumble(RumbleType.kBothRumble, 0);
+    })));
     // new Trigger(() -> operator.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shootAmp());
     // shooter.setDefaultCommand(shooterCommands.stopIt());
@@ -225,12 +255,35 @@ public class RobotContainer {
     // 'updateSimVision'");
     visionSubsystem.simulationPeriodic(drivebase.getPose());
     visionSubsystem.getLatestResult();
+    
     // System.out.println(drivebase.getPose());
 
   }
 
   public void addVision() {
-    drivebase.addCameraInput(visionSubsystem.getEstimatedRobotPose().estimatedPose.toPose2d(),
-        visionSubsystem.getTimestampSeconds(), visionSubsystem.getStandardDeviations());
+    var estimatedPose = visionSubsystem.getEstimatedRobotPose();
+    var std = visionSubsystem.getStandardDeviations();
+    if (estimatedPose.isPresent() && std.isPresent()) {
+      var pose = estimatedPose.get().estimatedPose.toPose2d();
+      NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));      
+      // NTHelper.setDoubleArray("Measurments/std", NTHelper.getDoubleArrayPose2d(pose));
+
+      drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),
+          visionSubsystem.getTimestampSeconds(), std.get());
+    }
+  }
+
+  public void updateVision() {
+    // visionSubsystem.periodic();
+    Optional<Transform3d> bestResult = visionSubsystem.getLatestResult();
+    if (bestResult != null && bestResult.isPresent()) {
+      Transform3d transform = bestResult.get();
+      NTHelper.setDouble("Measurments/april-tag-x", transform.getX());
+      NTHelper.setDouble("Measurments/april-tag-y", transform.getY());
+      NTHelper.setDouble("Measurments/april-tag-z", transform.getZ());
+      NTHelper.setDouble("Measurments/april-tag-id", visionSubsystem.getLatestId);
+      addVision();
+    }
+    // NTHelper.setDouble("Measurments/april-tag-rot", bestResult.getRotation());
   }
 }

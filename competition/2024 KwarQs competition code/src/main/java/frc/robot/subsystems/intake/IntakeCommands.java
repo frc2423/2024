@@ -20,7 +20,7 @@ public class IntakeCommands {
     public Command intakeUp() {
         var command = Commands.run(() -> {
             intake.retract();
-                    System.out.println("INTAKE UP");
+            System.out.println("INTAKE UP");
 
         }, intake);
         command.setName("Intake Up");
@@ -30,7 +30,7 @@ public class IntakeCommands {
     public Command intakeOutOfTheWayCommand() {
         var command = Commands.run(() -> {
             intake.outOfTheWay();
-                    System.out.println("INTAKE OUT OF THE WAY");
+            System.out.println("INTAKE OUT OF THE WAY");
 
         }, intake);
         command.setName("Intake Out of The Way");
@@ -70,9 +70,13 @@ public class IntakeCommands {
     }
 
     public Command intakeIntakeUntil() {
-        var command = intakeIntake().until(intake::isBeamBroken);
-        command.setName("Intake untill");
-        return command;
+        Command intakeStart = intakeIntake().until(intake::isBeamBroken);
+        Command intakeStop = Commands.runOnce(intake::beltStop);
+        Command intakeRetract = Commands.runOnce(intake::retract);
+
+        Command sequence = Commands.sequence(intakeStart, intakeStop, intakeRetract);
+        sequence.setName("Intake untill");
+        return sequence;
     }
 
     public Command beltStopCommand() {

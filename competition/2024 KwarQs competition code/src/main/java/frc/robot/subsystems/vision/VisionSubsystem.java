@@ -3,37 +3,37 @@ package frc.robot.subsystems.vision;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.vision.Vision;
 
 public class VisionSubsystem extends SubsystemBase {
     private Vision visionInterface = new Vision();
-
-    public VisionSubsystem() {
-    }
+    public double getLatestId = 0;
+    private Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
 
     @Override
     public void periodic() {
-        Optional<EstimatedRobotPose> pose = visionInterface.getEstimatedGlobalPose();
+        estimatedPose = visionInterface.getEstimatedGlobalPose();
     }
 
-    public EstimatedRobotPose getEstimatedRobotPose() {
-        Optional<EstimatedRobotPose> pose = visionInterface.getEstimatedGlobalPose();
-        if (pose.isEmpty())
-            return null;
-        else {
-            return pose.get();
+    public Optional<EstimatedRobotPose> getEstimatedRobotPose() {
+        return estimatedPose;
+    }
+
+    public Optional<Matrix<N3, N1>> getStandardDeviations() {
+        Optional<EstimatedRobotPose> pose = getEstimatedRobotPose();
+        if (pose.isEmpty()) {
+            return Optional.empty();
         }
-
-    }
-
-    public Matrix<N3, N1> getStandardDeviations() {
-        return visionInterface.getEstimationStdDevs(getEstimatedRobotPose().estimatedPose.toPose2d());
+        return Optional.of(visionInterface.getEstimationStdDevs(pose.get().estimatedPose.toPose2d()));
     }
 
     public double getTimestampSeconds() {
@@ -45,7 +45,25 @@ public class VisionSubsystem extends SubsystemBase {
         visionInterface.simulationPeriodic(pose);
     }
 
-    public void getLatestResult() {
-        visionInterface.getLatestResult();
+    public Optional<Transform3d> getLatestResult() {
+        if (!visionInterface.getLatestResult().hasTargets()) {
+            return null;
+        }
+        PhotonTrackedTarget getLatestResult = visionInterface.getLatestResult().getBestTarget();
+        if (getLatestResult != null) {
+            getLatestId = getLatestResult.getFiducialId();
+            return Optional.ofNullable(getLatestResult.getBestCameraToTarget());
+        }
+        return null;
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        // This is used to add things to NetworkTables
+        super.initSendable(builder);
+
+        builder.addBooleanProperty("has targets", () -> visionInterface.getLatestResult().hasTargets(), null);
+        builder.addBooleanProperty("is connected", () -> visionInterface.getCamera().isConnected(), null);
+        builder.addIntegerProperty("pipeline index", () -> visionInterface.getCamera().getPipelineIndex(), null);
     }
 }

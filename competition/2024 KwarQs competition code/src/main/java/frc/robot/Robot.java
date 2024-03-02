@@ -85,6 +85,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.JointReader();
 
     NTHelper.setDouble("/Time", periodTimer.get());
+
+    m_robotContainer.updateVision();
   }
 
   /**
@@ -183,8 +185,7 @@ public class Robot extends TimedRobot {
    * This function is called periodically whilst in simulation.
    */
   @Override
-  public void simulationPeriodic()
-  {
+  public void simulationPeriodic() {
     m_robotContainer.updateSimVision();
   }
 }
