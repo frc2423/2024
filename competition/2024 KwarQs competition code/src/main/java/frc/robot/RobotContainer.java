@@ -11,6 +11,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -79,10 +80,12 @@ public class RobotContainer {
   public static final DAS das = new DAS();
 
   public void JointReader() {
-    NTHelper.setDouble("/urdf/joints/intake",
+    NTHelper.setDouble("/field3d/urdf/joints/intake",
         intake.getPivotAngle().getRadians() - Rotation2d.fromDegrees(130).getRadians());
-    NTHelper.setDouble("/urdf/joints/shooter", shooterAngle.getShooterAngle().getRadians() + (Math.PI / 2));
-    NTHelper.setDoubleArray("/urdf/pose", NTHelper.getDoubleArrayPose2d(drivebase.getPose()));
+    NTHelper.setDouble("/field3d/urdf/joints/shooter", shooterAngle.getShooterAngle().getRadians() + (Math.PI / 2));
+    NTHelper.setDoubleArray("/field3d/urdf/pose", NTHelper.getDoubleArrayPose2d(drivebase.getPose()));
+    Pose3d cameraPose = new Pose3d(drivebase.getPose()).plus(Constants.Vision.kRobotToCam);
+    NTHelper.setDoubleArray("/field3d/field/cameraPose", NTHelper.getDoubleArrayPose3d(cameraPose));
   }
 
   /**

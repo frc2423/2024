@@ -60,6 +60,7 @@
       "/SmartDashboard/Shooter": "Subsystem",
       "/SmartDashboard/ShooterAngle": "Subsystem",
       "/SmartDashboard/SwerveSubsystem": "Subsystem",
+      "/SmartDashboard/VisionSubsystem": "Subsystem",
       "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d",
       "/SmartDashboard/navX-Sensor[1]": "Gyro",
       "/SmartDashboard/navX-Sensor[4]": "Gyro"

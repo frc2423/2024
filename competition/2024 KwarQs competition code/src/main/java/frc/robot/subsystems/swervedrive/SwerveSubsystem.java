@@ -490,7 +490,6 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void addCameraInput(Pose2d visionPose, double timestamp, Matrix<N3, N1> standardDeviations) {
-    System.out.println("ADD VISION MEASUEMENT");
     swerveDrive.addVisionMeasurement(visionPose, timestamp, standardDeviations);
   }
 

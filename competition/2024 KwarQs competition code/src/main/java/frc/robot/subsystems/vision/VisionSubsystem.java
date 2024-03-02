@@ -17,18 +17,15 @@ import frc.robot.vision.Vision;
 public class VisionSubsystem extends SubsystemBase {
     private Vision visionInterface = new Vision();
     public double getLatestId = 0;
-
-    public VisionSubsystem() {
-    }
+    private Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
 
     @Override
     public void periodic() {
-        Optional<EstimatedRobotPose> pose = visionInterface.getEstimatedGlobalPose();
+        estimatedPose = visionInterface.getEstimatedGlobalPose();
     }
 
     public Optional<EstimatedRobotPose> getEstimatedRobotPose() {
-        Optional<EstimatedRobotPose> pose = visionInterface.getEstimatedGlobalPose();
-        return pose;
+        return estimatedPose;
     }
 
     public Optional<Matrix<N3, N1>> getStandardDeviations() {

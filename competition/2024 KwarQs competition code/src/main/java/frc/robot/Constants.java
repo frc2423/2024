@@ -63,8 +63,8 @@ public final class Constants {
   public static class Vision {
     public static final String kCameraName = "Arducam_OV9281_USB_Camera";
     // Assumed the origin point was on the floor -(^o^)-
-    public static final Transform3d kRobotToCam = new Transform3d(new Translation3d(0, 0.229, 0.394),
-        new Rotation3d(0, 0.419, 0));
+    public static final Transform3d kRobotToCam = new Transform3d(new Translation3d(-0.229, 0, 0.394),
+        new Rotation3d(0, -0.419, Math.PI));
 
     // The layout of the AprilTags on the field
     public static final AprilTagFieldLayout kTagLayout;

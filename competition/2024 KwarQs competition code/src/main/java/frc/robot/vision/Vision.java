@@ -101,8 +101,9 @@ public class Vision {
     }
 
     public PhotonPipelineResult getLatestResult() {
-        if (camera.getLatestResult().hasTargets()) {
-            var target = camera.getLatestResult().getBestTarget();
+        var result = camera.getLatestResult();
+        if (result.hasTargets()) {
+            var target = result.getBestTarget();
             NTHelper.setDouble("/best target/yaw", target.getYaw());
 
             var pose3d = kTagLayout.getTagPose(target.getFiducialId());
@@ -116,7 +117,7 @@ public class Vision {
         } else {
             NTHelper.setDoubleArray("/best target/pose", new double[] { 0, 0, 100, 0, 0, 0, 0 });
         }
-        return camera.getLatestResult();
+        return result;
     }
 
     /**
