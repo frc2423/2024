@@ -54,7 +54,7 @@ public class ShooterAngleCommands {
     return command;
   }
 
-  private Command setShooterAngleFromDAS() {
+  public Command setShooterAngleFromDAS() {
     
         return new FunctionalCommand(
             () -> {

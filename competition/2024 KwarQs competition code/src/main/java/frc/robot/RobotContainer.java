@@ -15,10 +15,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -159,6 +161,12 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+
+
+
+
+
+
     new JoystickButton(driverXbox, XboxController.Button.kStart.value)
         .onTrue((new InstantCommand(drivebase::zeroGyro)));
     // new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new
@@ -178,7 +186,8 @@ public class RobotContainer {
     new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterUp());
 
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
+    // new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS());
     shooter.setDefaultCommand(shooterCommands.stopIt());
 
     new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
@@ -186,6 +195,14 @@ public class RobotContainer {
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
     new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
 
+
+    new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
+      operator.setRumble(RumbleType.kBothRumble, 1);
+      driverXbox.setRumble(RumbleType.kBothRumble, 1);
+    }).withTimeout(0.375).andThen(Commands.runOnce(() -> {
+      operator.setRumble(RumbleType.kBothRumble, 0);
+      driverXbox.setRumble(RumbleType.kBothRumble, 0);
+    })));
     // new Trigger(() -> operator.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shootAmp());
     // shooter.setDefaultCommand(shooterCommands.stopIt());
