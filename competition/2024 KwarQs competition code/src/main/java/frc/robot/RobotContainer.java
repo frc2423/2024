@@ -191,6 +191,7 @@ public class RobotContainer {
 
     // new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS());
+    new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
 
 
     // new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());

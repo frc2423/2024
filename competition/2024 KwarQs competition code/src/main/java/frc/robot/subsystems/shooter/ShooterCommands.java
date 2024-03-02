@@ -135,7 +135,7 @@ public class ShooterCommands {
             shooter.shooterOn();
             // ShooterAngle.moveShooterAngle
             // code to run while running
-        }, shooter).withTimeout(0.375);
+        }, shooter).withTimeout(0.75);
         // return new FunctionalCommand(
         // () -> {
 
@@ -169,7 +169,7 @@ public class ShooterCommands {
 
     public Command shootFromDAS() {
         Command command = Commands.parallel(
-                revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS()).andThen(shoot());
+                revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS()).andThen(Commands.waitSeconds(0.35).andThen(shoot()).andThen(shooterAngle.shooterAngleCommand()));
         command.setName("shootFromDAS");
         return command;
     }

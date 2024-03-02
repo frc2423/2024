@@ -129,12 +129,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void intake() {
         // slurp the note
-        intakeSpeed = -.4;
+        intakeSpeed = -.3;
     }
 
     public void outtake() {
         // spit the note out
-        intakeSpeed = .4;
+        intakeSpeed = .3;
     }
 
     public void beltStop() {
