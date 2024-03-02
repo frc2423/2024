@@ -31,7 +31,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private double shooterSpeed2 = -4.3;
     public static Timer timer;
     public static double feederVoltage = -RobotController.getBatteryVoltage();
-    public static double feederFlopVoltage = 2;
+    public static double feederFlopVoltage = 1;
     public static double feederFlopVoltageBackwards = 4;
     private final CANSparkMax feeder_Motor;
     public static final int kFeederMotorPort = 23;
@@ -92,6 +92,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void moveFeederSlow() {
         feeder_Motor.setVoltage(-feederFlopVoltage);
+    }
+
+    public void moveFeederslowReverse() {
+        feeder_Motor.setVoltage(0.5);
     }
 
     public void moveFeederMotorBackwards() {

@@ -57,9 +57,17 @@ public class ShooterCommands {
     }
 
     public Command moveFeedSlowCommand() {
-        var command = Commands.run(() -> shooter.moveFeederSlow(), shooter).withTimeout(.1);
+        var command = Commands.run(() -> shooter.moveFeederSlow(), shooter).withTimeout(.3);
         command.setName("Feeding SLOW");
         return command;
+    }
+
+    public Command moveFeedSlowReverseCommand() {
+        var command = Commands.run(() -> shooter.moveFeederslowReverse(), shooter).withTimeout(.1);
+        command.setName("Feeding SLOW REVERSE");
+        return command;
+        // This might be wrong and we don't know how the first one was working in the
+        // first place so be careful
     }
 
     public Command shoot() {
@@ -78,14 +86,6 @@ public class ShooterCommands {
         return command;
     }
 
-    public Command shooterCommand() {
-        Command shooterCommand = Commands.sequence(
-                Commands.parallel(rev(), intake.intakeInWithRevCommand()),
-                Commands.parallel(shoot(), intake.intakeOutWithShoot()));
-        shooterCommand.setName("Rev,Intake,Shoot");
-        return shooterCommand;
-    }
-
     public Command shooterOnFlop() {
         var command = Commands.run(() -> shooter.shooterOnFlop()).withTimeout(0.1);
         command.setName("sPiNiNg");
@@ -95,8 +95,11 @@ public class ShooterCommands {
     public Command handOffCommand() {
 
         var command = Commands.sequence(
+                // bring game piece in so its not on top of green wheel
                 intake.intakeInWithRevCommand(),
+                // outtake, green forward, shooter backwards
                 Commands.parallel(moveFeedSlowCommand(), intake.intakeOutWithFeedCommand(), shooterOnFlop()),
+                moveFeedSlowReverseCommand(),
                 intake.intakeOutOfTheWayCommand().until(() -> iintake.isAngleGreat()));
         command.setName("Hand Off");
         return command;
@@ -125,12 +128,14 @@ public class ShooterCommands {
 
     private Command revSpeedFromDAS() {
         return Commands.run(() -> {
+            System.out.println("revSpeedFromDAS");
             double distance = drivebase.getDistanceDAS();
             DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
             shooter.setSpeed(as.getVoltage());
+            shooter.shooterOn();
             // ShooterAngle.moveShooterAngle
             // code to run while running
-        }).withTimeout(0.375);
+        }, shooter).withTimeout(0.375);
         // return new FunctionalCommand(
         // () -> {
 
@@ -154,9 +159,18 @@ public class ShooterCommands {
         // );
     }
 
-    public Command shootFromDAS(){
-        return Commands.parallel(
-            revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS()
-        );
+    public Command shooterCommand() {
+        Command shooterCommand = Commands.sequence(
+                Commands.parallel(rev(), intake.intakeInWithRevCommand()),
+                Commands.parallel(shoot(), intake.intakeOutWithShoot()));
+        shooterCommand.setName("Rev,Intake,Shoot");
+        return shooterCommand;
+    }
+
+    public Command shootFromDAS() {
+        Command command = Commands.parallel(
+                revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS()).andThen(shoot());
+        command.setName("shootFromDAS");
+        return command;
     }
 }

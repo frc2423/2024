@@ -32,10 +32,10 @@ public class DAS {
 
     private void initializeMap() {
         // Example values, replace these with your actual mappings
-        distanceMap.put(1.0, new MotorSettings(323, -8)); // fix values
-        distanceMap.put(2.0, new MotorSettings(318, -8));
-        distanceMap.put(3.0, new MotorSettings(313, -9));
-        distanceMap.put(4.0, new MotorSettings(310, -9));
+        distanceMap.put(1.655, new MotorSettings(323, -8)); // fix values
+        distanceMap.put(2.01, new MotorSettings(318, -8));
+        distanceMap.put(2.357, new MotorSettings(313, -9));
+        distanceMap.put(2.7, new MotorSettings(310, -9));
     }
 
     public MotorSettings calculateAS(double distance) {

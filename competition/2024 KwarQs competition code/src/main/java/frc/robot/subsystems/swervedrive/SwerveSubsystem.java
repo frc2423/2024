@@ -497,6 +497,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     // This is used to add things to NetworkTables
     super.initSendable(builder);
+    builder.addDoubleProperty("Distance", () -> getDistanceDAS(), null);
     builder.addDoubleProperty("Front Left Speed", () -> swerveDrive.getStates()[0].speedMetersPerSecond, null);
     builder.addDoubleArrayProperty("Get Camera Pose3d", () ->  NTHelper.getDoubleArrayPose3d(getCameraPose()), null);
   }
