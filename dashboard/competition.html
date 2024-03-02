@@ -1,0 +1,43 @@
+<dashboard-tab
+    tab-name="TeleOperated"
+    slot="tab"
+    source-provider="NetworkTables"
+    source-key="Mech2dIntake"
+    selected=""
+><frc-boolean-box
+        source-provider="NetworkTables"
+        style="transform: translate(7.40002px, 4.4px); width: 470.4px; height: 95.2px;"
+        source-key="/SmartDashboard/Intake/Beam broken?"
+        true-color="#00ff2a"
+        label="BEAM"
+    ></frc-boolean-box><frc-robot-command
+        source-provider="NetworkTables"
+        style="transform: translate(40px, 160px);"
+        source-key="/SmartDashboard/GyroZero"
+        label="Zero Gyro"
+    ></frc-robot-command></dashboard-tab><dashboard-tab
+    slot="tab"
+    tab-name="Autonomous"
+    source-provider="NetworkTables"
+><frc-sendable-chooser
+        source-provider="NetworkTables"
+        style="transform: translate(95px, 47px);"
+        source-key="/Shuffleboard/Autonomous/SendableChooser[0]"
+        options="[]"
+    ></frc-sendable-chooser><frc-field-wrapper
+        source-key="/SmartDashboard/Field"
+        source-provider="NetworkTables"
+        style="transform: translate(20.3875px, 259.188px); width: 556.8px; height: 361.6px;"
+        game="Crescendo"
+        grid-size="1"
+    >
+    </frc-field-wrapper><frc-swerve-drivebase
+        source-provider="NetworkTables"
+        style="transform: translate(642.8px, 279.388px); width: 185.6px; height: 192.6px;"
+        source-key="/SmartDashboard/Swerve Drive"
+        wheellocations="[2.5,2,2.5,-2,-2.5,2,-2.5,-2]"
+        measuredstates="[0,0,0,0,0,0,0,0]"
+        desiredstates="[0,0,0,0,0,0,0,0]"
+        sizeleftright="4"
+        sizefrontback="5"
+    ></frc-swerve-drivebase></dashboard-tab>
