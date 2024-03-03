@@ -127,10 +127,16 @@
     }
   },
   "NetworkTables": {
-    "Retained Values": {
+    "Persistent Values": {
       "open": false
     },
     "transitory": {
+      "FMSInfo": {
+        "open": true
+      },
+      "Measurments": {
+        "open": true
+      },
       "Shuffleboard": {
         "Autonomous": {
           "SendableChooser[0]": {
@@ -157,6 +163,7 @@
           },
           "open": true
         },
+        "open": true,
         "swerve": {
           "double[]##v_/SmartDashboard/swerve/measuredChassisSpeeds": {
             "open": true
@@ -178,6 +185,9 @@
         },
         "open": true
       },
+      "debugging": {
+        "open": true
+      },
       "joints": {
         "angles": {
           "open": true
@@ -192,7 +202,8 @@
             "open": true
           },
           "open": true
-        }
+        },
+        "open": true
       }
     }
   },
