@@ -129,7 +129,7 @@ public class ShooterAngle extends SubsystemBase {
     pivot.setAngle(-shooterPivotAngle.getDegrees() - 90);
     
     if(intake.isIntakeDown() == false){
-      shooterPivotMotorPercent = Math.min(shooterPivotMotorPercent, 0);
+      shooterPivotMotorPercent = 0;
     }
 
     if (shooterPivotAngle.getDegrees() > maxShooterPivotAngle) {
