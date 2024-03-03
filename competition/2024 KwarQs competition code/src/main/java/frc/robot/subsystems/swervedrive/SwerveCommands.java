@@ -33,7 +33,6 @@ public class SwerveCommands {
         return command;
     }
 
-<<<<<<< HEAD
     public Command autoAlignShootCommand() {
         var command = swerve.autoAlignShoot();
         command.setName("Align to Shoot");
@@ -41,6 +40,4 @@ public class SwerveCommands {
     }
 
 
-=======
->>>>>>> 27dc79d4159e73eef62e872555defe20f9cd7156
 }
