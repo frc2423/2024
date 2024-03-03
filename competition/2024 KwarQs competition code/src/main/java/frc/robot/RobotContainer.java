@@ -122,6 +122,10 @@ public class RobotContainer {
     m_chooser.addOption("Amp YoYo Auto", "Amp YoYo Auto");
     m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
 
+    m_chooser.addOption("YoYo Center", "YoYo Center");
+    
+    ;
+
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
 
@@ -221,7 +225,7 @@ public class RobotContainer {
         .whileTrue(shooterAngleCommands.moveShooterUp());
 
     new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
-    new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(intakeCommands.intakeIntakeUntil());
+    new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(shooterCommands.moveFeedSlowCommand());
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
