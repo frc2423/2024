@@ -75,7 +75,8 @@ public class RobotContainer {
   ShooterAngle shooterAngle = new ShooterAngle(intake);
   IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase);
-  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake, drivebase);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
+      drivebase);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
   public static final DAS das = new DAS();
 
@@ -86,6 +87,7 @@ public class RobotContainer {
     NTHelper.setDoubleArray("/field3d/urdf/pose", NTHelper.getDoubleArrayPose2d(drivebase.getPose()));
     Pose3d cameraPose = new Pose3d(drivebase.getPose()).plus(Constants.Vision.kRobotToCam);
     NTHelper.setDoubleArray("/field3d/field/cameraPose", NTHelper.getDoubleArrayPose3d(cameraPose));
+    NTHelper.setString("/field3d/field/origin", PoseTransformUtils.isRedAlliance() ? "red": "blue");
   }
 
   /**
@@ -96,7 +98,7 @@ public class RobotContainer {
     double asAngle = as.getAngle();
     double asVoltage = as.getVoltage();
     System.out.println("DASissupa");
-    System.out.println(asAngle +","+ asVoltage);
+    System.out.println(asAngle + "," + asVoltage);
 
     // Configure the trigger bindings
     configureBindings();
@@ -159,16 +161,12 @@ public class RobotContainer {
     NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
 
     PathPlannerLogging.setLogActivePathCallback((poses) -> {
+      System.out.println("PATH!!!!!");
       drivebase.getField().getObject("path").setPoses(poses);
     });
   }
 
   private void configureBindings() {
-
-
-
-
-
 
     new JoystickButton(driverXbox, XboxController.Button.kStart.value)
         .onTrue((new InstantCommand(drivebase::zeroGyro)));
@@ -189,15 +187,22 @@ public class RobotContainer {
     new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterUp());
 
-    // new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS());
+    // new Trigger(() -> driverXbox.getRightTriggerAxis() >
+    // .5).whileTrue(shooterCommands.shooterCommand());
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS())
+        .onFalse(shooterAngleCommands.shooterAngleCommand());
+    new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
+
+    // new Trigger(() -> driverXbox.getRightTriggerAxis() >
+    // .5).whileTrue(shooterCommands.shooterCommand());
+
     shooter.setDefaultCommand(shooterCommands.stopIt());
 
     new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
     new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
-
+    new Trigger(() -> driverXbox.getPOV() == 0).whileTrue(swerveCommands.autoAlignShootCommand());
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
@@ -224,8 +229,6 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.autoFlopCommand());
     new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(shooterCommands.shootAmp());
 
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
-    shooter.setDefaultCommand(shooterCommands.stopIt());
   }
 
   /**
@@ -255,7 +258,7 @@ public class RobotContainer {
     // 'updateSimVision'");
     visionSubsystem.simulationPeriodic(drivebase.getPose());
     visionSubsystem.getLatestResult();
-    
+
     // System.out.println(drivebase.getPose());
 
   }
@@ -265,8 +268,9 @@ public class RobotContainer {
     var std = visionSubsystem.getStandardDeviations();
     if (estimatedPose.isPresent() && std.isPresent()) {
       var pose = estimatedPose.get().estimatedPose.toPose2d();
-      NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));      
-      // NTHelper.setDoubleArray("Measurments/std", NTHelper.getDoubleArrayPose2d(pose));
+      NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));
+      // NTHelper.setDoubleArray("Measurments/std",
+      // NTHelper.getDoubleArrayPose2d(pose));
 
       drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),
           visionSubsystem.getTimestampSeconds(), std.get());

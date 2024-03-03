@@ -73,9 +73,10 @@ public class ShooterAngleCommands {
             },
             () -> {
                 // return true when finished
-                return shooterAngle.isShooterAtGoal();
-            }
-        );
+                //return shooterAngle.isShooterAtGoal();
+                return false;
+            }, shooterAngle
+        ).withTimeout(1);
     }
 
     

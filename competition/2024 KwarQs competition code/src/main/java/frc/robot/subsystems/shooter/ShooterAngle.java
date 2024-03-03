@@ -41,7 +41,7 @@ public class ShooterAngle extends SubsystemBase {
   private double pivotMotorPercent = 0;
   private final FlywheelSim pivotSimMotor = new FlywheelSim(DCMotor.getNEO(1), 6.75, 0.025);
 
-  ProfiledPIDController shooter_pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? 0.001 : 0.3, 0, 0,
+  ProfiledPIDController shooter_pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? 0.001 : 0.5, 0, 0,
       new TrapezoidProfile.Constraints(270, 400)); // 360, 420
   private double shooterPivotMotorPercent = 0;
   private Rotation2d shooterPivotAngle = new Rotation2d(0);
@@ -129,7 +129,7 @@ public class ShooterAngle extends SubsystemBase {
     pivot.setAngle(-shooterPivotAngle.getDegrees() - 90);
     
     if(intake.isIntakeDown() == false){
-      shooterPivotMotorPercent = Math.min(shooterPivotMotorPercent, 0);
+      shooterPivotMotorPercent = 0;
     }
 
     if (shooterPivotAngle.getDegrees() > maxShooterPivotAngle) {
