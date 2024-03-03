@@ -1,11 +1,7 @@
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.DAS;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.intake.IntakeCommands;
@@ -19,7 +15,6 @@ public class ShooterCommands {
     private IntakeCommands intake;
     private IntakeSubsystem iintake;
     private SwerveSubsystem drivebase;
-    private DAS das = new DAS();
 
     public ShooterCommands(ShooterSubsystem shooter, ShooterAngleCommands shooterAngle, IntakeCommands intake,
             IntakeSubsystem iintake, SwerveSubsystem drivebase) {
@@ -66,8 +61,6 @@ public class ShooterCommands {
         var command = Commands.run(() -> shooter.moveFeederslowReverse(), shooter).withTimeout(.1);
         command.setName("Feeding SLOW REVERSE");
         return command;
-        // This might be wrong and we don't know how the first one was working in the
-        // first place so be careful
     }
 
     public Command shoot() {
@@ -128,35 +121,11 @@ public class ShooterCommands {
 
     private Command revSpeedFromDAS() {
         return Commands.run(() -> {
-            System.out.println("revSpeedFromDAS");
-            double distance = drivebase.getDistanceDAS();
+            double distance = drivebase.getDistanceToSpeaker();
             DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
             shooter.setSpeed(as.getVoltage());
             shooter.shooterOn();
-            // ShooterAngle.moveShooterAngle
-            // code to run while running
         }, shooter).withTimeout(0.75);
-        // return new FunctionalCommand(
-        // () -> {
-
-        // // code to run on init
-        // },
-        // () -> {
-        // double distance = drivebase.getDistanceDAS();
-        // DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
-        // shooter.setSpeed(as.getVoltage());
-        // // ShooterAngle.moveShooterAngle
-        // // code to run while running
-        // },
-        // (interrupted) -> {
-        // // code to run when ending
-        // },
-        // () -> {
-        // // return true when finished
-        // return shooter.isRevatSpeed();
-        // //return shooter.isShooterAtGoal
-        // }
-        // );
     }
 
     public Command shooterCommand() {

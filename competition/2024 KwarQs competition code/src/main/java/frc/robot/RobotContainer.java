@@ -38,13 +38,7 @@ import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 
-import java.io.File;
 import java.util.Optional;
-
-import org.photonvision.targeting.PhotonPipelineResult;
-
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.util.PathPlannerLogging;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
