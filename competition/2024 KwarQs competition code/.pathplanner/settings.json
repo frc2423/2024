@@ -8,9 +8,10 @@
     "Yo Autos"
   ],
   "autoFolders": [
-    "YoYo",
+    "center field",
     "ShootAndStayStill",
-    "Yo"
+    "Yo",
+    "YoYo"
   ],
   "defaultMaxVel": 2.0,
   "defaultMaxAccel": 2.0,
