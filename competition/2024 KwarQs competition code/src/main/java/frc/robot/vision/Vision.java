@@ -38,6 +38,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.NTHelper;
+import frc.robot.PoseTransformUtils;
 import frc.robot.Robot;
 
 import java.util.Optional;
@@ -105,13 +106,13 @@ public class Vision {
         if (result.hasTargets()) {
             var target = result.getBestTarget();
             NTHelper.setDouble("/best target/yaw", target.getYaw());
-
+            
             var pose3d = kTagLayout.getTagPose(target.getFiducialId());
             if (pose3d.isPresent()) {
                 double pitch = Rotation2d.fromDegrees(target.getPitch()).getRadians();                
                 double yaw = Rotation2d.fromDegrees(target.getYaw()).getRadians();
                 Transform3d transform = new Transform3d(new Translation3d(), new Rotation3d(0, pitch, yaw));
-                Pose3d newPose = pose3d.get().plus(transform);
+                Pose3d newPose = PoseTransformUtils.transformRedPose(pose3d.get().plus(transform));
                 NTHelper.setDoubleArray("/best target/pose", NTHelper.getDoubleArrayPose3d(newPose));
             }
         } else {
