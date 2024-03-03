@@ -273,6 +273,10 @@ public class SwerveSubsystem extends SubsystemBase {
         false); // Open loop is disabled since it shouldn't be used most of the time.
   }
 
+  public void turnToAngle(double angle) {
+    ChassisSpeeds desiredSpeeds = this.getTargetSpeeds(0.0, 0.0, new Rotation2d(angle * Math.PI));
+  }
+
   /**
    * Drive the robot given a chassis field oriented velocity.
    *
@@ -429,7 +433,6 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.field;
   }
 
-
   /**
    * Gets the current field-relative velocity (x, y and omega) of the robot
    *
@@ -499,7 +502,7 @@ public class SwerveSubsystem extends SubsystemBase {
     super.initSendable(builder);
     builder.addDoubleProperty("Distance", () -> getDistanceDAS(), null);
     builder.addDoubleProperty("Front Left Speed", () -> swerveDrive.getStates()[0].speedMetersPerSecond, null);
-    builder.addDoubleArrayProperty("Get Camera Pose3d", () ->  NTHelper.getDoubleArrayPose3d(getCameraPose()), null);
+    builder.addDoubleArrayProperty("Get Camera Pose3d", () -> NTHelper.getDoubleArrayPose3d(getCameraPose()), null);
   }
 
   public void setSlowMaxSpeed() {
@@ -510,11 +513,11 @@ public class SwerveSubsystem extends SubsystemBase {
     maximumSpeed = 4.5;
   }
 
-  public double getDistanceDAS(){
-        double ydistance = this.getPose().getY() - 5.53;
-        double xdistance = this.getPose().getX();
-        double distance = Math.sqrt(Math.pow(ydistance, 2) + Math.pow(xdistance, 2));
-       
-        return (distance);
+  public double getDistanceDAS() {
+    double ydistance = this.getPose().getY() - 5.53;
+    double xdistance = this.getPose().getX();
+    double distance = Math.sqrt(Math.pow(ydistance, 2) + Math.pow(xdistance, 2));
+
+    return (distance);
   }
 }

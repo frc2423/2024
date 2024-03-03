@@ -9,6 +9,7 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 public class ShooterAngleCommands {
   private ShooterAngle shooterAngle;
   private SwerveSubsystem drivebase;
+
   public ShooterAngleCommands(ShooterAngle shooterAngle, SwerveSubsystem drivebase) {
     this.shooterAngle = shooterAngle;
     this.drivebase = drivebase;
@@ -55,30 +56,27 @@ public class ShooterAngleCommands {
   }
 
   public Command setShooterAngleFromDAS() {
-    
-        return new FunctionalCommand(
-            () -> {
 
-                // code to run on init
-            },
-            () -> {
-                double distance = drivebase.getDistanceDAS();
-                DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
-                shooterAngle.setAngle(as.getAngle());
-                // ShooterAngle.moveShooterAngle
-                // code to run while running
-            },
-            (interrupted) -> {
-                // code to run when ending
-            },
-            () -> {
-                // return true when finished
-                //return shooterAngle.isShooterAtGoal();
-                return false;
-            }, shooterAngle
-        ).withTimeout(1);
-    }
+    return new FunctionalCommand(
+        () -> {
 
-    
+          // code to run on init
+        },
+        () -> {
+          double distance = drivebase.getDistanceDAS();
+          DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
+          shooterAngle.setAngle(as.getAngle());
+          // ShooterAngle.moveShooterAngle
+          // code to run while running
+        },
+        (interrupted) -> {
+          // code to run when ending
+        },
+        () -> {
+          // return true when finished
+          // return shooterAngle.isShooterAtGoal();
+          return false;
+        }, shooterAngle).withTimeout(1);
+  }
 
 }

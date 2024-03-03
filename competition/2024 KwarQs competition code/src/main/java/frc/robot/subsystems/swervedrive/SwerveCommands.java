@@ -10,7 +10,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 public class SwerveCommands {
-    
+
     private SwerveSubsystem swerve;
 
     public SwerveCommands(SwerveSubsystem swerve) {
@@ -32,6 +32,5 @@ public class SwerveCommands {
         command.setName("BIG GOOOOOOOO");
         return command;
     }
-
 
 }

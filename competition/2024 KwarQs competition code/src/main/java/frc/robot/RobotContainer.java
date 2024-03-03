@@ -14,6 +14,9 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -37,6 +40,7 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import swervelib.SwerveController;
 
 import java.io.File;
 import java.util.Optional;
@@ -75,7 +79,8 @@ public class RobotContainer {
   ShooterAngle shooterAngle = new ShooterAngle(intake);
   IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase);
-  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake, drivebase);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
+      drivebase);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
   public static final DAS das = new DAS();
 
@@ -96,7 +101,7 @@ public class RobotContainer {
     double asAngle = as.getAngle();
     double asVoltage = as.getVoltage();
     System.out.println("DASissupa");
-    System.out.println(asAngle +","+ asVoltage);
+    System.out.println(asAngle + "," + asVoltage);
 
     // Configure the trigger bindings
     configureBindings();
@@ -128,15 +133,18 @@ public class RobotContainer {
           double y = MathUtil.applyDeadband(
               -driverXbox.getLeftY(),
               OperatorConstants.LEFT_Y_DEADBAND);
+          NTHelper.setDouble("/debugging/Left Y", m_yspeedLimiter.calculate(y));
           return m_yspeedLimiter.calculate(y);
         },
         () -> {
           double x = MathUtil.applyDeadband(
               -driverXbox.getLeftX(),
               OperatorConstants.LEFT_X_DEADBAND);
+          NTHelper.setDouble("/debugging/Left X", m_xspeedLimiter.calculate(x));
           return m_xspeedLimiter.calculate(x);
         },
         () -> -driverXbox.getRightX());
+    NTHelper.setDouble("/debugging/Right X", -driverXbox.getRightX());
 
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
@@ -163,12 +171,15 @@ public class RobotContainer {
     });
   }
 
+  // public Command shotRotate(){
+  // var command = Commands.run(() -> {
+  // swerve.setHighMaxSpeed();
+  // });
+  // command.setName("BIG GOOOOOOOO");
+  // return command;
+  // }
+
   private void configureBindings() {
-
-
-
-
-
 
     new JoystickButton(driverXbox, XboxController.Button.kStart.value)
         .onTrue((new InstantCommand(drivebase::zeroGyro)));
@@ -178,8 +189,8 @@ public class RobotContainer {
     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()); // intake.intakeOuttake
     // .onFalse(new RunCommand(intake::beltStop));
 
-    new JoystickButton(driverXbox, XboxController.Button.kB.value)
-        .whileTrue(intakeCommands.intakeIntakeUntil());
+    // new JoystickButton(driverXbox, XboxController.Button.kB.value)
+    // .whileTrue(intakeCommands.intakeIntakeUntil());
     // .onFalse(new RunCommand(intake::beltStop));
 
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
@@ -189,12 +200,16 @@ public class RobotContainer {
     new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterUp());
 
-    // new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
+    // new Trigger(() -> driverXbox.getRightTriggerAxis() >
+    // .5).whileTrue(shooterCommands.shooterCommand());
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
 
+    /// turn!
+    new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(shotRot());
 
-    // new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shooterCommand());
+    // new Trigger(() -> driverXbox.getRightTriggerAxis() >
+    // .5).whileTrue(shooterCommands.shooterCommand());
 
     shooter.setDefaultCommand(shooterCommands.stopIt());
 
@@ -202,7 +217,6 @@ public class RobotContainer {
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
     new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
-
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
@@ -258,7 +272,7 @@ public class RobotContainer {
     // 'updateSimVision'");
     visionSubsystem.simulationPeriodic(drivebase.getPose());
     visionSubsystem.getLatestResult();
-    
+
     // System.out.println(drivebase.getPose());
 
   }
@@ -268,8 +282,9 @@ public class RobotContainer {
     var std = visionSubsystem.getStandardDeviations();
     if (estimatedPose.isPresent() && std.isPresent()) {
       var pose = estimatedPose.get().estimatedPose.toPose2d();
-      NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));      
-      // NTHelper.setDoubleArray("Measurments/std", NTHelper.getDoubleArrayPose2d(pose));
+      NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));
+      // NTHelper.setDoubleArray("Measurments/std",
+      // NTHelper.getDoubleArrayPose2d(pose));
 
       drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),
           visionSubsystem.getTimestampSeconds(), std.get());
@@ -287,6 +302,57 @@ public class RobotContainer {
       NTHelper.setDouble("Measurments/april-tag-id", visionSubsystem.getLatestId);
       addVision();
     }
+  }
+
+  public void periodicShotRot() {
+    double angleToAprilTag = 0;
+    double xdisplacement = 0;
+    double ydisplacement = 0;
+    NTHelper.setDoubleArray("/debugging/robot-pose",
+        new double[] { drivebase.getPose().getX(), drivebase.getPose().getY() });
+
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      xdisplacement = Constants.blueSpeakerATX - drivebase.getPose().getX();
+      ydisplacement = drivebase.getPose().getY() - Constants.SpeakerATY;
+      angleToAprilTag = Math.atan(xdisplacement / ydisplacement);
+      // drivebase.drive((-(ydisplacement / xdisplacement)));
+      System.out.println("Blue");
+    } else {
+      xdisplacement = drivebase.getPose().getX();
+      ydisplacement = drivebase.getPose().getY() - Constants.SpeakerATY;
+      angleToAprilTag = Math.atan(xdisplacement / ydisplacement);
+      // drivebase.drive((-(ydisplacement / xdisplacement)));
+      System.out.println("Red");
+    }
+    drivebase.turnToAngle(-angleToAprilTag);
+    NTHelper.setDouble("/debugging/Desired Angle", (angleToAprilTag * 180 / Math.PI));
+    NTHelper.setDouble("/debugging/xdisplacement", xdisplacement);
+    NTHelper.setDouble("/debugging/ydisplacement", ydisplacement);
+    NTHelper.setDouble("/debugging/displacement",
+        (Math.sqrt((Math.pow(ydisplacement, 2) * Math.pow(xdisplacement, 2)))));
+
     // NTHelper.setDouble("Measurments/april-tag-rot", bestResult.getRotation());
+  }
+
+  public Command shotRot() {
+    var command = Commands.run(() -> {
+      double angleToAprilTag = 0;
+
+      if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        double xdisplacement = Constants.blueSpeakerATX - drivebase.getPose().getX();
+        double ydisplacement = drivebase.getPose().getY() - Constants.SpeakerATY;
+        angleToAprilTag = Math.atan(xdisplacement / ydisplacement);
+        // drivebase.drive((-(ydisplacement / xdisplacement)));
+      } else {
+        double xdisplacement = drivebase.getPose().getX();
+        double ydisplacement = drivebase.getPose().getY() - Constants.SpeakerATY;
+        angleToAprilTag = Math.atan(xdisplacement / ydisplacement);
+        // drivebase.drive((-(ydisplacement / xdisplacement)));
+      }
+      drivebase.turnToAngle(-angleToAprilTag);
+      NTHelper.setDouble("/debugging/Desired Angle", angleToAprilTag);
+    });
+
+    return command;
   }
 }
