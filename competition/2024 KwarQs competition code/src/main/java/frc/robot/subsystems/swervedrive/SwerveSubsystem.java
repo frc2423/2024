@@ -499,7 +499,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     // This is used to add things to NetworkTables
     super.initSendable(builder);
-    builder.addDoubleProperty("Distance", () -> getDistanceDAS(), null);
+    builder.addDoubleProperty("Distance", () -> getDistanceToSpeaker(), null);
     builder.addDoubleProperty("Front Left Speed", () -> swerveDrive.getStates()[0].speedMetersPerSecond, null);
     builder.addDoubleArrayProperty("Get Camera Pose3d", () ->  NTHelper.getDoubleArrayPose3d(getCameraPose()), null);
   }
@@ -508,35 +508,11 @@ public class SwerveSubsystem extends SubsystemBase {
     maximumSpeed = 2;
   }
 
-  public Command autoAlignShoot() {
-
-    // Since we are using a holonomic drivetrain, the rotation component of this pose
-// represents the goal holonomic rotation
-Pose2d targetPose = new Pose2d(2.34, 5.59, Rotation2d.fromDegrees(0));
-
-// Create the constraints to use while pathfinding
-PathConstraints constraints = new PathConstraints(
-        2.0, 4.0,
-        Units.degreesToRadians(540), Units.degreesToRadians(720));
-
-// Since AutoBuilder is configured, we can use it to build pathfinding commands
-Command pathfindingCommand = AutoBuilder.pathfindToPose(
-        targetPose,
-        constraints,
-        0.0, // Goal end velocity in meters/sec
-        0.0 
-        );// Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
-    
-        return pathfindingCommand;
-  }
-
-
-
   public void setHighMaxSpeed() {
     maximumSpeed = 4.5;
   }
 
-  public double getDistanceDAS(){
+  public double getDistanceToSpeaker(){
         double ydistance = this.getPose().getY() - 5.53;
         double xdistance = this.getPose().getX();
         double distance = Math.sqrt(Math.pow(ydistance, 2) + Math.pow(xdistance, 2));
