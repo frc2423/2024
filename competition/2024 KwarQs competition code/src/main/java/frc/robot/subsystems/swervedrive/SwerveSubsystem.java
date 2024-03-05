@@ -530,26 +530,16 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public Rotation2d getLookAngle(Pose2d targetPose) {
     Pose2d currentPose = this.getPose();
-
     double angleRads = Math.atan2(targetPose.getY() - currentPose.getY(), targetPose.getX() - currentPose.getX());
-
     return new Rotation2d(angleRads);
   }
 
   public void actuallyLookAngle(Rotation2d rotation2d) {
-
     ChassisSpeeds desiredSpeeds = this.getTargetSpeeds(0.0, 0.0,
         rotation2d);
 
-    // Limit velocity to prevent tippy
-    // Translation2d translation = SwerveController.getTranslation2d(desiredSpeeds);
-    // translation = SwerveMath.limitVelocity(translation, swerveDrive.getFieldVelocity(), swerveDrive.getPose(),
-    //     Constants.LOOP_TIME, Constants.ROBOT_MASS, List.of(Constants.CHASSIS),
-    //     swerveDrive.getSwerveDriveConfiguration());
-
     // Make the robot move
     this.drive(desiredSpeeds);
-
   }
 
 }

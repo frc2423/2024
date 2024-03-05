@@ -35,18 +35,15 @@ public class SwerveCommands {
         return command;
     }
 
-    public Command lookAtAngle() { //to
+
+    public Command lookAtTarget(Pose2d targetAngle) { //to
         var command = Commands.run(() -> {
-            
-            NTHelper.setPersistent("/debugging");
-            double X = NTHelper.getDouble("/debugging/X", 0);
-            double Y = NTHelper.getDouble("/debugging/Y", 0);
-            Pose2d targetAngle = new Pose2d(X, Y, new Rotation2d());
-            Pose2d transformedPose = PoseTransformUtils.transformRedPose(targetAngle);
+
+            Pose2d transformedPose = PoseTransformUtils.transformYRedPose(targetAngle);
             Rotation2d specialAngle = swerve.getLookAngle(transformedPose);
             swerve.actuallyLookAngle(specialAngle);
 
-        });
+        }, swerve);
         command.setName("setLookAngle");
         return command;
     }

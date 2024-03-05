@@ -179,7 +179,7 @@ public class RobotContainer {
     //     .whileTrue(intakeCommands.intakeIntakeUntil());
     // .onFalse(new RunCommand(intake::beltStop));
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
-        .whileTrue(swerveCommands.lookAtAngle());
+        .whileTrue(swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose));
 
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
