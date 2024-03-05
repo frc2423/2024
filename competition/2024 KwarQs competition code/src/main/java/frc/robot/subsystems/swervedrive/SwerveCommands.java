@@ -51,12 +51,13 @@ public class SwerveCommands {
         return command;
     }
 
-    public Command autoAlignShootCommand() {
+    public Command autoAlignCommand(Pose2d pose) {
+
 
         // Since we are using a holonomic drivetrain, the rotation component of this
         // pose
         // represents the goal holonomic rotation
-        Pose2d targetPose = new Pose2d(2.34, 5.59, Rotation2d.fromDegrees(0));
+        Pose2d targetPose = PoseTransformUtils.transformRedPose(pose);
 
         // Create the constraints to use while pathfinding
         PathConstraints constraints = new PathConstraints(

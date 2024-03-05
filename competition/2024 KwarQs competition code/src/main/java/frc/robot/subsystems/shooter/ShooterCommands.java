@@ -125,7 +125,7 @@ public class ShooterCommands {
             DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
             shooter.setSpeed(as.getVoltage());
             shooter.shooterOn();
-        }, shooter).withTimeout(0.75);
+        }, shooter).withTimeout(0.3);
     }
 
     public Command shooterCommand() {

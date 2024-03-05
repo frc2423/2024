@@ -24,7 +24,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private NeoMotor shooterMotorOne;
     private NeoMotor shooterMotorTwo;
     private double shooterSpeed = -4.3;
-    private double shooterSpeed2 = -4.3;
     public static Timer timer;
     public static double feederVoltage = -RobotController.getBatteryVoltage() / 3;
     public static double feederFlopVoltage = 1;
@@ -50,7 +49,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void shooterOn() {
         shooterMotorOne.setSpeed(shooterSpeed / RobotController.getBatteryVoltage());
-        shooterMotorTwo.setSpeed(shooterSpeed2 / RobotController.getBatteryVoltage());
+        shooterMotorTwo.setSpeed(-10 / RobotController.getBatteryVoltage());
     }
 
     public void shooterOnFlop() {
@@ -113,8 +112,20 @@ public class ShooterSubsystem extends SubsystemBase {
 
         builder.addDoubleProperty("shooterSpeed", () -> shooterSpeed, (shooterSpeed) -> {
             this.shooterSpeed = shooterSpeed;
-            this.shooterSpeed2 = shooterSpeed;
         });
     }
+
+    // public String usingWhatForShooting(String usingThis) {
+
+    //     if (usingThis == "vision") {
+    //         return "vision";
+    //     } else if (usingThis == "autoAlign") {
+    //         return "autoAlign";
+    //     } else if (usingThis == "Week_0"){
+    //         return "Week_0";
+    //     }
+
+
+    // }
 
 }

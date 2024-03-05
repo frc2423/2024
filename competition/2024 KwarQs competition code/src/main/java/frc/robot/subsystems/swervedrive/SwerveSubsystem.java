@@ -21,6 +21,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -36,6 +37,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.DAS;
 import frc.robot.NTHelper;
 import frc.robot.PoseTransformUtils;
 import frc.robot.Constants.Drivebase;
@@ -513,12 +515,17 @@ public class SwerveSubsystem extends SubsystemBase {
     maximumSpeed = 4.5;
   }
 
-  public double getDistanceToSpeaker() {
-    double ydistance = this.getPose().getY() - 5.53;
-    double xdistance = this.getPose().getX();
-    double distance = Math.sqrt(Math.pow(ydistance, 2) + Math.pow(xdistance, 2));
+  public double getDistanceToSpeaker(){
 
-    return (distance);
+  Pose2d transformedPose = PoseTransformUtils.transformYRedPose(Constants.autoAlign.speakerLocationPose);
+
+    Transform2d diffPose = this.getPose().minus(transformedPose);
+
+        double ydistance = diffPose.getY();
+        double xdistance = diffPose.getX();
+        double distance = Math.sqrt(Math.pow(ydistance, 2) + Math.pow(xdistance, 2));
+       
+        return (distance);
   }
 
   public Rotation2d getLookAngle(Pose2d targetPose) {

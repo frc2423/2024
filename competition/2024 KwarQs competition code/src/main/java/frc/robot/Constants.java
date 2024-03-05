@@ -8,6 +8,8 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -42,6 +44,19 @@ public final class Constants {
     public static final double MAX_ACCELERATION = 2;
   }
 
+  public static final class autoAlign {
+    // THESE ARE FOR THE BLUE ALLIANCE
+    public static final Pose2d shootPose = new Pose2d(2.34, 5.59, Rotation2d.fromDegrees(0));
+    public static final Pose2d sourceRightPose = new Pose2d(14.80, 0.61, Rotation2d.fromDegrees(126.28));
+    public static final Pose2d sourceMiddlePose = new Pose2d(15.42, 0.89, Rotation2d.fromDegrees(126.28));
+    public static final Pose2d sourceLeftPose = new Pose2d(15.97, 1.23, Rotation2d.fromDegrees(126.28));
+    public static final Pose2d speakerLocationPose = new Pose2d(0.00, 5.56, Rotation2d.fromDegrees(0));
+    public static final Pose2d StageLeftPose = new Pose2d(4.09, 5.43, Rotation2d.fromDegrees(-60));
+    public static final Pose2d StageRightPose = new Pose2d(3.97, 2.82, Rotation2d.fromDegrees(60));
+    public static final Pose2d StageCenterPose = new Pose2d(6.55, 4.15, Rotation2d.fromDegrees(-180));
+
+  }
+  
   public static final class Drivebase {
     // Hold time on motor brakes when disabled
     public static final double WHEEL_LOCK_TIME = 10; // seconds

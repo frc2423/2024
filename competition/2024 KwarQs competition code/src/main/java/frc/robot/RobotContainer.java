@@ -154,6 +154,11 @@ public class RobotContainer {
         new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
     NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
 
+    NamedCommands.registerCommand("distanceShoot", shooterCommands.shootFromDAS());
+
+    NamedCommands.registerCommand("HandOff", shooterCommands.handOffCommand());
+
+
     PathPlannerLogging.setLogActivePathCallback((poses) -> {
       System.out.println("PATH!!!!!");
       drivebase.getField().getObject("path").setPoses(poses);
@@ -198,7 +203,7 @@ public class RobotContainer {
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
     new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
-    new Trigger(() -> driverXbox.getPOV() == 0).whileTrue(swerveCommands.autoAlignShootCommand());
+    new Trigger(() -> driverXbox.getPOV() == 0).whileTrue(swerveCommands.autoAlignCommand(Constants.autoAlign.shootPose));
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
