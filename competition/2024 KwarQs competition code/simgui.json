@@ -145,6 +145,9 @@
             "open": true
           }
         },
+        "Shooter": {
+          "open": true
+        },
         "ShooterAngle": {
           "open": true
         },
@@ -157,6 +160,7 @@
           },
           "open": true
         },
+        "open": true,
         "swerve": {
           "double[]##v_/SmartDashboard/swerve/measuredChassisSpeeds": {
             "open": true

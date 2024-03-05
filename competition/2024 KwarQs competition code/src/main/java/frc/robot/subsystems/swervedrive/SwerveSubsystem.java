@@ -29,11 +29,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.DAS;
 import frc.robot.NTHelper;
 import frc.robot.PoseTransformUtils;
+import frc.robot.RobotContainer;
 
 import static frc.robot.Constants.Vision.kRobotToCam;
 
@@ -516,7 +518,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public double getDistanceToSpeaker(){
 
-  Pose2d transformedPose = PoseTransformUtils.transformRedPose(Constants.autoAlign.speakerLocationPose);
+    String usingThis = NTHelper.getString("/SmartDashboard/Shooter/usingThis", "vision");
+
+    
+    if (usingThis == "vision") {
+       Pose2d transformedPose = PoseTransformUtils.transformRedPose(Constants.autoAlign.speakerLocationPose);
 
     Transform2d diffPose = this.getPose().minus(transformedPose);
 
@@ -525,5 +531,15 @@ public class SwerveSubsystem extends SubsystemBase {
         double distance = Math.sqrt(Math.pow(ydistance, 2) + Math.pow(xdistance, 2));
        
         return (distance);
+
+    } else if (usingThis == "autoAlign"){
+      double distance = 1.66;
+      return distance;
+
+    } else {
+      double distance = 1.318;
+      return distance;
+     
+    }
   }
 }
