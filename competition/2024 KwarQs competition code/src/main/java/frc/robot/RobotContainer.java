@@ -154,6 +154,11 @@ public class RobotContainer {
         new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
     NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
 
+    NamedCommands.registerCommand("distanceShoot", shooterCommands.shootFromDAS());
+
+    NamedCommands.registerCommand("HandOff", shooterCommands.handOffCommand());
+
+
     PathPlannerLogging.setLogActivePathCallback((poses) -> {
       System.out.println("PATH!!!!!");
       drivebase.getField().getObject("path").setPoses(poses);
