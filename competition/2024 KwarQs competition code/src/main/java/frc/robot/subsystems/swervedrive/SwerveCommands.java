@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.PoseTransformUtils;
 
 public class SwerveCommands {
 
@@ -33,12 +34,13 @@ public class SwerveCommands {
         return command;
     }
 
-    public Command autoAlignShootCommand() {
+    public Command autoAlignCommand(Pose2d pose) {
+
 
         // Since we are using a holonomic drivetrain, the rotation component of this
         // pose
         // represents the goal holonomic rotation
-        Pose2d targetPose = new Pose2d(2.34, 5.59, Rotation2d.fromDegrees(0));
+        Pose2d targetPose = PoseTransformUtils.transformRedPose(pose);
 
         // Create the constraints to use while pathfinding
         PathConstraints constraints = new PathConstraints(
