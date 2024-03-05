@@ -115,17 +115,10 @@ public class ShooterSubsystem extends SubsystemBase {
         });
     }
 
-    // public String usingWhatForShooting(String usingThis) {
+    public String usingWhatForShooting() {
+        String usingThis = NTHelper.getString
+        return String usingThis;
 
-    //     if (usingThis == "vision") {
-    //         return "vision";
-    //     } else if (usingThis == "autoAlign") {
-    //         return "autoAlign";
-    //     } else if (usingThis == "Week_0"){
-    //         return "Week_0";
-    //     }
-
-
-    // }
+    }
 
 }
