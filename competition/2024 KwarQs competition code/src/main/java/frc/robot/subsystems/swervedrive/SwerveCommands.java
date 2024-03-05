@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.NTHelper;
+import frc.robot.PoseTransformUtils;
 
 public class SwerveCommands {
 
@@ -30,6 +32,22 @@ public class SwerveCommands {
             swerve.setHighMaxSpeed();
         });
         command.setName("BIG GOOOOOOOO");
+        return command;
+    }
+
+    public Command lookAtAngle() { //to
+        var command = Commands.run(() -> {
+            
+            NTHelper.setPersistent("/debugging");
+            double X = NTHelper.getDouble("/debugging/X", 0);
+            double Y = NTHelper.getDouble("/debugging/Y", 0);
+            Pose2d targetAngle = new Pose2d(X, Y, new Rotation2d());
+            Pose2d transformedPose = PoseTransformUtils.transformRedPose(targetAngle);
+            Rotation2d specialAngle = swerve.getLookAngle(transformedPose);
+            swerve.actuallyLookAngle(specialAngle);
+
+        });
+        command.setName("setLookAngle");
         return command;
     }
 
