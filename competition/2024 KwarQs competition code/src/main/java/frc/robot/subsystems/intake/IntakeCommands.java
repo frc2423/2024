@@ -79,6 +79,16 @@ public class IntakeCommands {
         return sequence;
     }
 
+    public Command intakeSequence() {
+        Command intakeDown = Commands.runOnce(intake::extend);
+        Command intakeStart = intakeIntake().until(intake::isBeamBroken);
+        Command intakeStop = Commands.runOnce(intake::beltStop);
+        Command intakeUp = Commands.runOnce(intake::retract);
+
+        Command bestSequence = Commands.sequence(intakeDown, intakeStart.withTimeout(10), intakeStop, intakeUp);
+        bestSequence.setName("Intake Sequence");
+        return bestSequence;
+    }
     public Command beltStopCommand() {
         var command = Commands.runOnce(intake::beltStop, intake);
         return command;

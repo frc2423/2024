@@ -108,6 +108,9 @@ public class RobotContainer {
     m_chooser.addOption("Yo Auto", "Yo Auto");
     m_chooser.addOption("Amp Yo Auto", "Amp Yo Auto");
     m_chooser.addOption("Feeder Yo Auto", "Feeder Yo Auto");
+    m_chooser.addOption("New Yo Auto", "New Yo Auto");
+    m_chooser.addOption("New Amp Yo Auto", "New Amp Yo Auto");
+    m_chooser.addOption("New Feeder Yo Auto", "New Feeder Yo Auto");
     m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
     m_chooser.addOption("ShootAndStayStillFeeder", "ShootAndStayStillFeeder");
     m_chooser.addOption("ShootAndStayStillAmp", "ShootAndStayStillAmp");
@@ -153,10 +156,15 @@ public class RobotContainer {
     NamedCommands.registerCommand("IntakeUp",
         new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
     NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
+    
+    NamedCommands.registerCommand("Shoot", shooterCommands.shoot());
 
     NamedCommands.registerCommand("distanceShoot", shooterCommands.shootFromDAS());
 
     NamedCommands.registerCommand("HandOff", shooterCommands.handOffCommand());
+
+    NamedCommands.registerCommand("IntakeSequence", intakeCommands.intakeSequence());
+
 
 
     PathPlannerLogging.setLogActivePathCallback((poses) -> {
