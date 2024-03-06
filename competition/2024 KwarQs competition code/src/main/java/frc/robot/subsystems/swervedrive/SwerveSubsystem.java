@@ -435,7 +435,6 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.field;
   }
 
-
   /**
    * Gets the current field-relative velocity (x, y and omega) of the robot
    *
@@ -505,7 +504,7 @@ public class SwerveSubsystem extends SubsystemBase {
     super.initSendable(builder);
     builder.addDoubleProperty("Distance", () -> getDistanceToSpeaker(), null);
     builder.addDoubleProperty("Front Left Speed", () -> swerveDrive.getStates()[0].speedMetersPerSecond, null);
-    builder.addDoubleArrayProperty("Get Camera Pose3d", () ->  NTHelper.getDoubleArrayPose3d(getCameraPose()), null);
+    builder.addDoubleArrayProperty("Get Camera Pose3d", () -> NTHelper.getDoubleArrayPose3d(getCameraPose()), null);
   }
 
   public void setSlowMaxSpeed() {
@@ -516,30 +515,29 @@ public class SwerveSubsystem extends SubsystemBase {
     maximumSpeed = 4.5;
   }
 
-  public double getDistanceToSpeaker(){
+  public double getDistanceToSpeaker() {
 
     String usingThis = NTHelper.getString("/SmartDashboard/Shooter/usingThis", "vision");
 
-    
-    if (usingThis == "vision") {
-       Pose2d transformedPose = PoseTransformUtils.transformRedPose(Constants.autoAlign.speakerLocationPose);
+    if (usingThis.equals("vision")) {
+      Pose2d transformedPose = PoseTransformUtils.transformYRedPose(Constants.autoAlign.speakerLocationPose);
 
-    Transform2d diffPose = this.getPose().minus(transformedPose);
+      Transform2d diffPose = this.getPose().minus(transformedPose);
 
-        double ydistance = diffPose.getY();
-        double xdistance = diffPose.getX();
-        double distance = Math.sqrt(Math.pow(ydistance, 2) + Math.pow(xdistance, 2));
-       
-        return (distance);
+      double ydistance = diffPose.getY();
+      double xdistance = diffPose.getX();
+      double distance = Math.sqrt(Math.pow(ydistance, 2) + Math.pow(xdistance, 2));
 
-    } else if (usingThis == "autoAlign"){
+      return (distance);
+
+    } else if (usingThis.equals("autoAlign")) {
       double distance = 1.66;
       return distance;
 
     } else {
       double distance = 1.318;
       return distance;
-     
+
     }
   }
 }

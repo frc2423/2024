@@ -64,6 +64,7 @@ public class ShooterAngleCommands {
   public Command setShooterAngleFromDAS() {
       return Commands.run(() -> {
         double distance = drivebase.getDistanceToSpeaker();
+        System.out.println(" ANGLE DISTANCE " + distance);
         DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
         shooterAngle.setAngle(as.getAngle());
       }, shooterAngle).withTimeout(0.7);
