@@ -8,33 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4382599407138885,
-        "y": 6.171610859626855
+        "x": 1.5365255266887123,
+        "y": 6.511225119454518
       },
       "isLocked": false,
       "linkedName": "Amp Retrieve End"
     },
     {
       "anchor": {
-        "x": 2.49,
-        "y": 5.55
+        "x": 1.3140196323188638,
+        "y": 6.4292492636340475
       },
       "prevControl": {
-        "x": 2.4499707772596704,
-        "y": 5.410406484151056
+        "x": 1.1969112668610487,
+        "y": 6.394116753996703
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -45,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 36.869897645844105,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "New Yo Autos",
   "previewStartingState": {
-    "rotation": -0.9101418554430629,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true
