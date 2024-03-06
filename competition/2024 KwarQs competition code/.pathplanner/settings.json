@@ -4,11 +4,13 @@
   "holonomicMode": true,
   "pathFolders": [
     "Amp",
+    "Middle Auto Paths",
     "New Yo Autos",
     "Triple Yo Paths",
     "Yo Autos"
   ],
   "autoFolders": [
+    "Middle Autos",
     "New Yo",
     "ShootAndStayStill",
     "Yo",
