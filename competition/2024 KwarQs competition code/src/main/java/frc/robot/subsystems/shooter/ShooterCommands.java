@@ -146,6 +146,7 @@ public class ShooterCommands {
                 Commands.parallel(
                         swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose, Rotation2d.fromDegrees(180)),
                         revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS()),
+                        shoot(),
                         shooterAngle.shooterAngleCommand()
         );
         
