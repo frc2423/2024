@@ -8,11 +8,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.NTHelper;
 import frc.robot.PoseTransformUtils;
 
 public class SwerveCommands {
 
     private SwerveSubsystem swerve;
+
+    Rotation2d specialAngle = new Rotation2d();
 
     public SwerveCommands(SwerveSubsystem swerve) {
         this.swerve = swerve;
@@ -34,13 +37,34 @@ public class SwerveCommands {
         return command;
     }
 
+
+    public Command lookAtTarget(Pose2d targetAngle, Rotation2d offset) { //to
+        
+        var command = Commands.run(() -> {
+            Pose2d transformedPose = PoseTransformUtils.transformYRedPose(targetAngle);
+            specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
+            swerve.actuallyLookAngle(specialAngle);
+        }, swerve).until(() -> {
+            double desiredAngle = specialAngle.getDegrees();
+            double currentAngle = swerve.getHeading().getDegrees();
+            return desiredAngle + 2 > currentAngle &&  currentAngle > desiredAngle - 2;
+        } 
+        ).andThen(Commands.run(() -> {
+            Pose2d transformedPose = PoseTransformUtils.transformYRedPose(targetAngle);
+            specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
+            swerve.actuallyLookAngle(specialAngle);
+        }, swerve).withTimeout(.5));
+        command.setName("setLookAngle");
+        return command;
+    }
+
     public Command autoAlignCommand(Pose2d pose) {
 
 
         // Since we are using a holonomic drivetrain, the rotation component of this
         // pose
         // represents the goal holonomic rotation
-        Pose2d targetPose = PoseTransformUtils.transformRedPose(pose);
+        Pose2d targetPose = PoseTransformUtils.transformYRedPose(pose);
 
         // Create the constraints to use while pathfinding
         PathConstraints constraints = new PathConstraints(

@@ -89,7 +89,9 @@ public class Robot extends TimedRobot {
     NTHelper.setDouble("/Time", periodTimer.get());
     
 
-    m_robotContainer.updateVision();
+    if (!isSimulation()) {
+      m_robotContainer.updateVision();
+    }
   }
 
   /**

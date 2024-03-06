@@ -131,6 +131,9 @@
       "open": false
     },
     "transitory": {
+      "FMSInfo": {
+        "open": true
+      },
       "Shuffleboard": {
         "Autonomous": {
           "SendableChooser[0]": {
@@ -180,6 +183,9 @@
           },
           "open": true
         },
+        "open": true
+      },
+      "debugging": {
         "open": true
       },
       "joints": {
