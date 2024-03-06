@@ -1,11 +1,14 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants;
 import frc.robot.DAS;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 public class ShooterCommands {
@@ -15,14 +18,16 @@ public class ShooterCommands {
     private IntakeCommands intake;
     private IntakeSubsystem iintake;
     private SwerveSubsystem drivebase;
+    private SwerveCommands swerveCommands;
 
     public ShooterCommands(ShooterSubsystem shooter, ShooterAngleCommands shooterAngle, IntakeCommands intake,
-            IntakeSubsystem iintake, SwerveSubsystem drivebase) {
+            IntakeSubsystem iintake, SwerveSubsystem drivebase, SwerveCommands swerveCommands) {
         this.shooter = shooter;
         this.intake = intake;
         this.shooterAngle = shooterAngle;
         this.iintake = iintake;
         this.drivebase = drivebase;
+        this.swerveCommands = swerveCommands;
     }
 
     public Command rev() {
@@ -125,7 +130,7 @@ public class ShooterCommands {
             DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
             shooter.setSpeed(as.getVoltage());
             shooter.shooterOn();
-        }, shooter).withTimeout(0.75);
+        }, shooter).withTimeout(0.3);
     }
 
     public Command shooterCommand() {
@@ -137,8 +142,14 @@ public class ShooterCommands {
     }
 
     public Command shootFromDAS() {
-        Command command = Commands.parallel(
-                revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS()).andThen(Commands.waitSeconds(0.35).andThen(shoot()).andThen(shooterAngle.shooterAngleCommand()));
+        Command command = Commands.sequence(
+                Commands.parallel(
+                        swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose, Rotation2d.fromDegrees(180)),
+                        revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS()),
+                        shoot(),
+                        shooterAngle.shooterAngleCommand()
+        );
+        
         command.setName("shootFromDAS");
         return command;
     }
