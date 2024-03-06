@@ -120,6 +120,7 @@ public class RobotContainer {
     m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
     m_chooser.addOption("Feeder Two-Piece Auto", "Feeder Two-Piece Auto");
     m_chooser.addOption("Amp Two-Piece Auto", "Amp Two-Piece Auto");
+     m_chooser.addOption("Feeder to Far Middle ", "Feeder to Far Middle");
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
