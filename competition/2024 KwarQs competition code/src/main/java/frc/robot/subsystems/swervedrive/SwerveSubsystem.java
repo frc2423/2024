@@ -4,9 +4,14 @@
 
 package frc.robot.subsystems.swervedrive;
 
+import static frc.robot.Constants.Vision.kRobotToCam;
+
+import java.io.File;
+import java.util.List;
+import java.util.function.DoubleSupplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -28,17 +33,14 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.DAS;
 import frc.robot.NTHelper;
 import frc.robot.PoseTransformUtils;
-
-import static frc.robot.Constants.Vision.kRobotToCam;
-
-import java.io.File;
-import java.util.function.DoubleSupplier;
+import frc.robot.Constants.Drivebase;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -384,7 +386,8 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return The yaw angle
    */
   public Rotation2d getHeading() {
-    return swerveDrive.getYaw();
+    // return swerveDrive.getYaw();
+    return getPose().getRotation();
   }
 
   /**
@@ -432,7 +435,6 @@ public class SwerveSubsystem extends SubsystemBase {
   public Field2d getField() {
     return swerveDrive.field;
   }
-
 
   /**
    * Gets the current field-relative velocity (x, y and omega) of the robot
@@ -503,7 +505,7 @@ public class SwerveSubsystem extends SubsystemBase {
     super.initSendable(builder);
     builder.addDoubleProperty("Distance", () -> getDistanceToSpeaker(), null);
     builder.addDoubleProperty("Front Left Speed", () -> swerveDrive.getStates()[0].speedMetersPerSecond, null);
-    builder.addDoubleArrayProperty("Get Camera Pose3d", () ->  NTHelper.getDoubleArrayPose3d(getCameraPose()), null);
+    builder.addDoubleArrayProperty("Get Camera Pose3d", () -> NTHelper.getDoubleArrayPose3d(getCameraPose()), null);
   }
 
   public void setSlowMaxSpeed() {
@@ -516,7 +518,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public double getDistanceToSpeaker(){
 
-  Pose2d transformedPose = PoseTransformUtils.transformRedPose(Constants.autoAlign.speakerLocationPose);
+  Pose2d transformedPose = PoseTransformUtils.transformYRedPose(Constants.autoAlign.speakerLocationPose);
 
     Transform2d diffPose = this.getPose().minus(transformedPose);
 
@@ -526,4 +528,19 @@ public class SwerveSubsystem extends SubsystemBase {
        
         return (distance);
   }
+
+  public Rotation2d getLookAngle(Pose2d targetPose) {
+    Pose2d currentPose = this.getPose();
+    double angleRads = Math.atan2(targetPose.getY() - currentPose.getY(), targetPose.getX() - currentPose.getX());
+    return new Rotation2d(angleRads);
+  }
+
+  public void actuallyLookAngle(Rotation2d rotation2d) {
+    ChassisSpeeds desiredSpeeds = this.getTargetSpeeds(0.0, 0.0,
+        rotation2d);
+        
+    // Make the robot move
+    this.drive(desiredSpeeds);
+  }
+
 }
