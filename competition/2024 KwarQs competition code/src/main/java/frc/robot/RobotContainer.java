@@ -11,6 +11,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -69,9 +70,9 @@ public class RobotContainer {
   ShooterAngle shooterAngle = new ShooterAngle(intake);
   IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase);
-  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
-      drivebase);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
+  ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
+      drivebase, swerveCommands);
   public static final DAS das = new DAS();
 
   public void JointReader() {
@@ -175,11 +176,11 @@ public class RobotContainer {
     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()); // intake.intakeOuttake
     // .onFalse(new RunCommand(intake::beltStop));
 
-    // new JoystickButton(driverXbox, XboxController.Button.kB.value)
-    //     .whileTrue(intakeCommands.intakeIntakeUntil());
-    // .onFalse(new RunCommand(intake::beltStop));
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
-        .whileTrue(swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose));
+        .whileTrue(intakeCommands.intakeIntakeUntil())
+        .onFalse(new RunCommand(intake::beltStop));
+    Pose2d origin = new Pose2d();
+
 
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
@@ -289,6 +290,6 @@ public class RobotContainer {
       NTHelper.setDouble("Measurments/april-tag-id", visionSubsystem.getLatestId);
       addVision();
     }
-    // NTHelper.setDouble("Measurments/april-tag-rot", bestResult.getRotation());
+    // NTHelper.setDouble("Measurments/april-tag-rot", bestResult.getRotation()); //"idk how much that is in practical suck terms" -travis 3/5/24 6:15 pm 
   }
 }

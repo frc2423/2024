@@ -15,6 +15,8 @@ public class SwerveCommands {
 
     private SwerveSubsystem swerve;
 
+    Rotation2d specialAngle = new Rotation2d();
+
     public SwerveCommands(SwerveSubsystem swerve) {
         this.swerve = swerve;
     }
@@ -36,14 +38,16 @@ public class SwerveCommands {
     }
 
 
-    public Command lookAtTarget(Pose2d targetAngle) { //to
+    public Command lookAtTarget(Pose2d targetAngle, Rotation2d offset) { //to
         var command = Commands.run(() -> {
-
             Pose2d transformedPose = PoseTransformUtils.transformYRedPose(targetAngle);
-            Rotation2d specialAngle = swerve.getLookAngle(transformedPose);
-            swerve.actuallyLookAngle(specialAngle);
-
-        }, swerve);
+            specialAngle = swerve.getLookAngle(transformedPose);
+            swerve.actuallyLookAngle(specialAngle.plus(offset));
+        }, swerve).until(() -> {
+            double desiredAngle = specialAngle.getDegrees();
+            double currentAngle = swerve.getHeading().getDegrees();
+            return desiredAngle + 2 > currentAngle &&  currentAngle > desiredAngle - 2;
+        });
         command.setName("setLookAngle");
         return command;
     }
