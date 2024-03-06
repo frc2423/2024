@@ -538,11 +538,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public void actuallyLookAngle(Rotation2d rotation2d) {
     ChassisSpeeds desiredSpeeds = this.getTargetSpeeds(0.0, 0.0,
         rotation2d);
-
-        NTHelper.setDouble("/debugging/actuallyLookAngle", rotation2d.getDegrees());
-        NTHelper.setDouble("/debugging/omegaRadiansPerSecond", desiredSpeeds.omegaRadiansPerSecond);
-
-
+        
     // Make the robot move
     this.drive(desiredSpeeds);
   }
