@@ -17,6 +17,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.NTHelper;
 import frc.robot.devices.NeoMotor;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -40,6 +41,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotorTwo = new NeoMotor(22);
         shooterMotorTwo.setInverted(true);
         shooterMotorOne.setFollower(shooterMotorTwo);
+        
     }
 
     // Shooter turns on/ shoots the note
@@ -114,18 +116,5 @@ public class ShooterSubsystem extends SubsystemBase {
             this.shooterSpeed = shooterSpeed;
         });
     }
-
-    // public String usingWhatForShooting(String usingThis) {
-
-    //     if (usingThis == "vision") {
-    //         return "vision";
-    //     } else if (usingThis == "autoAlign") {
-    //         return "autoAlign";
-    //     } else if (usingThis == "Week_0"){
-    //         return "Week_0";
-    //     }
-
-
-    // }
 
 }

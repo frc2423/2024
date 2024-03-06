@@ -1,0 +1,54 @@
+<dashboard-tab
+    tab-name="TeleOperated"
+    slot="tab"
+    source-provider="NetworkTables"
+    selected=""
+><frc-toggle-group
+        source-provider="NetworkTables"
+        style="transform: translate(179.6px, 243.2px); flex-direction: column; width: 152.4px; height: 228.788px;"
+        source-key="/SmartDashboard/Shooter/usingThis"
+        options="[&quot;vision&quot;,&quot;autoAlign&quot;,&quot;week0&quot;]"
+        value="vision"
+    ></frc-toggle-group><frc-basic-fms-info
+        source-provider="NetworkTables"
+        style="transform: translate(379.6px, 5.6px);"
+    ></frc-basic-fms-info><frc-swerve-drivebase
+        source-provider="NetworkTables"
+        style="transform: translate(701.6px, 213.588px); width: 183.2px; height: 223.8px;"
+        source-key="/SmartDashboard/swerve"
+        wheellocations="[2.5,2,2.5,-2,-2.5,2,-2.5,-2]"
+        measuredstates="[0,0,0,0,0,0,0,0]"
+        desiredstates="[0,0,0,0,0,0,0,0]"
+        sizeleftright="4"
+        sizefrontback="5"
+    ></frc-swerve-drivebase><frc-boolean-box
+        source-provider="NetworkTables"
+        style="transform: translate(29.5876px, 19.1875px); width: 254.388px; height: 97.6px;"
+        source-key="/SmartDashboard/Intake/Beam broken?"
+        label="BEAM"
+    ></frc-boolean-box><frc-robot-command
+        source-provider="NetworkTables"
+        style="transform: translate(45.6px, 142.4px); width: 214.4px; height: 76.4px;"
+        label="Zero Gyro"
+    ></frc-robot-command><frc-field-wrapper
+        source-key="/SmartDashboard/Field"
+        source-provider="NetworkTables"
+        style="transform: translate(1010.4px, 208.812px);"
+        game="Crescendo"
+        grid-size="1"
+    >
+    </frc-field-wrapper><frc-field3d
+        source-provider="NetworkTables"
+        style="transform: translate(1103.99px, 4.00002px); width: 303.612px; height: 242.388px;"
+        camera-pose="[]"
+    ></frc-field3d><frc-sendable-chooser-wrapper
+        source-key="/SmartDashboard/Auto choices"
+        source-provider="NetworkTables"
+        label="AUTO PATH"
+        style="transform: translate(366.787px, 112.8px); width: 251.2px; height: 93.7875px;"
+        options="[]"
+    ></frc-sendable-chooser-wrapper></dashboard-tab><dashboard-tab
+    slot="tab"
+    tab-name="Autonomous"
+    source-provider="NetworkTables"
+></dashboard-tab>

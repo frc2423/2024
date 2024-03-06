@@ -1,19 +1,24 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.DAS;
+import frc.robot.NTHelper;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 public class ShooterAngleCommands {
   private ShooterAngle shooterAngle;
   private SwerveSubsystem drivebase;
+  private ShooterSubsystem shooterSubsystem;
 
-  public ShooterAngleCommands(ShooterAngle shooterAngle, SwerveSubsystem drivebase) {
+  public ShooterAngleCommands(ShooterAngle shooterAngle, SwerveSubsystem drivebase,
+      ShooterSubsystem shooterSubsystem) {
     this.shooterAngle = shooterAngle;
     this.drivebase = drivebase;
+    this.shooterSubsystem = shooterSubsystem;
   }
 
   public Command feederAngleCommand() {
@@ -57,10 +62,13 @@ public class ShooterAngleCommands {
   }
 
   public Command setShooterAngleFromDAS() {
-    return Commands.run(() -> {
-      double distance = drivebase.getDistanceToSpeaker();
-      DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
-      shooterAngle.setAngle(as.getAngle());
-    }, shooterAngle).withTimeout(0.7);
+      return Commands.run(() -> {
+        double distance = drivebase.getDistanceToSpeaker();
+        System.out.println(" ANGLE DISTANCE " + distance);
+        DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
+        shooterAngle.setAngle(as.getAngle());
+      }, shooterAngle).withTimeout(0.7);
+
   }
+
 }

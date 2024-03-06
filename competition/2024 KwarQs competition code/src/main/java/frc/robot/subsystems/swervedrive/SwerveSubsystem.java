@@ -35,11 +35,13 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.DAS;
 import frc.robot.NTHelper;
 import frc.robot.PoseTransformUtils;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.Drivebase;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -516,17 +518,29 @@ public class SwerveSubsystem extends SubsystemBase {
     maximumSpeed = 4.5;
   }
 
-  public double getDistanceToSpeaker(){
+  public double getDistanceToSpeaker() {
 
-  Pose2d transformedPose = PoseTransformUtils.transformYRedPose(Constants.autoAlign.speakerLocationPose);
+    String usingThis = NTHelper.getString("/SmartDashboard/Shooter/usingThis", "vision");
 
-    Transform2d diffPose = this.getPose().minus(transformedPose);
+    if (usingThis.equals("vision")) {
+      Pose2d transformedPose = PoseTransformUtils.transformYRedPose(Constants.autoAlign.speakerLocationPose);
 
-        double ydistance = diffPose.getY();
-        double xdistance = diffPose.getX();
-        double distance = Math.sqrt(Math.pow(ydistance, 2) + Math.pow(xdistance, 2));
-       
-        return (distance);
+      Transform2d diffPose = this.getPose().minus(transformedPose);
+
+      double ydistance = diffPose.getY();
+      double xdistance = diffPose.getX();
+      double distance = Math.sqrt(Math.pow(ydistance, 2) + Math.pow(xdistance, 2));
+
+      return (distance);
+
+    } else if (usingThis.equals("autoAlign")) {
+      double distance = 1.66;
+      return distance;
+
+    } else {
+      double distance = 1.318;
+      return distance;
+    }
   }
 
   public Rotation2d getLookAngle(Pose2d targetPose) {
@@ -538,7 +552,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public void actuallyLookAngle(Rotation2d rotation2d) {
     ChassisSpeeds desiredSpeeds = this.getTargetSpeeds(0.0, 0.0,
         rotation2d);
-        
+
     // Make the robot move
     this.drive(desiredSpeeds);
   }

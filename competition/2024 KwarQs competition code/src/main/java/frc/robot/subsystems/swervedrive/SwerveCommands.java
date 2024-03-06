@@ -64,7 +64,7 @@ public class SwerveCommands {
         // Since we are using a holonomic drivetrain, the rotation component of this
         // pose
         // represents the goal holonomic rotation
-        Pose2d targetPose = PoseTransformUtils.transformRedPose(pose);
+        Pose2d targetPose = PoseTransformUtils.transformYRedPose(pose);
 
         // Create the constraints to use while pathfinding
         PathConstraints constraints = new PathConstraints(

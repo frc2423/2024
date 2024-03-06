@@ -60,6 +60,8 @@ public class Robot extends TimedRobot {
     periodTimer.start();
 
     DataLogManager.start();
+
+    NTHelper.setString("/SmartDashboard/Shooter/usingThis", "vision");
   }
 
   /**
@@ -85,8 +87,11 @@ public class Robot extends TimedRobot {
     m_robotContainer.JointReader();
 
     NTHelper.setDouble("/Time", periodTimer.get());
+    
 
-    m_robotContainer.updateVision();
+    if (!isSimulation()) {
+      m_robotContainer.updateVision();
+    }
   }
 
   /**
