@@ -214,7 +214,9 @@ public class RobotContainer {
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
     new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
-    new Trigger(() -> driverXbox.getPOV() == 0).whileTrue(swerveCommands.autoAlignCommand(Constants.autoAlign.shootPose));
+    new Trigger(() -> driverXbox.getPOV() == 180).whileTrue(swerveCommands.autoAlignShootCommand(Constants.autoAlign.shootPose));
+    new Trigger(() -> driverXbox.getPOV() == 270).whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.ampPose));
+
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
