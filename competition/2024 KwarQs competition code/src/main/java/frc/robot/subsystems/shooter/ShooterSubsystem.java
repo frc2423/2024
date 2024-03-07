@@ -95,6 +95,14 @@ public class ShooterSubsystem extends SubsystemBase {
         feeder_Motor.setVoltage(0.5);
     }
 
+     public void moveFeederAmp() {
+        feeder_Motor.setVoltage(5);
+    }
+
+     public void moveFeederAmpOpp() {
+        feeder_Motor.setVoltage(-0.5);
+    }
+
     public void moveFeederMotorBackwards() {
         feeder_Motor.setVoltage(feederFlopVoltageBackwards);
     }
