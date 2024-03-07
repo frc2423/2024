@@ -2,52 +2,15 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7167669684840067,
-      "y": 4.403274541213847
+      "x": 1.2788871226815193,
+      "y": 4.2978770123018135
     },
-    "rotation": -58.29857033049434
+    "rotation": -42.1844433157888
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "RevvvvvandShoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeSequence"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Feeder Retrieve"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Feeder to Middle"
-          }
-        },
         {
           "type": "named",
           "data": {
@@ -61,9 +24,47 @@
           }
         },
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeSequence"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Feeder Retrieve"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "HandOff"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "distanceShoot"
           }
         }
       ]

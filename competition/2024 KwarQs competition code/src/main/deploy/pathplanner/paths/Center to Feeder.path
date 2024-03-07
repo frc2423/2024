@@ -3,38 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3491521419562087,
-        "y": 7.003080254377342
+        "x": 2.894982565999367,
+        "y": 5.550936522700434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8292964403332503,
-        "y": 7.049923600560469
+        "x": 2.0442156268927936,
+        "y": 5.180144975674567
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.883271729453586,
-        "y": 7.003080254377342
+        "x": 2.399425568081907,
+        "y": 4.1046482092964185
       },
       "prevControl": {
-        "x": 2.889127147726477,
-        "y": 7.014791090923123
+        "x": 0.5345733768390629,
+        "y": 3.877708524647819
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.25,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -49,9 +43,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Yo Autos",
+  "folder": "New yo yo autos",
   "previewStartingState": {
-    "rotation": 49.18491612511839,
+    "rotation": 0.5507783204622452,
     "velocity": 0
   },
   "useDefaultConstraints": true

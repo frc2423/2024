@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3491521419562087,
-        "y": 7.003080254377342
+        "x": 2.894982565999367,
+        "y": 5.550936522700434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8292964403332503,
-        "y": 7.049923600560469
+        "x": 2.894982565999367,
+        "y": 5.949104965257006
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.883271729453586,
-        "y": 7.003080254377342
+        "x": 2.894982565999367,
+        "y": 6.991369417831561
       },
       "prevControl": {
-        "x": 2.889127147726477,
-        "y": 7.014791090923123
+        "x": 2.8715608929078047,
+        "y": 6.464381773271393
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,9 +30,9 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.25,
-      "rotationDegrees": 0,
-      "rotateFast": false
+      "waypointRelativePos": 0.0,
+      "rotationDegrees": 88.69804732742114,
+      "rotateFast": true
     }
   ],
   "constraintZones": [],
@@ -45,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 90.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Yo Autos",
+  "folder": "New yo yo autos",
   "previewStartingState": {
-    "rotation": 49.18491612511839,
+    "rotation": 1.3019526725788146,
     "velocity": 0
   },
   "useDefaultConstraints": true
