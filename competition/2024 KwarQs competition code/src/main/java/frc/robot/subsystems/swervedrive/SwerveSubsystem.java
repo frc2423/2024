@@ -527,7 +527,7 @@ public class SwerveSubsystem extends SubsystemBase {
     String usingThis = NTHelper.getString("/SmartDashboard/Shooter/usingThis", "vision");
 
     if (usingThis.equals("vision")) {
-      Pose2d transformedPose = PoseTransformUtils.transformRedPose(Constants.autoAlign.speakerLocationPose);
+      Pose2d transformedPose = PoseTransformUtils.transformXRedPose(Constants.autoAlign.speakerLocationPose);
 
       Transform2d diffPose = this.getPose().minus(transformedPose);
 

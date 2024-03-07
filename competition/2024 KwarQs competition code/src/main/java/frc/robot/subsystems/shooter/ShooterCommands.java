@@ -67,6 +67,17 @@ public class ShooterCommands {
         command.setName("Feeding SLOW REVERSE");
         return command;
     }
+    public Command moveFeedAmpCommand() {
+        var command = Commands.run(() -> shooter.moveFeederAmpOpp(), shooter);
+        command.setName("Feeding SLOW REVERSE");
+        return command;
+    }
+
+     public Command moveFeedAmpOppCommand() {
+        var command = Commands.run(() -> shooter.moveFeederAmp(), shooter);
+        command.setName("Feeding SLOW");
+        return command;
+    }
 
     public Command shoot() {
         var command = Commands.run(() -> {

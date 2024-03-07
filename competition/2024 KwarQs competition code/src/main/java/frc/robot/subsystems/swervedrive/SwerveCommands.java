@@ -64,7 +64,7 @@ public class SwerveCommands {
     public Command lookAtTarget(Pose2d targetAngle, Rotation2d offset) { //to
         
         var command = Commands.run(() -> {
-            Pose2d transformedPose = PoseTransformUtils.transformRedPose(targetAngle);
+            Pose2d transformedPose = PoseTransformUtils.transformXRedPose(targetAngle);
             specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
             swerve.actuallyLookAngle(specialAngle);
         }, swerve).until(() -> {
@@ -75,7 +75,7 @@ public class SwerveCommands {
             
         } 
         ).andThen(Commands.run(() -> {
-            Pose2d transformedPose = PoseTransformUtils.transformRedPose(targetAngle);
+            Pose2d transformedPose = PoseTransformUtils.transformXRedPose(targetAngle);
             specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
             swerve.actuallyLookAngle(specialAngle);
         }, swerve).withTimeout(.5));
@@ -89,7 +89,7 @@ public class SwerveCommands {
         // Since we are using a holonomic drivetrain, the rotation component of this
         // pose
         // represents the goal holonomic rotation
-        Pose2d targetPose = PoseTransformUtils.transformYRedPose(pose);
+        Pose2d targetPose = PoseTransformUtils.transformXRedPose(pose);
 
         // Create the constraints to use while pathfinding
         PathConstraints constraints = new PathConstraints(
