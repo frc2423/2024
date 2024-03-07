@@ -6,6 +6,7 @@ import com.revrobotics.SparkAbsoluteEncoder;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -55,7 +56,9 @@ public class IntakeSubsystem extends SubsystemBase {
     private double intakeSpeed = .25;
     public double isDoneSec = .5; // for revving not for shooting
     public double isDoneShoot = 2; //sec
-    
+
+    private MedianFilter beambreakFilter = new MedianFilter(5);
+    private double beamBreakAverage = 0;
 
     public IntakeSubsystem() {
         pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
@@ -152,6 +155,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // checks if the beam is broken
     public boolean isBeamBroken() {
+        return beamBreakAverage > .5;
+    }
+    
+    public boolean getRawBeamBroken() {
         return !beamBreak.get();
     }
 
@@ -161,11 +168,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        beamBreakAverage = beambreakFilter.calculate(getRawBeamBroken() ? 1 : 0);
         // This method will be called once per scheduler run moo
         pivotMotorPercent = calculatePid(setpoint);
 
         if (isBeamBroken() && setpoint.getDegrees() == downPositionDegrees) {
-            beltMotor.set(0);
+            beltMotor.set(Math.min(0, intakeSpeed));
         } else {
             beltMotor.set(intakeSpeed);
         }
@@ -247,6 +255,6 @@ public class IntakeSubsystem extends SubsystemBase {
         builder.addDoubleProperty("Pivot Motor Percent", () -> pivotMotorPercent, null);
         builder.addDoubleProperty("Belt Motor Speed", () -> beltMotor.get(), null);
         builder.addBooleanProperty("Beam broken?", () -> isBeamBroken(), null);
-
+        builder.addDoubleProperty("Beam break average", () -> beamBreakAverage, null);
     }
 }

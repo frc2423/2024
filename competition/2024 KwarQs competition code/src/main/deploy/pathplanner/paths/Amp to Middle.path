@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.72,
-        "y": 6.710309340732804
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 1.0713250963734455,
-        "y": 7.049923600560469
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
         "x": 2.34,
         "y": 7.0
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.4382599407138885,
+        "y": 6.171610859626855
+      },
+      "isLocked": false,
+      "linkedName": "Amp Retrieve End"
+    },
+    {
+      "anchor": {
+        "x": 2.49,
+        "y": 5.55
+      },
       "prevControl": {
-        "x": 0.9900514038633685,
-        "y": 6.9882191770771955
+        "x": 2.4499707772596704,
+        "y": 5.410406484151056
       },
       "nextControl": null,
       "isLocked": false,
@@ -49,9 +49,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Yo Autos",
+  "folder": "New Yo Autos",
   "previewStartingState": {
-    "rotation": 59.85861444792467,
+    "rotation": -0.9101418554430629,
     "velocity": 0
   },
   "useDefaultConstraints": true

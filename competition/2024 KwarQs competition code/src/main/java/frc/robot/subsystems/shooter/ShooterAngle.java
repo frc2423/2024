@@ -69,7 +69,7 @@ public class ShooterAngle extends SubsystemBase {
 
     shooter_Pivot.setInverted(true);
 
-    shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
+    shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 2 : 2);
 
     Mechanism2d mech = new Mechanism2d(3, 3);
     // the mechanism root node

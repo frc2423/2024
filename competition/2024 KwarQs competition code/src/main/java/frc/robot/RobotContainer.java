@@ -82,19 +82,13 @@ public class RobotContainer {
     NTHelper.setDoubleArray("/field3d/urdf/pose", NTHelper.getDoubleArrayPose2d(drivebase.getPose()));
     Pose3d cameraPose = new Pose3d(drivebase.getPose()).plus(Constants.Vision.kRobotToCam);
     NTHelper.setDoubleArray("/field3d/field/cameraPose", NTHelper.getDoubleArrayPose3d(cameraPose));
-    NTHelper.setString("/field3d/field/origin", PoseTransformUtils.isRedAlliance() ? "red": "blue");
+    NTHelper.setString("/field3d/field/origin", "blue");
   }
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    DAS.MotorSettings as = das.calculateAS(1.3);
-    double asAngle = as.getAngle();
-    double asVoltage = as.getVoltage();
-    System.out.println("DASissupa");
-    System.out.println(asAngle + "," + asVoltage);
-
     // Configure the trigger bindings
     configureBindings();
     intake.beltStop();
@@ -109,6 +103,9 @@ public class RobotContainer {
     m_chooser.addOption("Yo Auto", "Yo Auto");
     m_chooser.addOption("Amp Yo Auto", "Amp Yo Auto");
     m_chooser.addOption("Feeder Yo Auto", "Feeder Yo Auto");
+    m_chooser.addOption("New Yo Auto", "New Yo Auto");
+    m_chooser.addOption("New Amp Yo Auto", "New Amp Yo Auto");
+    m_chooser.addOption("New Feeder Yo Auto", "New Feeder Yo Auto");
     m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
     m_chooser.addOption("ShootAndStayStillFeeder", "ShootAndStayStillFeeder");
     m_chooser.addOption("ShootAndStayStillAmp", "ShootAndStayStillAmp");
@@ -116,6 +113,9 @@ public class RobotContainer {
     m_chooser.addOption("Feeder YoYo Auto", "Feeder YoYo Auto");
     m_chooser.addOption("Amp YoYo Auto", "Amp YoYo Auto");
     m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
+    m_chooser.addOption("Feeder Two-Piece Auto", "Feeder Two-Piece Auto");
+    m_chooser.addOption("Amp Two-Piece Auto", "Amp Two-Piece Auto");
+     m_chooser.addOption("Feeder to Far Middle ", "Feeder to Far Middle");
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -125,12 +125,18 @@ public class RobotContainer {
           double y = MathUtil.applyDeadband(
               -driverXbox.getLeftY(),
               OperatorConstants.LEFT_Y_DEADBAND);
+          if (PoseTransformUtils.isRedAlliance()) {
+            y *= -1;
+          }
           return m_yspeedLimiter.calculate(y);
         },
         () -> {
           double x = MathUtil.applyDeadband(
               -driverXbox.getLeftX(),
               OperatorConstants.LEFT_X_DEADBAND);
+          if (PoseTransformUtils.isRedAlliance()) {
+            x *= -1;
+          }
           return m_xspeedLimiter.calculate(x);
         },
         () -> -driverXbox.getRightX());
@@ -154,14 +160,18 @@ public class RobotContainer {
     NamedCommands.registerCommand("IntakeUp",
         new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
     NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
+    
+    NamedCommands.registerCommand("Shoot", shooterCommands.shoot());
 
     NamedCommands.registerCommand("distanceShoot", shooterCommands.shootFromDAS());
 
     NamedCommands.registerCommand("HandOff", shooterCommands.handOffCommand());
 
+    NamedCommands.registerCommand("IntakeSequence", intakeCommands.intakeSequence());
+
+
 
     PathPlannerLogging.setLogActivePathCallback((poses) -> {
-      System.out.println("PATH!!!!!");
       drivebase.getField().getObject("path").setPoses(poses);
     });
   }

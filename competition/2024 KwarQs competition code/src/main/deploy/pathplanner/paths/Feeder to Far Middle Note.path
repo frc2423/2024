@@ -3,38 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.72,
-        "y": 6.710309340732804
+        "x": 0.83,
+        "y": 4.13
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0713250963734455,
-        "y": 7.049923600560469
+        "x": 1.533311148797754,
+        "y": 2.793791398030688
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Feeder Start"
     },
     {
       "anchor": {
-        "x": 2.34,
-        "y": 7.0
+        "x": 7.883798934502291,
+        "y": 0.7846260485673593
       },
       "prevControl": {
-        "x": 0.9900514038633685,
-        "y": 6.9882191770771955
+        "x": 6.883798934502291,
+        "y": 0.7846260485673593
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Feeder Far Middle"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -45,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Yo Autos",
+  "folder": "Middle Auto Paths",
   "previewStartingState": {
-    "rotation": 59.85861444792467,
+    "rotation": -54.0578881286176,
     "velocity": 0
   },
   "useDefaultConstraints": true

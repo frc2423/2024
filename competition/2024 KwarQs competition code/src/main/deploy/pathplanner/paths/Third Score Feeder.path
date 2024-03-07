@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8410072768790318,
-        "y": 4.6960454548583845
+        "x": 1.021248718676652,
+        "y": 4.286166175754399
       },
       "isLocked": false,
       "linkedName": null
@@ -20,18 +20,18 @@
         "y": 5.594556573728532
       },
       "prevControl": {
-        "x": 1.7800461794273759,
-        "y": 4.95046056371055
+        "x": 2.426549104168107,
+        "y": 4.344720358484939
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Third Score Feeder End"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": 45.02513077598502,
+      "rotationDegrees": -27.49932532277443,
       "rotateFast": false
     }
   ],
@@ -57,7 +57,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 47.140076779547826,
+    "rotation": 43.042619559537414,
     "rotateFast": false
   },
   "reversed": false,

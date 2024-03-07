@@ -4,13 +4,18 @@
   "holonomicMode": true,
   "pathFolders": [
     "Amp",
+    "Middle Auto Paths",
+    "New Yo Autos",
     "Triple Yo Paths",
     "Yo Autos"
   ],
   "autoFolders": [
-    "YoYo",
+    "Middle Autos",
+    "Triple Autos",
+    "New Yo",
     "ShootAndStayStill",
-    "Yo"
+    "Yo",
+    "YoYo"
   ],
   "defaultMaxVel": 2.0,
   "defaultMaxAccel": 2.0,

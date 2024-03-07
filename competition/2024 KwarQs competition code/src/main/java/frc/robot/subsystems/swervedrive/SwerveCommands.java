@@ -21,6 +21,29 @@ public class SwerveCommands {
         this.swerve = swerve;
     }
 
+    public double normalizedAngle(double currentAngleDegrees){
+        double angle = currentAngleDegrees % 360;
+        if(angle < 0){
+            angle += 360;
+        } 
+        return angle;
+    }
+
+    public double getNormalizedAngleDiff(double a, double b){
+        double diff = Math.abs(a - b);
+        if (diff < 180){
+            return diff;
+        }
+        else if(a<b){
+            return Math.abs(a+360-b);
+        }
+        else {
+            return Math.abs(b+360-a);
+        }
+        }
+        
+    
+
     public Command setSlowMaxSpeed() {
         var command = Commands.run(() -> {
             swerve.setSlowMaxSpeed();
@@ -41,16 +64,18 @@ public class SwerveCommands {
     public Command lookAtTarget(Pose2d targetAngle, Rotation2d offset) { //to
         
         var command = Commands.run(() -> {
-            Pose2d transformedPose = PoseTransformUtils.transformYRedPose(targetAngle);
+            Pose2d transformedPose = PoseTransformUtils.transformRedPose(targetAngle);
             specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
             swerve.actuallyLookAngle(specialAngle);
         }, swerve).until(() -> {
-            double desiredAngle = specialAngle.getDegrees();
-            double currentAngle = swerve.getHeading().getDegrees();
-            return desiredAngle + 2 > currentAngle &&  currentAngle > desiredAngle - 2;
+            double desiredAngle = normalizedAngle(specialAngle.getDegrees());
+            double currentAngle = normalizedAngle(swerve.getHeading().getDegrees());
+            double angleDiff = getNormalizedAngleDiff(desiredAngle, currentAngle);
+            return angleDiff < 3;
+            
         } 
         ).andThen(Commands.run(() -> {
-            Pose2d transformedPose = PoseTransformUtils.transformYRedPose(targetAngle);
+            Pose2d transformedPose = PoseTransformUtils.transformRedPose(targetAngle);
             specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
             swerve.actuallyLookAngle(specialAngle);
         }, swerve).withTimeout(.5));
