@@ -298,6 +298,9 @@ public class SwerveSubsystem extends SubsystemBase {
   public void drive(ChassisSpeeds velocity) {
     swerveDrive.drive(velocity);
   }
+  public void stop() {
+    swerveDrive.drive(new ChassisSpeeds());
+  }
 
   @Override
   public void periodic() {
@@ -556,8 +559,11 @@ public class SwerveSubsystem extends SubsystemBase {
   public void actuallyLookAngle(Rotation2d rotation2d) {
     ChassisSpeeds desiredSpeeds = this.getTargetSpeeds(0.0, 0.0,
         rotation2d);
-
+    double maxRadsPerSecond = .2;
     // Make the robot move
+    if(Math.abs(desiredSpeeds.omegaRadiansPerSecond) > maxRadsPerSecond){
+      desiredSpeeds.omegaRadiansPerSecond = Math.copySign(maxRadsPerSecond, desiredSpeeds.omegaRadiansPerSecond);
+    }
     this.drive(desiredSpeeds);
   }
 

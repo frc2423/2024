@@ -3,6 +3,7 @@ package frc.robot.subsystems.swervedrive;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -17,32 +18,30 @@ public class SwerveCommands {
 
     Rotation2d specialAngle = new Rotation2d();
 
+    private MedianFilter currentAngleFilter = new MedianFilter(5);
+
     public SwerveCommands(SwerveSubsystem swerve) {
         this.swerve = swerve;
     }
 
-    public double normalizedAngle(double currentAngleDegrees){
+    public double normalizedAngle(double currentAngleDegrees) {
         double angle = currentAngleDegrees % 360;
-        if(angle < 0){
+        if (angle < 0) {
             angle += 360;
-        } 
+        }
         return angle;
     }
 
-    public double getNormalizedAngleDiff(double a, double b){
+    public double getNormalizedAngleDiff(double a, double b) {
         double diff = Math.abs(a - b);
-        if (diff < 180){
+        if (diff < 180) {
             return diff;
+        } else if (a < b) {
+            return Math.abs(a + 360 - b);
+        } else {
+            return Math.abs(b + 360 - a);
         }
-        else if(a<b){
-            return Math.abs(a+360-b);
-        }
-        else {
-            return Math.abs(b+360-a);
-        }
-        }
-        
-    
+    }
 
     public Command setSlowMaxSpeed() {
         var command = Commands.run(() -> {
@@ -60,31 +59,34 @@ public class SwerveCommands {
         return command;
     }
 
+    public Command lookAtTarget(Pose2d targetAngle, Rotation2d offset) { // to
+        var command = Commands.sequence(
+                Commands.runOnce(currentAngleFilter::reset),
+                Commands.run(() -> {
+                    Pose2d transformedPose = PoseTransformUtils.transformRedPose(targetAngle);
+                    specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
+                    swerve.actuallyLookAngle(specialAngle);
+                }, swerve).until(() -> {
+                    double desiredAngle = normalizedAngle(specialAngle.getDegrees());
+                    double currentAngle = currentAngleFilter
+                            .calculate(normalizedAngle(swerve.getHeading().getDegrees()));
+                    double angleDiff = getNormalizedAngleDiff(desiredAngle, currentAngle);
+                    return angleDiff < 3;
+                }),
+                Commands.run(() -> {
+                    Pose2d transformedPose = PoseTransformUtils.transformRedPose(targetAngle);
+                    specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
+                    swerve.actuallyLookAngle(specialAngle);
+                }, swerve).withTimeout(.5),
+                Commands.runOnce(() -> {
+                    swerve.stop();
+                }));
 
-    public Command lookAtTarget(Pose2d targetAngle, Rotation2d offset) { //to
-        
-        var command = Commands.run(() -> {
-            Pose2d transformedPose = PoseTransformUtils.transformRedPose(targetAngle);
-            specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
-            swerve.actuallyLookAngle(specialAngle);
-        }, swerve).until(() -> {
-            double desiredAngle = normalizedAngle(specialAngle.getDegrees());
-            double currentAngle = normalizedAngle(swerve.getHeading().getDegrees());
-            double angleDiff = getNormalizedAngleDiff(desiredAngle, currentAngle);
-            return angleDiff < 3;
-            
-        } 
-        ).andThen(Commands.run(() -> {
-            Pose2d transformedPose = PoseTransformUtils.transformRedPose(targetAngle);
-            specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
-            swerve.actuallyLookAngle(specialAngle);
-        }, swerve).withTimeout(.5));
         command.setName("setLookAngle");
         return command;
     }
 
     public Command autoAlignCommand(Pose2d pose) {
-
 
         // Since we are using a holonomic drivetrain, the rotation component of this
         // pose
