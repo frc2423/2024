@@ -9,6 +9,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -54,7 +55,8 @@ public final class Constants {
     public static final Pose2d StageLeftPose = new Pose2d(4.09, 5.43, Rotation2d.fromDegrees(-60));
     public static final Pose2d StageRightPose = new Pose2d(3.97, 2.82, Rotation2d.fromDegrees(60));
     public static final Pose2d StageCenterPose = new Pose2d(6.55, 4.15, Rotation2d.fromDegrees(-180));
-
+    
+    public static final Pose3d autoCameraPose = new Pose3d(6, 9, 3, new Rotation3d(0, .4, -Math.toRadians(160)));
   }
   
   public static final class Drivebase {

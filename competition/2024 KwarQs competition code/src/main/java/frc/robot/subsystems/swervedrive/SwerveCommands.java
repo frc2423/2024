@@ -64,7 +64,7 @@ public class SwerveCommands {
     public Command lookAtTarget(Pose2d targetAngle, Rotation2d offset) { //to
         
         var command = Commands.run(() -> {
-            Pose2d transformedPose = PoseTransformUtils.transformYRedPose(targetAngle);
+            Pose2d transformedPose = PoseTransformUtils.transformRedPose(targetAngle);
             specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
             swerve.actuallyLookAngle(specialAngle);
         }, swerve).until(() -> {
@@ -75,7 +75,7 @@ public class SwerveCommands {
             
         } 
         ).andThen(Commands.run(() -> {
-            Pose2d transformedPose = PoseTransformUtils.transformYRedPose(targetAngle);
+            Pose2d transformedPose = PoseTransformUtils.transformRedPose(targetAngle);
             specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
             swerve.actuallyLookAngle(specialAngle);
         }, swerve).withTimeout(.5));

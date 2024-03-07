@@ -82,19 +82,13 @@ public class RobotContainer {
     NTHelper.setDoubleArray("/field3d/urdf/pose", NTHelper.getDoubleArrayPose2d(drivebase.getPose()));
     Pose3d cameraPose = new Pose3d(drivebase.getPose()).plus(Constants.Vision.kRobotToCam);
     NTHelper.setDoubleArray("/field3d/field/cameraPose", NTHelper.getDoubleArrayPose3d(cameraPose));
-    NTHelper.setString("/field3d/field/origin", PoseTransformUtils.isRedAlliance() ? "red": "blue");
+    NTHelper.setString("/field3d/field/origin", "blue");
   }
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    DAS.MotorSettings as = das.calculateAS(1.3);
-    double asAngle = as.getAngle();
-    double asVoltage = as.getVoltage();
-    System.out.println("DASissupa");
-    System.out.println(asAngle + "," + asVoltage);
-
     // Configure the trigger bindings
     configureBindings();
     intake.beltStop();
@@ -131,12 +125,18 @@ public class RobotContainer {
           double y = MathUtil.applyDeadband(
               -driverXbox.getLeftY(),
               OperatorConstants.LEFT_Y_DEADBAND);
+          if (PoseTransformUtils.isRedAlliance()) {
+            y *= -1;
+          }
           return m_yspeedLimiter.calculate(y);
         },
         () -> {
           double x = MathUtil.applyDeadband(
               -driverXbox.getLeftX(),
               OperatorConstants.LEFT_X_DEADBAND);
+          if (PoseTransformUtils.isRedAlliance()) {
+            x *= -1;
+          }
           return m_xspeedLimiter.calculate(x);
         },
         () -> -driverXbox.getRightX());
@@ -172,7 +172,6 @@ public class RobotContainer {
 
 
     PathPlannerLogging.setLogActivePathCallback((poses) -> {
-      System.out.println("PATH!!!!!");
       drivebase.getField().getObject("path").setPoses(poses);
     });
   }

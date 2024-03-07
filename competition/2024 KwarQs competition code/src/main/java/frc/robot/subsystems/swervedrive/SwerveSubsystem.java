@@ -170,9 +170,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public Command getAuto(String auto) {
     PathPlannerAuto path = new PathPlannerAuto(auto);
-    Pose2d pose = PathPlannerAuto.getStaringPoseFromAutoFile(auto);
+    // Pose2d pose = PathPlannerAuto.getStaringPoseFromAutoFile(auto);
     // figure out what to do if pose is undefined
-    resetOdometry(pose);
+    // resetOdometry(pose);
 
     return path;
   }
@@ -340,6 +340,10 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.getPose();
   }
 
+  public Pose2d getPathplannerPose() {
+    return PoseTransformUtils.transformRedPose(getPose());
+  }
+
   public Pose3d getCameraPose() {
     Pose3d cameraPose3d = new Pose3d(getPose());
     cameraPose3d = cameraPose3d.plus(kRobotToCam);
@@ -498,7 +502,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void addCameraInput(Pose2d visionPose, double timestamp, Matrix<N3, N1> standardDeviations) {
-    swerveDrive.addVisionMeasurement(PoseTransformUtils.transformRedPose(visionPose), timestamp, standardDeviations);
+    swerveDrive.addVisionMeasurement(visionPose, timestamp, standardDeviations);
   }
 
   @Override
@@ -523,7 +527,7 @@ public class SwerveSubsystem extends SubsystemBase {
     String usingThis = NTHelper.getString("/SmartDashboard/Shooter/usingThis", "vision");
 
     if (usingThis.equals("vision")) {
-      Pose2d transformedPose = PoseTransformUtils.transformYRedPose(Constants.autoAlign.speakerLocationPose);
+      Pose2d transformedPose = PoseTransformUtils.transformRedPose(Constants.autoAlign.speakerLocationPose);
 
       Transform2d diffPose = this.getPose().minus(transformedPose);
 
