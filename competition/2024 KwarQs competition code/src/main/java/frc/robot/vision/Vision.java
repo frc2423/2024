@@ -112,7 +112,7 @@ public class Vision {
                 double pitch = Rotation2d.fromDegrees(target.getPitch()).getRadians();                
                 double yaw = Rotation2d.fromDegrees(target.getYaw()).getRadians();
                 Transform3d transform = new Transform3d(new Translation3d(), new Rotation3d(0, pitch, yaw));
-                Pose3d newPose = PoseTransformUtils.transformRedPose(pose3d.get().plus(transform));
+                Pose3d newPose = pose3d.get().plus(transform);
                 NTHelper.setDoubleArray("/best target/pose", NTHelper.getDoubleArrayPose3d(newPose));
             }
         } else {

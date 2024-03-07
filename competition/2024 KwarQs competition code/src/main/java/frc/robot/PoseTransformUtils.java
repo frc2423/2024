@@ -31,18 +31,19 @@ public class PoseTransformUtils {
             return startPose;
         }
     }
+
     public static Pose3d transformRedPose(Pose3d startPose) {
         if (isRedAlliance()) {
             double realX = FIELD_LENGTH_METERS - startPose.getX();
             double realY = FIELD_WIDTH_METERS - startPose.getY();
-            Rotation3d realANGLE = startPose.getRotation().plus(new Rotation3d(0,0, Math.PI));
+            Rotation3d realANGLE = startPose.getRotation().plus(new Rotation3d(0, 0, Math.PI));
             Pose3d transformedPose = new Pose3d(realX, realY, startPose.getZ(), realANGLE);
             return transformedPose;
         } else {
             return startPose;
         }
     }
-    
+
     public static Pose2d transformYRedPose(Pose2d startPose) {
         if (isRedAlliance()) {
             double realX = startPose.getX();
@@ -54,11 +55,24 @@ public class PoseTransformUtils {
             return startPose;
         }
     }
+
+    public static Pose2d transformXRedPose(Pose2d startPose) {
+        if (isRedAlliance()) {
+            double realX = FIELD_LENGTH_METERS - startPose.getX();
+            double realY = startPose.getY();
+            Rotation2d realANGLE = startPose.getRotation().plus(new Rotation2d(Math.PI));
+            Pose2d transformedPose = new Pose2d(realX, realY, realANGLE);
+            return transformedPose;
+        } else {
+            return startPose;
+        }
+    }
+
     public static Pose3d transformYRedPose(Pose3d startPose) {
         if (isRedAlliance()) {
             double realX = startPose.getX();
             double realY = FIELD_WIDTH_METERS - startPose.getY();
-            Rotation3d realANGLE = startPose.getRotation().plus(new Rotation3d(0,0, Math.PI));
+            Rotation3d realANGLE = startPose.getRotation().plus(new Rotation3d(0, 0, Math.PI));
             Pose3d transformedPose = new Pose3d(realX, realY, startPose.getZ(), realANGLE);
             return transformedPose;
         } else {
