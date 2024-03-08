@@ -134,4 +134,32 @@ public class SwerveCommands {
 
         return pathfindingCommand;
     }
+
+    public Command autoAlignSourceMiddleCommand(Pose2d pose) {
+
+
+        // Since we are using a holonomic drivetrain, the rotation component of this
+        // pose
+        // represents the goal holonomic rotation
+        Pose2d targetPose = PoseTransformUtils.transformXRedPose(pose);
+
+        // Create the constraints to use while pathfinding
+        PathConstraints constraints = new PathConstraints(
+                2.0, 4.0,
+                Units.degreesToRadians(540), Units.degreesToRadians(720));
+
+        // Since AutoBuilder is configured, we can use it to build pathfinding commands
+        Command pathfindingCommand = AutoBuilder.pathfindToPose(
+                targetPose,
+                constraints,
+                0.0, // Goal end velocity in meters/sec
+                0.0);// Rotation delay distance in meters. This is how far the robot should travel
+                     // before attempting to rotate.
+
+        pathfindingCommand.setName("Align to Source Middle");
+
+        return pathfindingCommand;
+    }
+
+
 }
