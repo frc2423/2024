@@ -14,12 +14,6 @@
         {
           "type": "named",
           "data": {
-            "name": "HandOff"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "distanceShoot"
           }
         },

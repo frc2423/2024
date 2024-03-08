@@ -559,7 +559,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public void actuallyLookAngle(Rotation2d rotation2d) {
     ChassisSpeeds desiredSpeeds = this.getTargetSpeeds(0.0, 0.0,
         rotation2d);
-    double maxRadsPerSecond = .2;
+    double maxRadsPerSecond = 2.5;
     // Make the robot move
     if(Math.abs(desiredSpeeds.omegaRadiansPerSecond) > maxRadsPerSecond){
       desiredSpeeds.omegaRadiansPerSecond = Math.copySign(maxRadsPerSecond, desiredSpeeds.omegaRadiansPerSecond);
