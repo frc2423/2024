@@ -55,10 +55,16 @@ public final class Constants {
     public static final Pose2d StageLeftPose = new Pose2d(4.09, 5.43, Rotation2d.fromDegrees(-60));
     public static final Pose2d StageRightPose = new Pose2d(3.97, 2.82, Rotation2d.fromDegrees(60));
     public static final Pose2d StageCenterPose = new Pose2d(6.55, 4.15, Rotation2d.fromDegrees(-180));
-    
+
     public static final Pose3d autoCameraPose = new Pose3d(6, 9, 3, new Rotation3d(0, .4, -Math.toRadians(160)));
+
+    public static final Pose2d ampPose = new Pose2d(1.82, 7.68, Rotation2d.fromDegrees(90));
+    public static final Pose2d ampNote = new Pose2d(2.92, 6.99, Rotation2d.fromDegrees(0));
+    public static final Pose2d middleNote = new Pose2d(2.89, 5.55, Rotation2d.fromDegrees(0));
+    public static final Pose2d stageNote = new Pose2d(2.89, 4.10, Rotation2d.fromDegrees(0));
+
   }
-  
+
   public static final class Drivebase {
     // Hold time on motor brakes when disabled
     public static final double WHEEL_LOCK_TIME = 10; // seconds

@@ -26,15 +26,21 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 2.0
+                        "name": "lookAtStageNote"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "setRotationTargetStageNote"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Feeder Retrieve"
+                        "pathName": "Feeder Go Forward"
                       }
                     }
                   ]

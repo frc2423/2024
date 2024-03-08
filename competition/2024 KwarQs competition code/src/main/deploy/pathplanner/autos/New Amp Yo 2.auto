@@ -26,15 +26,21 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 2.0
+                        "name": "lookAtAmpNote"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "setRotationTargetAmpNote"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Feeder Retrieve"
+                        "pathName": "Amp Go Forward"
                       }
                     }
                   ]

@@ -83,6 +83,10 @@ public class RobotContainer {
     Pose3d cameraPose = new Pose3d(drivebase.getPose()).plus(Constants.Vision.kRobotToCam);
     NTHelper.setDoubleArray("/field3d/field/cameraPose", NTHelper.getDoubleArrayPose3d(cameraPose));
     // NTHelper.setString("/field3d/field/origin", "blue");
+
+    Rotation2d angle = drivebase.getLookAngle(PoseTransformUtils.transformXRedPose(Constants.autoAlign.middleNote));
+    NTHelper.setDouble("/debug/autoRotationOverride", angle.getDegrees());
+
   }
 
   /**
@@ -106,6 +110,7 @@ public class RobotContainer {
     m_chooser.addOption("New Yo Auto", "New Yo Auto");
     m_chooser.addOption("New Amp Yo Auto", "New Amp Yo Auto");
     m_chooser.addOption("New Feeder Yo Auto", "New Feeder Yo Auto");
+    m_chooser.addOption("New Feeder Yo Auto2", "New Feeder Yo Auto2");
     m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
     m_chooser.addOption("ShootAndStayStillFeeder", "ShootAndStayStillFeeder");
     m_chooser.addOption("ShootAndStayStillAmp", "ShootAndStayStillAmp");
@@ -115,8 +120,8 @@ public class RobotContainer {
     m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
     m_chooser.addOption("Feeder Two-Piece Auto", "Feeder Two-Piece Auto");
     m_chooser.addOption("Amp Two-Piece Auto", "Amp Two-Piece Auto");
-     m_chooser.addOption("Feeder to Far Middle ", "Feeder to Far Middle");
-
+    m_chooser.addOption("Feeder to Far Middle ", "Feeder to Far Middle");
+    m_chooser.addOption("New Amp Yo 2", "New Amp Yo 2");
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
 
@@ -160,7 +165,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("IntakeUp",
         new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
     NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
-    
+
     NamedCommands.registerCommand("Shoot", shooterCommands.shoot());
 
     NamedCommands.registerCommand("distanceShoot", shooterCommands.shootFromDAS());
@@ -172,10 +177,17 @@ public class RobotContainer {
     Command lookAtAmpNote = swerveCommands.lookAtTarget(Constants.autoAlign.ampNote, new Rotation2d());
     Command lookAtMiddleNote = swerveCommands.lookAtTarget(Constants.autoAlign.middleNote, new Rotation2d());
     Command lookAtStageNote = swerveCommands.lookAtTarget(Constants.autoAlign.stageNote, new Rotation2d());
-    
+
     NamedCommands.registerCommand("lookAtAmpNote", lookAtAmpNote);
     NamedCommands.registerCommand("lookAtMiddleNote", lookAtMiddleNote);
     NamedCommands.registerCommand("lookAtStageNote", lookAtStageNote);
+
+    NamedCommands.registerCommand("setRotationTargetAmpNote",
+        Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.ampNote)));
+    NamedCommands.registerCommand("setRotationTargetMiddleNote",
+        Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.middleNote)));
+    NamedCommands.registerCommand("setRotationTargetStageNote",
+        Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.stageNote)));
 
     PathPlannerLogging.setLogActivePathCallback((poses) -> {
       drivebase.getField().getObject("path").setPoses(poses);
@@ -194,7 +206,7 @@ public class RobotContainer {
 
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
         .whileTrue(intakeCommands.intakeIntakeUntil());
-        // .onFalse(new RunCommand(intake::beltStop));
+    // .onFalse(new RunCommand(intake::beltStop));
 
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
@@ -220,13 +232,12 @@ public class RobotContainer {
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
     new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
-    new Trigger(() -> driverXbox.getPOV() == 180).whileTrue(swerveCommands.autoAlignShootCommand(Constants.autoAlign.shootPose));
-    new Trigger(() -> driverXbox.getPOV() == 270).whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.ampPose));
-    new Trigger(() -> driverXbox.getPOV() == 90).whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.sourceMiddlePose));
-
-        
-
-
+    new Trigger(() -> driverXbox.getPOV() == 180)
+        .whileTrue(swerveCommands.autoAlignShootCommand(Constants.autoAlign.shootPose));
+    new Trigger(() -> driverXbox.getPOV() == 270)
+        .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.ampPose));
+    new Trigger(() -> driverXbox.getPOV() == 90)
+        .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.sourceMiddlePose));
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
@@ -262,6 +273,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
+    drivebase.setAutoRotationTarget(null);
     return drivebase.getAuto(m_chooser.getSelected());
   }
 
@@ -312,6 +324,7 @@ public class RobotContainer {
       NTHelper.setDouble("Measurments/april-tag-id", visionSubsystem.getLatestId);
       addVision();
     }
-    // NTHelper.setDouble("Measurments/april-tag-rot", bestResult.getRotation()); //"idk how much that is in practical suck terms" -travis 3/5/24 6:15 pm 
+    // NTHelper.setDouble("Measurments/april-tag-rot", bestResult.getRotation());
+    // //"idk how much that is in practical suck terms" -travis 3/5/24 6:15 pm
   }
 }

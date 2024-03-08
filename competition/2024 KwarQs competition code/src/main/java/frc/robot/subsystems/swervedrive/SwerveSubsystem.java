@@ -8,10 +8,12 @@ import static frc.robot.Constants.Vision.kRobotToCam;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -53,6 +55,8 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveSubsystem extends SubsystemBase {
+
+  private Optional<Pose2d> autoRotationTarget = Optional.empty();
 
   /**
    * Swerve drive object.
@@ -146,7 +150,23 @@ public class SwerveSubsystem extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirements
     );
+
+    PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
   }
+
+  public void setAutoRotationTarget(Pose2d pose) {
+    autoRotationTarget = pose == null ? Optional.empty() : Optional.of(pose);
+  }
+
+  public Optional<Rotation2d> getRotationTargetOverride(){
+    // Some condition that should decide if we want to override rotation    
+    if (autoRotationTarget.isEmpty()) {
+      return Optional.empty();
+    }
+    Pose2d transformedPose = PoseTransformUtils.transformXRedPose(autoRotationTarget.get());
+    Rotation2d angle = getLookAngle(transformedPose);
+    return Optional.of(angle);
+}
 
   /**
    * Get the path follower with events.
@@ -515,6 +535,13 @@ public class SwerveSubsystem extends SubsystemBase {
     builder.addDoubleProperty("Distance", () -> getDistanceToSpeaker(), null);
     builder.addDoubleProperty("Front Left Speed", () -> swerveDrive.getStates()[0].speedMetersPerSecond, null);
     builder.addDoubleArrayProperty("Get Camera Pose3d", () -> NTHelper.getDoubleArrayPose3d(getCameraPose()), null);
+    builder.addDoubleArrayProperty("autoRotationTarget", () -> {
+      if (autoRotationTarget.isEmpty()) {
+        return new double[] {};
+      } else {
+        return NTHelper.getDoubleArrayPose2d(autoRotationTarget.get());
+      }
+    }, null);
   }
 
   public void setSlowMaxSpeed() {

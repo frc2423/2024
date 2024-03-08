@@ -6,7 +6,7 @@
 ><frc-field-wrapper
         source-key="/SmartDashboard/Field"
         source-provider="NetworkTables"
-        style="transform: translate(23.9875px, 19.8px); width: 317.562px; height: 460.2px;"
+        style="transform: translate(0px, 0px); width: 264.775px; height: 445.8px;"
         game="Crescendo"
         rotation="90"
         grid-size="1"
@@ -16,9 +16,10 @@
     >
     </frc-field-wrapper><frc-field3d
         source-provider="NetworkTables"
-        style="transform: translate(389.6px, 130.2px);"
+        style="transform: translate(268px, 15px);"
         camera-pose="[]"
         source-key="/field3d/field"
+        origin="blue"
     ><frc-field3d-urdf-wrapper
             source-provider="NetworkTables"
             source-key="/field3d/urdf"
@@ -34,11 +35,46 @@
             <frc-field3d-urdf></frc-field3d-urdf>
             <!---->
             <frc-field3d-urdf></frc-field3d-urdf>
+            <!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
+            <!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
         </frc-field3d-urdf-wrapper><frc-field3d-pose-visualizer
             source-provider="NetworkTables"
             source-key="/best target"
             pose="[0,0,0]"
-        ></frc-field3d-pose-visualizer></frc-field3d></dashboard-tab><dashboard-tab
+        ></frc-field3d-pose-visualizer></frc-field3d><vaadin-number-field
+        label="Auto override angle"
+        value="0"
+        has-value=""
+        has-label=""
+        source-provider="NetworkTables"
+        style="transform: translate(498.388px, 408px); width: 258.4px; height: 59.375px;"
+        source-key="/debug/autoRotationOverride"
+        placeholder=""
+        min="NaN"
+        max="NaN"
+    ><input
+            slot="input"
+            value="0"
+            type="number"
+            id="vaadin-number-field-62"
+            aria-labelledby="label-vaadin-number-field-62"
+            aria-describedby=""
+            min="undefined"
+            max="undefined"
+            step="any"
+        ><label
+            slot="label"
+            id="label-vaadin-number-field-62"
+            for="vaadin-number-field-62"
+        >Auto override angle</label>
+        <div
+            slot="error-message"
+            id="error-message-vaadin-number-field-53"
+            hidden=""
+        ></div>
+    </vaadin-number-field></dashboard-tab><dashboard-tab
     slot="tab"
     tab-name="Autonomous"
     source-provider="NetworkTables"
