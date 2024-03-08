@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 0.72,
-      "y": 6.7
-    },
-    "rotation": 63.69719737093483
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -14,13 +8,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RevvvvvandShoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
+            "name": "distanceShoot"
           }
         },
         {
@@ -34,18 +22,31 @@
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "Amp Retrieve"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "lookAtStageNote"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "setRotationTargetStageNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Feeder Go Forward"
+                      }
+                    }
+                  ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Amp to Shoot"
           }
         },
         {
@@ -58,12 +59,6 @@
           "type": "named",
           "data": {
             "name": "distanceShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
           }
         }
       ]
