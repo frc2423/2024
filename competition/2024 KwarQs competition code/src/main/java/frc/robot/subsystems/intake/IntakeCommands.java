@@ -50,7 +50,7 @@ public class IntakeCommands {
     }
 
     public Command intakeInWithRevCommand() {
-        var command = intakeIntake().withTimeout(0.1)
+        var command = intakeIntake().withTimeout(0.5)
                 .withTimeout(intake.isDoneSec);
         command.setName("Intake In With Rev");
         return command;

@@ -105,7 +105,7 @@ public class ShooterCommands {
 
         var command = Commands.sequence(
                 // bring game piece in so its not on top of green wheel
-                intake.intakeInWithRevCommand(),
+                intake.intakeInWithRevCommand().withTimeout(1),
                 // outtake, green forward, shooter backwards
                 Commands.parallel(moveFeedSlowCommand(), intake.intakeOutWithFeedCommand(), shooterOnFlop()),
                 moveFeedSlowReverseCommand(),

@@ -173,7 +173,7 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotMotorPercent = calculatePid(setpoint);
 
         if (isBeamBroken() && setpoint.getDegrees() == downPositionDegrees) {
-            beltMotor.set(Math.min(0, intakeSpeed));
+            beltMotor.set(Math.max(0, intakeSpeed));
         } else {
             beltMotor.set(intakeSpeed);
         }
