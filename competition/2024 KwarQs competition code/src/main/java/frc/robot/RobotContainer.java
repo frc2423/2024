@@ -169,7 +169,13 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("IntakeSequence", intakeCommands.intakeSequence());
 
-
+    Command lookAtAmpNote = swerveCommands.lookAtTarget(Constants.autoAlign.ampNote, new Rotation2d());
+    Command lookAtMiddleNote = swerveCommands.lookAtTarget(Constants.autoAlign.middleNote, new Rotation2d());
+    Command lookAtStageNote = swerveCommands.lookAtTarget(Constants.autoAlign.stageNote, new Rotation2d());
+    
+    NamedCommands.registerCommand("lookAtAmpNote", lookAtAmpNote);
+    NamedCommands.registerCommand("lookAtMiddleNote", lookAtMiddleNote);
+    NamedCommands.registerCommand("lookAtStageNote", lookAtStageNote);
 
     PathPlannerLogging.setLogActivePathCallback((poses) -> {
       drivebase.getField().getObject("path").setPoses(poses);
@@ -214,7 +220,13 @@ public class RobotContainer {
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
     new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
-    new Trigger(() -> driverXbox.getPOV() == 0).whileTrue(swerveCommands.autoAlignCommand(Constants.autoAlign.shootPose));
+    new Trigger(() -> driverXbox.getPOV() == 180).whileTrue(swerveCommands.autoAlignShootCommand(Constants.autoAlign.shootPose));
+    new Trigger(() -> driverXbox.getPOV() == 270).whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.ampPose));
+    new Trigger(() -> driverXbox.getPOV() == 90).whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.sourceMiddlePose));
+
+        
+
+
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
