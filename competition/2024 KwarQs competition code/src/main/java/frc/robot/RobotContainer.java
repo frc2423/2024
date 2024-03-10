@@ -82,7 +82,7 @@ public class RobotContainer {
     NTHelper.setDoubleArray("/field3d/urdf/pose", NTHelper.getDoubleArrayPose2d(drivebase.getPose()));
     Pose3d cameraPose = new Pose3d(drivebase.getPose()).plus(Constants.Vision.kRobotToCam);
     NTHelper.setDoubleArray("/field3d/field/cameraPose", NTHelper.getDoubleArrayPose3d(cameraPose));
-    // NTHelper.setString("/field3d/field/origin", "blue");
+    NTHelper.setString("/field3d/field/origin", PoseTransformUtils.isRedAlliance() ? "red" : "blue");
 
     Rotation2d angle = drivebase.getLookAngle(PoseTransformUtils.transformXRedPose(Constants.autoAlign.middleNote));
     NTHelper.setDouble("/debug/autoRotationOverride", angle.getDegrees());
@@ -107,13 +107,21 @@ public class RobotContainer {
     m_chooser.addOption("Yo Auto", "Yo Auto");
     m_chooser.addOption("Amp Yo Auto", "Amp Yo Auto");
     m_chooser.addOption("Feeder Yo Auto", "Feeder Yo Auto");
+    // m_chooser.addOption("New Amp Yo Auto", "New Amp Yo Auto");
+    // m_chooser.addOption("New Feeder Yo Auto", "New Feeder Yo Auto");
+
+    // 2 game piece autos
     m_chooser.addOption("New Yo Auto", "New Yo Auto");
-    m_chooser.addOption("New Amp Yo Auto", "New Amp Yo Auto");
-    m_chooser.addOption("New Feeder Yo Auto", "New Feeder Yo Auto");
     m_chooser.addOption("New Feeder Yo Auto2", "New Feeder Yo Auto2");
-    m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
-    m_chooser.addOption("ShootAndStayStillFeeder", "ShootAndStayStillFeeder");
-    m_chooser.addOption("ShootAndStayStillAmp", "ShootAndStayStillAmp");
+    m_chooser.addOption("New Amp Yo 2", "New Amp Yo 2");
+
+    // comp single game piece auto
+    m_chooser.addOption("Comp Single Note", "Comp Single Note");
+
+
+    // m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
+    // m_chooser.addOption("ShootAndStayStillFeeder", "ShootAndStayStillFeeder");
+    // m_chooser.addOption("ShootAndStayStillAmp", "ShootAndStayStillAmp");
     m_chooser.addOption("YoYo Auto", "YoYo Auto");
     m_chooser.addOption("Feeder YoYo Auto", "Feeder YoYo Auto");
     m_chooser.addOption("Amp YoYo Auto", "Amp YoYo Auto");
@@ -121,7 +129,6 @@ public class RobotContainer {
     m_chooser.addOption("Feeder Two-Piece Auto", "Feeder Two-Piece Auto");
     m_chooser.addOption("Amp Two-Piece Auto", "Amp Two-Piece Auto");
     m_chooser.addOption("Feeder to Far Middle ", "Feeder to Far Middle");
-    m_chooser.addOption("New Amp Yo 2", "New Amp Yo 2");
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
 

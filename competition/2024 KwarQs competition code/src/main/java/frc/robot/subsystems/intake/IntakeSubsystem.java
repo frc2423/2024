@@ -163,7 +163,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean isIntakeDown(){
-        return getPivotAngle().getDegrees() < 170;
+        return getPivotAngle().getDegrees() < 180;
     }
 
     @Override

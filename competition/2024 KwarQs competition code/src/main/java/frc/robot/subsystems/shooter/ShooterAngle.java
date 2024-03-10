@@ -42,7 +42,7 @@ public class ShooterAngle extends SubsystemBase {
   private final FlywheelSim pivotSimMotor = new FlywheelSim(DCMotor.getNEO(1), 6.75, 0.025);
 
   ProfiledPIDController shooter_pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? 0.001 : 0.5, 0, 0,
-      new TrapezoidProfile.Constraints(270, 400)); // 360, 420
+      new TrapezoidProfile.Constraints(500, 400)); // 360, 420
   private double shooterPivotMotorPercent = 0;
   private Rotation2d shooterPivotAngle = new Rotation2d(0);
   private static double maxShooterPivotAngle = 334;
@@ -50,9 +50,9 @@ public class ShooterAngle extends SubsystemBase {
   private CANcoder shooterAngle; // figured out? i think
 
   public static double feedAngle = 333.5; // is correct number now
-  public static double climbAngle = 205; // is correct number now
+  public static double climbAngle = 180; // is correct number now
   public static double shootAngle = 333.5; // is good
-  public static double ampAngle = 141; // maybe good
+  public static double ampAngle = 141; // maybe good 
   private IntakeSubsystem intake;
 
   public static Rotation2d setpoint = Rotation2d.fromDegrees(feedAngle); // Enter Rot2d value
