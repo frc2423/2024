@@ -52,7 +52,9 @@ public class ShooterAngle extends SubsystemBase {
   public static double feedAngle = 333.5; // is correct number now
   public static double climbAngle = 180; // is correct number now
   public static double shootAngle = 333.5; // is good
-  public static double ampAngle = 141; // maybe good 
+  public static double ampAngle = 141; // maybe good
+  public double shooterSlowPivotMotorPercent = 0.02;
+
   private IntakeSubsystem intake;
 
   public static Rotation2d setpoint = Rotation2d.fromDegrees(feedAngle); // Enter Rot2d value
@@ -103,10 +105,15 @@ public class ShooterAngle extends SubsystemBase {
         shooterPivotAngle = Rotation2d.fromDegrees(360 + shooterPivotAngle.getDegrees());
       }
     } else {
-      double encoderPosition = shooterAngle.getAbsolutePosition().getValueAsDouble() * 360 + 178;
+      double offset = 21.8;
+      double encoderPosition = shooterAngle.getAbsolutePosition().getValueAsDouble() * 360 + 178 + offset;
       shooterPivotAngle = Rotation2d.fromDegrees(encoderPosition);
     }
 
+  }
+
+  public double getVelocity() {
+    return shooter_Pivot2.getEncoder().getVelocity();
   }
 
   private void setMotorPercent() {
@@ -117,6 +124,11 @@ public class ShooterAngle extends SubsystemBase {
       pivotSimMotor.setInputVoltage(shooterPivotMotorPercent * RobotController.getBatteryVoltage());
       pivotSimMotor.update(.02);
     }
+  }
+
+  public void rotateDown() {
+      shooter_Pivot.set(shooterSlowPivotMotorPercent);
+      shooter_Pivot2.set(shooterSlowPivotMotorPercent);
   }
 
     public Rotation2d getShooterAngle(){
@@ -154,9 +166,9 @@ public class ShooterAngle extends SubsystemBase {
       setpoint = Rotation2d.fromDegrees(angle);
     });
     builder.addDoubleProperty("MotorPercentage", () -> shooterPivotMotorPercent, null);
+    builder.addDoubleProperty("Velocity", () -> getVelocity(), null);
     builder.addDoubleProperty("Angle", () -> shooterPivotAngle.getDegrees(), null);
     builder.addDoubleProperty("Error", () -> shooter_pivot_PID.getPositionError(), null);
-
   }
 
   public boolean isShooterAtGoal() {

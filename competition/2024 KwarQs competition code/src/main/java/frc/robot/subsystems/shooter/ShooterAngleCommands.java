@@ -13,6 +13,7 @@ public class ShooterAngleCommands {
   private ShooterAngle shooterAngle;
   private SwerveSubsystem drivebase;
   private ShooterSubsystem shooterSubsystem;
+  private double smallVelocity = 0.02;
 
   public ShooterAngleCommands(ShooterAngle shooterAngle, SwerveSubsystem drivebase,
       ShooterSubsystem shooterSubsystem) {
@@ -61,12 +62,28 @@ public class ShooterAngleCommands {
     return command;
   }
 
+  public Command moveShooterDownReset() {
+    Command command = Commands.sequence(
+        moveShooterDown().until(() -> {
+          boolean isStopped = false;
+          boolean isAtSetpoint = false;
+          return isStopped || isAtSetpoint;
+        }),
+        Commands.run(() -> {shooterAngle.rotateDown();
+        }).until(() -> {
+          return smallVelocity > shooterAngle.getVelocity();
+        })
+    );
+    command.setName("Move Shooter Down / Reset Boom");
+    return command;
+  }
+
   public Command setShooterAngleFromDAS() {
-      return Commands.run(() -> {
-        double distance = drivebase.getDistanceToSpeaker();
-        DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
-        shooterAngle.setAngle(as.getAngle());
-      }, shooterAngle).withTimeout(1.5);
+    return Commands.run(() -> {
+      double distance = drivebase.getDistanceToSpeaker();
+      DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
+      shooterAngle.setAngle(as.getAngle());
+    }, shooterAngle).withTimeout(1.5);
 
   }
 
