@@ -105,7 +105,7 @@ public class ShooterAngle extends SubsystemBase {
         shooterPivotAngle = Rotation2d.fromDegrees(360 + shooterPivotAngle.getDegrees());
       }
     } else {
-      double offset = 21.8;
+      double offset = 21.8 + 3.8;
       double encoderPosition = shooterAngle.getAbsolutePosition().getValueAsDouble() * 360 + 178 + offset;
       shooterPivotAngle = Rotation2d.fromDegrees(encoderPosition);
     }
