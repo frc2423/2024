@@ -118,7 +118,6 @@ public class RobotContainer {
     // comp single game piece auto
     m_chooser.addOption("Comp Single Note", "Comp Single Note");
 
-
     // m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
     // m_chooser.addOption("ShootAndStayStillFeeder", "ShootAndStayStillFeeder");
     // m_chooser.addOption("ShootAndStayStillAmp", "ShootAndStayStillAmp");
@@ -227,7 +226,8 @@ public class RobotContainer {
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS())
         .onFalse(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
-    new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand());
+    new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand())
+        .onFalse(shooterCommands.moveFeedAmpCommandEnd());
     new Trigger(() -> operator.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpOppCommand());
 
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >

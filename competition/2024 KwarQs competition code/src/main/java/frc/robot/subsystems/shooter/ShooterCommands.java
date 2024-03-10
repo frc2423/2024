@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.Constants;
 import frc.robot.DAS;
 import frc.robot.RobotContainer;
@@ -72,7 +73,14 @@ public class ShooterCommands {
         command.setName("Feeding SLOW REVERSE");
         return command;
     }
-
+    public Command moveFeedAmpCommandEnd() {
+        var endCommand = Commands.run(() -> {
+            shooter.moveFeederAmpOppEnd();
+        }, shooter).withTimeout(.35);
+        // endCommand.withInterruptBehavior(InterruptionBehavior.)
+        endCommand.setName("Feeding END");
+        return endCommand;
+    }
      public Command moveFeedAmpOppCommand() {
         var command = Commands.run(() -> shooter.moveFeederAmp(), shooter);
         command.setName("Feeding SLOW");
