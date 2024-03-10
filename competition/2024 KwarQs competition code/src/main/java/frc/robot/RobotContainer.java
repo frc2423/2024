@@ -118,6 +118,9 @@ public class RobotContainer {
     // comp single game piece auto
     m_chooser.addOption("Comp Single Note", "Comp Single Note");
 
+    // more autos
+    m_chooser.addOption("Amp side to center", "Amp side to center");
+
     // m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
     // m_chooser.addOption("ShootAndStayStillFeeder", "ShootAndStayStillFeeder");
     // m_chooser.addOption("ShootAndStayStillAmp", "ShootAndStayStillAmp");

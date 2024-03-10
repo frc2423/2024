@@ -169,6 +169,8 @@ public class ShooterAngle extends SubsystemBase {
     builder.addDoubleProperty("Velocity", () -> getVelocity(), null);
     builder.addDoubleProperty("Angle", () -> shooterPivotAngle.getDegrees(), null);
     builder.addDoubleProperty("Error", () -> shooter_pivot_PID.getPositionError(), null);
+    builder.addDoubleProperty("MotorVoltage", () -> shooterPivotMotorPercent*12, null);
+
   }
 
   public boolean isShooterAtGoal() {
