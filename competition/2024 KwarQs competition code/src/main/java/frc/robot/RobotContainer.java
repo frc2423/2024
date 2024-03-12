@@ -183,6 +183,10 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("IntakeSequence", intakeCommands.intakeSequence());
 
+    NamedCommands.registerCommand("ShooterToAngle", shooterAngleCommands.setShooterAngleFromDAS().withTimeout(1.5));
+
+    //.withTimeout(1.5)
+
     Command lookAtAmpNote = swerveCommands.lookAtTarget(Constants.autoAlign.ampNote, new Rotation2d());
     Command lookAtMiddleNote = swerveCommands.lookAtTarget(Constants.autoAlign.middleNote, new Rotation2d());
     Command lookAtStageNote = swerveCommands.lookAtTarget(Constants.autoAlign.stageNote, new Rotation2d());
@@ -197,6 +201,8 @@ public class RobotContainer {
         Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.middleNote)));
     NamedCommands.registerCommand("setRotationTargetStageNote",
         Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.stageNote)));
+    NamedCommands.registerCommand("setRotationTargetSpeaker",
+        Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.speakerLocationPose)));
 
     PathPlannerLogging.setLogActivePathCallback((poses) -> {
       drivebase.getField().getObject("path").setPoses(poses);
