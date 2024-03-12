@@ -196,6 +196,10 @@ public class NeoMotor {
         }
     }
 
+    public double getValue() {
+        return motorValue;
+    }
+
     public void setBrakeMode(boolean brake) {
         if (brake) {
             motor.setIdleMode(CANSparkMax.IdleMode.kBrake);

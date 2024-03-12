@@ -39,6 +39,8 @@
             <frc-field3d-urdf></frc-field3d-urdf>
             <!---->
             <frc-field3d-urdf></frc-field3d-urdf>
+            <!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
         </frc-field3d-urdf-wrapper><frc-field3d-pose-visualizer
             source-provider="NetworkTables"
             source-key="/best target"
@@ -51,6 +53,37 @@
         source-provider="NetworkTables"
         style="transform: translate(498.388px, 408px); width: 258.4px; height: 59.375px;"
         source-key="/debug/autoRotationOverride"
+        min="NaN"
+        max="NaN"
+    ><input
+            slot="input"
+            value="0"
+            type="number"
+            id="vaadin-number-field-63"
+            aria-labelledby="label-vaadin-number-field-62"
+            aria-describedby=""
+            min="NaN"
+            max="NaN"
+            step="any"
+        ><label
+            slot="label"
+            id="label-vaadin-number-field-62"
+            for="vaadin-number-field-63"
+        >Auto override angle</label>
+        <div
+            slot="error-message"
+            id="error-message-vaadin-number-field-53"
+            hidden=""
+        ></div>
+    </vaadin-number-field><vaadin-number-field
+        label="speaker distance"
+        value="0"
+        has-value=""
+        has-label=""
+        source-provider="NetworkTables"
+        style="transform: translate(313.987px, 416.4px); width: 136.8px; height: 58.6px;"
+        source-key="/SmartDashboard/SwerveSubsystem/Distance"
+        readonly=""
         placeholder=""
         min="NaN"
         max="NaN"
@@ -58,20 +91,21 @@
             slot="input"
             value="0"
             type="number"
-            id="vaadin-number-field-62"
-            aria-labelledby="label-vaadin-number-field-62"
+            id="vaadin-number-field-94"
+            aria-labelledby="label-vaadin-number-field-94"
             aria-describedby=""
             min="undefined"
             max="undefined"
             step="any"
+            readonly=""
         ><label
             slot="label"
-            id="label-vaadin-number-field-62"
-            for="vaadin-number-field-62"
-        >Auto override angle</label>
+            id="label-vaadin-number-field-94"
+            for="vaadin-number-field-94"
+        >speaker distance</label>
         <div
             slot="error-message"
-            id="error-message-vaadin-number-field-53"
+            id="error-message-vaadin-number-field-67"
             hidden=""
         ></div>
     </vaadin-number-field></dashboard-tab><dashboard-tab

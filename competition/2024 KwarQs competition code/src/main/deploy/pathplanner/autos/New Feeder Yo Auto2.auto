@@ -8,6 +8,12 @@
         {
           "type": "named",
           "data": {
+            "name": "IntakeDown"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "distanceShoot"
           }
         },

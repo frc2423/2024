@@ -41,7 +41,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotorTwo = new NeoMotor(22);
         shooterMotorTwo.setInverted(true);
         shooterMotorOne.setFollower(shooterMotorTwo);
-        
+
     }
 
     // Shooter turns on/ shoots the note
@@ -95,12 +95,22 @@ public class ShooterSubsystem extends SubsystemBase {
         feeder_Motor.setVoltage(0.5);
     }
 
-     public void moveFeederAmp() {
+    public void moveFeederAmp() {
         feeder_Motor.setVoltage(5);
     }
 
-     public void moveFeederAmpOpp() {
-        feeder_Motor.setVoltage(-0.5);
+    public void moveFeederAmpOpp() {
+        feeder_Motor.setVoltage(-3);
+        shooterMotorOne.setSpeed(1 / RobotController.getBatteryVoltage());
+        shooterMotorTwo.setSpeed(1 / RobotController.getBatteryVoltage());
+        // shooterOnSource();
+        // feeder_Motor.setVoltage(-0.5);
+    }
+   
+    public void moveFeederAmpOppEnd() {
+        feeder_Motor.setVoltage(0.6);
+        shooterMotorOne.setSpeed(1 / RobotController.getBatteryVoltage());
+        shooterMotorTwo.setSpeed(1 / RobotController.getBatteryVoltage());
     }
 
     public void moveFeederMotorBackwards() {
@@ -123,6 +133,8 @@ public class ShooterSubsystem extends SubsystemBase {
         builder.addDoubleProperty("shooterSpeed", () -> shooterSpeed, (shooterSpeed) -> {
             this.shooterSpeed = shooterSpeed;
         });
+        // builder.addDoubleProperty("shooterMotor1Value", shooterMotorOne::getValue, null);
+        // builder.addDoubleProperty("shooterMotor2Value", shooterMotorTwo::getValue, null);
     }
 
 }

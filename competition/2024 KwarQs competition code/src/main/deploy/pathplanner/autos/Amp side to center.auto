@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3842846515935527,
-      "y": 5.54
+      "x": 0.7812469471092803,
+      "y": 6.739121939782341
     },
-    "rotation": 0
+    "rotation": 59.03624346792652
   },
   "command": {
     "type": "sequential",
@@ -24,32 +24,25 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "IntakeSequence"
+                  "pathName": "Amp side to center wall"
                 }
               },
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "setRotationTargetMiddleNote"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Retrieve"
-                      }
-                    }
-                  ]
+                  "name": "IntakeSequence"
                 }
               }
             ]
@@ -59,12 +52,6 @@
           "type": "named",
           "data": {
             "name": "HandOff"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "distanceShoot"
           }
         }
       ]
