@@ -12,6 +12,7 @@
     ></frc-toggle-group><frc-basic-fms-info
         source-provider="NetworkTables"
         style="transform: translate(379.6px, 5.6px);"
+        source-key="/FMSInfo"
     ></frc-basic-fms-info><frc-swerve-drivebase
         source-provider="NetworkTables"
         style="transform: translate(701.6px, 213.588px); width: 183.2px; height: 223.8px;"
@@ -36,18 +37,45 @@
         style="transform: translate(1010.4px, 208.812px);"
         game="Crescendo"
         grid-size="1"
+        origin="red"
     >
     </frc-field-wrapper><frc-field3d
         source-provider="NetworkTables"
-        style="transform: translate(1103.99px, 4.00002px); width: 303.612px; height: 242.388px;"
+        style="transform: translate(1007.19px, 4px); width: 460px; height: 242.388px;"
         camera-pose="[]"
-    ></frc-field3d><frc-sendable-chooser-wrapper
-        source-key="/SmartDashboard/Auto choices"
+        source-key="/field3d/field"
+        fixed-camera=""
+    ><frc-field3d-urdf-wrapper
+            source-provider="NetworkTables"
+            source-key="/field3d/urdf"
+            name=""
+            pose="[0,0,0]"
+        ><!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
+            <!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
+            <!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
+            <!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
+            <!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
+        </frc-field3d-urdf-wrapper><frc-field3d-pose-visualizer
+            source-provider="NetworkTables"
+            source-key="/best target"
+            pose="[0,0,0]"
+        ></frc-field3d-pose-visualizer></frc-field3d><frc-sendable-chooser-wrapper
+        source-key="/Shuffleboard/Autonomous/SendableChooser[0]"
         source-provider="NetworkTables"
         label="AUTO PATH"
         style="transform: translate(366.787px, 112.8px); width: 251.2px; height: 93.7875px;"
         options="[]"
-    ></frc-sendable-chooser-wrapper></dashboard-tab><dashboard-tab
+    ></frc-sendable-chooser-wrapper><frc-boolean-box
+        source-provider="NetworkTables"
+        style="transform: translate(756.8px, 14.6px); width: 142px; height: 96.8px;"
+        source-key="/SmartDashboard/VisionSubsystem/is connected"
+        label="CameraConnected"
+    ></frc-boolean-box></dashboard-tab><dashboard-tab
     slot="tab"
     tab-name="Autonomous"
     source-provider="NetworkTables"
