@@ -2,6 +2,8 @@ package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.shooter.ShooterAngleCommands;
+import frc.robot.subsystems.shooter.ShooterCommands;
 
 public class IntakeCommands {
 
@@ -9,6 +11,7 @@ public class IntakeCommands {
 
     public IntakeCommands(IntakeSubsystem intake) {
         this.intake = intake;
+
     }
 
     public Command intakeDown() {
@@ -94,4 +97,6 @@ public class IntakeCommands {
         var command = Commands.runOnce(intake::beltStop, intake);
         return command;
     }
+
+    
 }

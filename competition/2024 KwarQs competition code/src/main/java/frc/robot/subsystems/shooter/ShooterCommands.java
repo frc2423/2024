@@ -172,4 +172,17 @@ public class ShooterCommands {
         command.setName("shootFromDAS");
         return command;
     }
+
+    public Command intakeSequencePlusHandoffCommand() {
+        Command intakeDown = Commands.runOnce(iintake::extend);
+        Command intakeStart = intake.intakeIntake().until(iintake::isBeamBroken);
+        Command intakeStop = Commands.runOnce(iintake::beltStop);
+        Command intakeUp = Commands.runOnce(iintake::retract);
+        Command wait = Commands.waitSeconds(1);
+        Command handoff = handOffCommand();
+
+        Command bestSequence = Commands.sequence(intakeDown, intakeStart.withTimeout(20), intakeStop, intakeUp, wait, handoff);
+        bestSequence.setName("Intake Sequence Plus Handoff");
+        return bestSequence;
+    }
 }
