@@ -12,6 +12,7 @@ package frc.robot.subsystems.shooter;
 
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
@@ -37,6 +38,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterSubsystem() {
         feeder_Motor = new CANSparkMax(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
+        feeder_Motor.setIdleMode(IdleMode.kBrake);
         shooterMotorOne = new NeoMotor(21); // Correct these when we know the numbers
         shooterMotorTwo = new NeoMotor(22);
         shooterMotorTwo.setInverted(true);
