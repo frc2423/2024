@@ -131,6 +131,10 @@ public class RobotContainer {
     m_chooser.addOption("Feeder Two-Piece Auto", "Feeder Two-Piece Auto");
     m_chooser.addOption("Amp Two-Piece Auto", "Amp Two-Piece Auto");
     m_chooser.addOption("Feeder to Far Middle ", "Feeder to Far Middle");
+    m_chooser.addOption("Amp Center 2 Piece","Amp Center 2 Piece");
+    m_chooser.addOption("Feeder Center 2 Piece","Feeder Center 2 Piece");
+    m_chooser.addOption("4 Note Auto","4 Note Auto");
+
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
 
@@ -203,6 +207,16 @@ public class RobotContainer {
         Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.stageNote)));
     NamedCommands.registerCommand("setRotationTargetSpeaker",
         Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.speakerLocationPose)));
+    NamedCommands.registerCommand("setRotationTargetCenterNote1",
+        Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.center1Note)));
+    NamedCommands.registerCommand("setRotationTargetCenterNote2",
+        Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.center2Note)));
+    NamedCommands.registerCommand("setRotationTargetCenterNote3",
+        Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.center3Note)));
+    NamedCommands.registerCommand("setRotationTargetCenterNote4",
+        Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.center4Note)));
+    NamedCommands.registerCommand("setRotationTargetCenterNote5",
+        Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.center5Note)));
 
     PathPlannerLogging.setLogActivePathCallback((poses) -> {
       drivebase.getField().getObject("path").setPoses(poses);

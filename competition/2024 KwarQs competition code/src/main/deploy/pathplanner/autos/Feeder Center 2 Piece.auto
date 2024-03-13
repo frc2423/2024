@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.72,
-      "y": 6.71
+      "x": 0.7636103146671328,
+      "y": 4.368142031576503
     },
-    "rotation": 65.0
+    "rotation": -53.74616226255519
   },
   "command": {
     "type": "sequential",
@@ -40,13 +40,13 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "setRotationTargetCenterNote1"
+                        "name": "setRotationTargetCenterNote5"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Amp to center wall"
+                        "pathName": "Feeder to center wall"
                       }
                     }
                   ]
@@ -68,7 +68,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Amp center wall to shoot"
+                  "pathName": "Feeder center wall to shoot"
                 }
               }
             ]
