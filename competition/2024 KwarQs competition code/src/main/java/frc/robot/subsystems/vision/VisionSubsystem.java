@@ -45,13 +45,22 @@ public class VisionSubsystem extends SubsystemBase {
         visionInterface.simulationPeriodic(pose);
     }
 
+    public void setLEDColor(final int targetId, final double yaw) {
+        // if alliance is blue and tag is blue speaker... {
+        // turn color to indicate that (maybe also check yaw for how well aligned we are)
+        // }
+        // etc.
+    }
+
     public Optional<Transform3d> getLatestResult() {
         if (!visionInterface.getLatestResult().hasTargets()) {
+            // setLEDColor(-1, -1);
             return null;
         }
         PhotonTrackedTarget getLatestResult = visionInterface.getLatestResult().getBestTarget();
         if (getLatestResult != null) {
             getLatestId = getLatestResult.getFiducialId();
+            // setLEDColor();
             return Optional.ofNullable(getLatestResult.getBestCameraToTarget());
         }
         return null;
