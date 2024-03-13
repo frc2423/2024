@@ -31,7 +31,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private NeoMotor shooterMotorTwo;
     private double shooterSpeed = -4.3 ;
     private double shooterSpeed2 = -4.3 ;
-    public static Timer timer;
     public static double feederVoltage = -RobotController.getBatteryVoltage();
     public static double feederFlopVoltage = 2;
     private final CANSparkMax feeder_Motor;
@@ -53,11 +52,6 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotorTwo = new NeoMotor(22);
         shooterMotorTwo.setInverted(true);
         shooterMotorOne.setFollower(shooterMotorTwo);
-    }
-
-    // Shooter turns on/ shoots the note
-    public void startTimer() {
-        timer.start();
     }
 
     private void calcShooterPID() {
