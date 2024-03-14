@@ -56,8 +56,8 @@ public class RobotContainer {
   private final SwerveSubsystem drivebase = new SwerveSubsystem(
       new File(Filesystem.getDeployDirectory(), deployDirectory));
 
-  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(5);
+  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(5);
 
   // A chooser for autonomous commands
   SendableChooser<String> m_chooser = new SendableChooser<>();
@@ -68,11 +68,11 @@ public class RobotContainer {
   ShooterSubsystem shooter = new ShooterSubsystem();
   VisionSubsystem visionSubsystem = new VisionSubsystem();
   ShooterAngle shooterAngle = new ShooterAngle(intake);
-  IntakeCommands intakeCommands = new IntakeCommands(intake);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
+  IntakeCommands intakeCommands = new IntakeCommands(intake);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
-      drivebase, swerveCommands);
+  drivebase, swerveCommands);
   public static final DAS das = new DAS();
 
   public void JointReader() {
@@ -286,7 +286,7 @@ public class RobotContainer {
         .whileTrue(shooterAngleCommands.moveShooterUp());
 
     new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
-    new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(intakeCommands.intakeIntakeUntil());
+    new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
