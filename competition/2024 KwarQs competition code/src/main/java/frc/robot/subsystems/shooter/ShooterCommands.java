@@ -164,7 +164,7 @@ public class ShooterCommands {
         Command command = Commands.sequence(
                 Commands.parallel(
                         swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose, Rotation2d.fromDegrees(180)),
-                        revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS()),
+                        revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS().withTimeout(1.5)),
                         shoot(),
                         shooterAngle.shooterAngleCommand()
         );

@@ -8,6 +8,12 @@
         {
           "type": "named",
           "data": {
+            "name": "IntakeDown"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "distanceShoot"
           }
         },
@@ -60,31 +66,38 @@
                 }
               },
               {
-                "type": "path",
-                "data": {
-                  "pathName": "Center to Near Amp"
-                }
-              },
-              {
-                "type": "sequential",
+                "type": "deadline",
                 "data": {
                   "commands": [
                     {
-                      "type": "named",
+                      "type": "path",
                       "data": {
-                        "name": "HandOff"
+                        "pathName": "Center to Near Amp"
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "sequential",
                       "data": {
-                        "name": "IntakeDown"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ShooterToAngle"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "HandOff"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "IntakeDown"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "ShooterToAngle"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]

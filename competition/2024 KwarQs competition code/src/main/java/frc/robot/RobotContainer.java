@@ -134,6 +134,7 @@ public class RobotContainer {
     m_chooser.addOption("Amp Center 2 Piece","Amp Center 2 Piece");
     m_chooser.addOption("Feeder Center 2 Piece","Feeder Center 2 Piece");
     m_chooser.addOption("4 Note Auto","4 Note Auto");
+    m_chooser.addOption("Amp 3 Piece","Amp 3 Piece");
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -206,7 +207,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("setRotationTargetStageNote",
         Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.stageNote)));
     NamedCommands.registerCommand("setRotationTargetSpeaker",
-        Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.speakerLocationPose)));
+        Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.speakerLocationPose, Rotation2d.fromDegrees(180))));
     NamedCommands.registerCommand("setRotationTargetCenterNote1",
         Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.center1Note)));
     NamedCommands.registerCommand("setRotationTargetCenterNote2",

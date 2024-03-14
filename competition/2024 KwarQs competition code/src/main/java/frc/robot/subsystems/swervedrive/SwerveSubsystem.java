@@ -57,6 +57,7 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class SwerveSubsystem extends SubsystemBase {
 
   private Optional<Pose2d> autoRotationTarget = Optional.empty();
+  private Rotation2d autoRotationTargetOffset = Rotation2d.fromDegrees(0);
 
   /**
    * Swerve drive object.
@@ -155,7 +156,12 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void setAutoRotationTarget(Pose2d pose) {
+    setAutoRotationTarget(pose, Rotation2d.fromDegrees(0));
+  }
+
+  public void setAutoRotationTarget(Pose2d pose, Rotation2d offset) {
     autoRotationTarget = pose == null ? Optional.empty() : Optional.of(pose);
+    autoRotationTargetOffset = offset;
   }
 
   public Optional<Rotation2d> getRotationTargetOverride(){
@@ -164,7 +170,7 @@ public class SwerveSubsystem extends SubsystemBase {
       return Optional.empty();
     }
     Pose2d transformedPose = PoseTransformUtils.transformXRedPose(autoRotationTarget.get());
-    Rotation2d angle = getLookAngle(transformedPose);
+    Rotation2d angle = getLookAngle(transformedPose).plus(autoRotationTargetOffset);
     return Optional.of(angle);
 }
 
