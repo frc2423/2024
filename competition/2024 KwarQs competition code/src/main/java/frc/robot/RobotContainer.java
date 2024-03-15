@@ -135,6 +135,7 @@ public class RobotContainer {
     m_chooser.addOption("Feeder Center 2 Piece","Feeder Center 2 Piece");
     m_chooser.addOption("4 Note Auto","4 Note Auto");
     m_chooser.addOption("Amp 3 Piece","Amp 3 Piece");
+    m_chooser.addOption("Feeder 3 Piece","Feeder 3 Piece");
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);

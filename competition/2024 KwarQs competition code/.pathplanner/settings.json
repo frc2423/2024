@@ -21,8 +21,8 @@
     "Yo",
     "YoYo"
   ],
-  "defaultMaxVel": 2.0,
-  "defaultMaxAccel": 2.0,
+  "defaultMaxVel": 3.0,
+  "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 350.0,
   "defaultMaxAngAccel": 535.0,
   "maxModuleSpeed": 4.5

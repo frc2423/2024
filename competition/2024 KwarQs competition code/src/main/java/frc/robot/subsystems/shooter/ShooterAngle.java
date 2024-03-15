@@ -1,7 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import com.revrobotics.CANSparkLowLevel;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkFlex;
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -30,19 +30,19 @@ import com.ctre.phoenix6.hardware.CANcoder;
 
 /** A robot arm subsystem that moves with a motion profile. */
 public class ShooterAngle extends SubsystemBase {
-  private final CANSparkMax shooter_Pivot = new CANSparkMax(26,CANSparkLowLevel.MotorType.kBrushless);
-  private final CANSparkMax shooter_Pivot2 = new CANSparkMax(24,CANSparkLowLevel.MotorType.kBrushless);
-  private static final double kSVolts = 1;
-  private static final double kGVolts = 1;
-  private static final double kVVoltSecondPerRad = 0.5;// all things for feed forward is wrong, re do pls
-  private static final double kAVoltSecondSquaredPerRad = 0.1;
+  private final CANSparkFlex shooter_Pivot = new CANSparkFlex(26,CANSparkLowLevel.MotorType.kBrushless);
+  private final CANSparkFlex shooter_Pivot2 = new CANSparkFlex(24,CANSparkLowLevel.MotorType.kBrushless);
+  private static final double kSVolts = 0; //1;
+  private static final double kGVolts = 0; //1;
+  private static final double kVVoltSecondPerRad = 0;//.5;// all things for feed forward is wrong, re do pls
+  private static final double kAVoltSecondSquaredPerRad = 0;//.1;
   private static final int kMotorPort = 26; // right side
   private MechanismLigament2d pivot;
   private double pivotMotorPercent = 0;
   private final FlywheelSim pivotSimMotor = new FlywheelSim(DCMotor.getNEO(1), 6.75, 0.025);
 
-  ProfiledPIDController shooter_pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? 0.001 : 0.5, 0, 0,
-      new TrapezoidProfile.Constraints(500, 400)); // 360, 420
+  ProfiledPIDController shooter_pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? 0.001 : 0.6, 0, 0,
+      new TrapezoidProfile.Constraints(450, 600)); //.5, 500, 400
   private double shooterPivotMotorPercent = 0;
   private Rotation2d shooterPivotAngle = new Rotation2d(0);
   private static double maxShooterPivotAngle = 334;
@@ -60,7 +60,9 @@ public class ShooterAngle extends SubsystemBase {
   public static Rotation2d setpoint = Rotation2d.fromDegrees(feedAngle); // Enter Rot2d value
 
   private final ArmFeedforward m_feedforward = new ArmFeedforward(
-      (Robot.isSimulation()) ? 0 : 0.02 * 12, (Robot.isSimulation()) ? 0 : 0.01 * 12, 0, 0);
+      (Robot.isSimulation()) ? 0 : 0.0175 * 12, (Robot.isSimulation()) ? 0 : 0.01 * 12, 0, 0);
+  // private final ArmFeedforward m_feedforward = new ArmFeedforward(
+  //     (Robot.isSimulation()) ? 0 : 0.02 * 12, (Robot.isSimulation()) ? 0 : 0.01 * 12, 0, 0);
 
   // 25 encoder 24 26 motors
 
@@ -91,7 +93,7 @@ public class ShooterAngle extends SubsystemBase {
     double pid = shooter_pivot_PID.calculate(shooterPivotAngle.getDegrees(), angle.getDegrees());
     var setpoint = shooter_pivot_PID.getSetpoint();
     double feedforward = m_feedforward.calculate(Math.toRadians(shooterPivotAngle.getDegrees() - 70),
-        setpoint.velocity);
+    setpoint.velocity);
     // return feedforward + pid;
     return (feedforward + pid) / RobotController.getBatteryVoltage();
   }

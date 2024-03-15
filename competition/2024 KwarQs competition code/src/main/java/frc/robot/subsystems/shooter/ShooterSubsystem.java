@@ -11,7 +11,7 @@
 package frc.robot.subsystems.shooter;
 
 import com.revrobotics.CANSparkLowLevel;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkFlex;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
@@ -29,14 +29,14 @@ public class ShooterSubsystem extends SubsystemBase {
     public static double feederVoltage = -RobotController.getBatteryVoltage() / 3;
     public static double feederFlopVoltage = 1;
     public static double feederFlopVoltageBackwards = 4;
-    private final CANSparkMax feeder_Motor;
+    private final CANSparkFlex feeder_Motor;
     public static final int kFeederMotorPort = 23;
     public double feederOnSec = 1.5;
     public double isDoneSec = 0.5; // for revving not for shooting
-    public double isDoneShoot = 2; // sec
+    public double isDoneShoot = .5; // sec
 
     public ShooterSubsystem() {
-        feeder_Motor = new CANSparkMax(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
+        feeder_Motor = new CANSparkFlex(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
         shooterMotorOne = new NeoMotor(21); // Correct these when we know the numbers
         shooterMotorTwo = new NeoMotor(22);
         shooterMotorTwo.setInverted(true);
