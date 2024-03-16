@@ -13,6 +13,8 @@ package frc.robot.subsystems.shooter;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkFlex;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -35,6 +37,12 @@ public class ShooterSubsystem extends SubsystemBase {
     public double isDoneSec = 0.5; // for revving not for shooting
     public double isDoneShoot = .5; // sec
 
+    public final SimpleMotorFeedforward feedforward1 = new SimpleMotorFeedforward(0.15, 0.0005, 0);
+    public final SimpleMotorFeedforward feedforward2 = new SimpleMotorFeedforward(0.15, 0.0005, 0);
+    PIDController pid1 = new PIDController(.0005, 0, 0);
+    PIDController pid2 = new PIDController(.0005, 0, 0);
+
+
     public ShooterSubsystem() {
         feeder_Motor = new CANSparkFlex(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
         shooterMotorOne = new NeoMotor(21); // Correct these when we know the numbers
@@ -49,9 +57,33 @@ public class ShooterSubsystem extends SubsystemBase {
         timer.start();
     }
 
+    public double calcShooterFeedFor(double shooterSpeed) {
+
+        double feedforward_calc = feedforward1.calculate(shooterSpeed);
+        return feedforward_calc;
+    }
+
+    public double calcShooterPID2(double shooterSpeed) {
+        double shooter_PID2 = pid2.calculate(shooterMotorTwo.getSpeed(), shooterSpeed);
+        return shooter_PID2;
+    }
+
+    public double calcShooterPID1(double shooterSpeed) {
+        double shooter_PID1 = pid1.calculate(shooterMotorOne.getSpeed(), shooterSpeed);
+        return shooter_PID1;
+    }
+
     public void shooterOn() {
-        shooterMotorOne.setSpeed(shooterSpeed / RobotController.getBatteryVoltage());
-        shooterMotorTwo.setSpeed(-10 / RobotController.getBatteryVoltage());
+        double speed = 3000;
+        NTHelper.setDouble("/debug/shooterFeedforward", calcShooterFeedFor(speed));
+        NTHelper.setDouble("/debug/shooterPid", calcShooterPID1(speed));
+        NTHelper.setDouble("/debug/shooterSpeed", shooterMotorOne.getSpeed());
+        NTHelper.setDouble("/debug/shooterSetpoint", speed);
+        NTHelper.setDouble("/debug/shooterAnglePid", calcShooterPID1(speed));
+
+        // System.out.println(calcShooterPID1(speed));
+        shooterMotorOne.setPercent(calcShooterPID1(speed) + calcShooterFeedFor(speed));
+        shooterMotorTwo.setPercent(calcShooterPID2(speed) + calcShooterFeedFor(speed));
     }
 
     public void shooterOnFlop() {
@@ -117,6 +149,16 @@ public class ShooterSubsystem extends SubsystemBase {
         feeder_Motor.setVoltage(feederFlopVoltageBackwards);
     }
 
+    public double getShooterOneVelocity() {
+        double speed1 = shooterMotorOne.getSpeed();
+        return speed1;
+    }
+
+    public double getShooterTwoVelocity() {
+        double speed2 = shooterMotorTwo.getSpeed();
+        return speed2;
+    }
+
     public void stopFeederMotor() {
         feeder_Motor.setVoltage(0);
     }
@@ -130,9 +172,13 @@ public class ShooterSubsystem extends SubsystemBase {
         // This is used to add things to NetworkTables
         super.initSendable(builder);
 
-        builder.addDoubleProperty("shooterSpeed", () -> shooterSpeed, (shooterSpeed) -> {
-            this.shooterSpeed = shooterSpeed;
-        });
+        
+            builder.addDoubleProperty("shooterSpeed", () -> shooterSpeed, (shooterSpeed) -> {
+                this.shooterSpeed = shooterSpeed;
+            });
+        builder.addDoubleProperty("shooterMotor1Velocity", this::getShooterOneVelocity, null);
+        builder.addDoubleProperty("shooterMotor2Velocity", this::getShooterTwoVelocity, null);
+
         // builder.addDoubleProperty("shooterMotor1Value", shooterMotorOne::getValue, null);
         // builder.addDoubleProperty("shooterMotor2Value", shooterMotorTwo::getValue, null);
     }

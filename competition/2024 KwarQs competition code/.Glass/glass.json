@@ -7,7 +7,9 @@
         },
         "ShooterAngle": {
           "open": true
-        },
+        }
+      },
+      "debug": {
         "open": true
       }
     },
@@ -70,13 +72,21 @@
     "Plot <0>": {
       "plots": [
         {
+          "axis": [
+            {
+              "max": 5000.0
+            },
+            {
+              "max": 10.0
+            }
+          ],
           "backgroundColor": [
             0.0,
             0.0,
             0.0,
             0.8500000238418579
           ],
-          "height": 0,
+          "height": 526,
           "series": [
             {
               "color": [
@@ -95,8 +105,46 @@
                 1.0
               ],
               "id": "NT:/SmartDashboard/Intake/Setpoint"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/debug/shooterSetpoint"
+            },
+            {
+              "color": [
+                0.7686275243759155,
+                0.30588236451148987,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Shooter/shooterMotor1Velocity"
+            },
+            {
+              "color": [
+                0.5058823823928833,
+                0.44705885648727417,
+                0.7019608020782471,
+                1.0
+              ],
+              "id": "NT:/debug/shooterPid",
+              "yAxis": 1
+            },
+            {
+              "color": [
+                0.5764706134796143,
+                0.4705882668495178,
+                0.3764706254005432,
+                1.0
+              ],
+              "id": "NT:/debug/shooterFeedforward"
             }
-          ]
+          ],
+          "yaxis2": true
         }
       ]
     }
