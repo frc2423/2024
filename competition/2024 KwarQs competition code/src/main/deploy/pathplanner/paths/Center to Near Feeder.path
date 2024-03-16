@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.7824530941501242,
-        "y": 5.54
+        "x": 2.894982565999367,
+        "y": 5.550936522700434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1139448735232316,
-        "y": 5.54
+        "x": 2.409292510892716,
+        "y": 5.298548289404272
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.883271729453586,
-        "y": 5.54
+        "x": 2.2119536546765417,
+        "y": 4.420390379242297
       },
       "prevControl": {
-        "x": 2.6095829741013126,
-        "y": 5.54
+        "x": 2.2514214259197765,
+        "y": 5.051874719134054
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,16 +34,19 @@
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAngularVelocity": 350.0,
+    "maxAngularAcceleration": 535.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -23.962488974578132,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Yo Autos",
-  "previewStartingState": null,
-  "useDefaultConstraints": false
+  "folder": "WEEK 4 PATHS",
+  "previewStartingState": {
+    "rotation": 0.5507783204622452,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
 }
