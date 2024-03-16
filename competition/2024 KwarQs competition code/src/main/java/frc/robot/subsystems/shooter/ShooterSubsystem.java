@@ -37,8 +37,8 @@ public class ShooterSubsystem extends SubsystemBase {
     public double isDoneSec = 0.5; // for revving not for shooting
     public double isDoneShoot = .5; // sec
 
-    public final SimpleMotorFeedforward feedforward1 = new SimpleMotorFeedforward(0.15, 0.0005, 0);
-    public final SimpleMotorFeedforward feedforward2 = new SimpleMotorFeedforward(0.15, 0.0005, 0);
+    public final SimpleMotorFeedforward feedforward1 = new SimpleMotorFeedforward(0.15, 0.00016, 0);
+    public final SimpleMotorFeedforward feedforward2 = new SimpleMotorFeedforward(0.15, 0.00016, 0);
     PIDController pid1 = new PIDController(.0005, 0, 0);
     PIDController pid2 = new PIDController(.0005, 0, 0);
 
