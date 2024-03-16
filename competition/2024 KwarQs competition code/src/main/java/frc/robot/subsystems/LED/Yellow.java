@@ -1,4 +1,4 @@
-package frc.robot.Led;
+package frc.robot.subsystems.LED;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
@@ -8,7 +8,7 @@ public class Yellow implements Led {
 
     public void run(AddressableLEDBuffer buffer, int length) {
         for (var i = 0; i < buffer.getLength(); i++) {
-            buffer.setRGB(i, 200, 78, 00);
+            buffer.setRGB(i, 255, 234, 00);
         }
 //yellow 250, 90, 0 (but divide)
     }
