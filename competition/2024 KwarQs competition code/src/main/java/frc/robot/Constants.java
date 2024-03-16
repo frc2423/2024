@@ -62,6 +62,13 @@ public final class Constants {
     public static final Pose2d ampNote = new Pose2d(2.92, 6.99, Rotation2d.fromDegrees(0));
     public static final Pose2d middleNote = new Pose2d(2.89, 5.55, Rotation2d.fromDegrees(0));
     public static final Pose2d stageNote = new Pose2d(2.89, 4.10, Rotation2d.fromDegrees(0));
+    public static final Pose2d center1Note = new Pose2d(8.29,7.46,Rotation2d.fromDegrees(0));
+    public static final Pose2d center2Note = new Pose2d(8.29,5.81,Rotation2d.fromDegrees(0));
+    public static final Pose2d center3Note = new Pose2d(8.29,4.11,Rotation2d.fromDegrees(0));
+    public static final Pose2d center4Note = new Pose2d(8.29,2.45,Rotation2d.fromDegrees(0));
+    public static final Pose2d center5Note = new Pose2d(8.29,0.77,Rotation2d.fromDegrees(0));
+
+
 
   }
 

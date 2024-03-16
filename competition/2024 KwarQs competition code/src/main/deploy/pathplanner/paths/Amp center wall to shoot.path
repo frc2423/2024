@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.72,
-        "y": 6.71
+        "x": 8.082784627107717,
+        "y": 7.489009593403803
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.735609747966998,
-        "y": 6.698598504187022
+        "x": 9.082784627107712,
+        "y": 7.489009593403803
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.49,
-        "y": 5.97
+        "x": 4.096539731541003,
+        "y": 5.555088802485298
       },
       "prevControl": {
-        "x": 1.6825832806350713,
-        "y": 6.672124092514974
+        "x": 4.658955471757099,
+        "y": 6.946327738809323
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,8 +30,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -42.5179247110474,
+      "waypointRelativePos": 0.6,
+      "rotationDegrees": 0.0,
       "rotateFast": false
     }
   ],
@@ -45,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -43.025065989118076,
+    "rotation": 0.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Triple Yo Paths",
+  "folder": "WEEK 4 PATHS",
   "previewStartingState": {
-    "rotation": 59.71163872536959,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true
