@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class KwarqsLed extends SubsystemBase {
-    private LedController ledController = new LedController(64);
+    private LedController ledController = new LedController(36); // 36 on each side
 
     public KwarqsLed() {
         ledController.add("yellow", new Yellow());
