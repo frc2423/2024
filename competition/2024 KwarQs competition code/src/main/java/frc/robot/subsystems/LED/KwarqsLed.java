@@ -13,11 +13,11 @@ public class KwarqsLed extends SubsystemBase {
         ledController.add("green", new Green());
         ledController.add("dark", new Dark());
 
-        setDefaultCommand(setYellow());
+        setDefaultCommand(disable());
     }
 
     public Command disable() {
-        var command = Commands.runOnce(()-> {
+        var command = Commands.run(()-> {
             ledController.set("dark");
         });
         command.addRequirements(this);
@@ -25,7 +25,7 @@ public class KwarqsLed extends SubsystemBase {
     }
 
     public Command setYellow() {
-        var command = Commands.runOnce(()-> {
+        var command = Commands.run(()-> {
             ledController.set("yellow");
         });
         command.addRequirements(this);
@@ -33,7 +33,7 @@ public class KwarqsLed extends SubsystemBase {
     } 
 
     public Command setPurple() {
-       var command = Commands.runOnce(()-> {
+       var command = Commands.run(()-> {
             ledController.set("purple");
         });
         command.addRequirements(this);
@@ -41,7 +41,8 @@ public class KwarqsLed extends SubsystemBase {
     } 
 
     public Command setGreen() {
-        var command = Commands.runOnce(()-> {
+        var command = Commands.run(()-> {
+            System.out.println("!!!!!!!!");
             ledController.set("green");
         });
         command.addRequirements(this);

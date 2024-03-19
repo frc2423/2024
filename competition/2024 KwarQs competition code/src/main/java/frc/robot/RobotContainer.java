@@ -39,6 +39,7 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.vision.Vision;
 
 import java.util.Optional;
 
@@ -65,6 +66,7 @@ public class RobotContainer {
 
   XboxController driverXbox = new XboxController(0);
   XboxController operator = new XboxController(1);
+  Vision vision = new Vision();
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
   VisionSubsystem visionSubsystem = new VisionSubsystem();
@@ -251,8 +253,10 @@ public class RobotContainer {
 
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS())
-        .onFalse(shooterAngleCommands.shooterAngleCommand());
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(Commands.runOnce(()-> {
+      shooterCommands.shootFromDAS();
+      ledKwarqs.setGreen();
+    })).onFalse(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
     new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand())
         .onFalse(shooterCommands.moveFeedAmpCommandEnd());
@@ -284,6 +288,7 @@ public class RobotContainer {
     // new Trigger(() -> operator.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shootAmp());
     // shooter.setDefaultCommand(shooterCommands.stopIt());
+    new Trigger(visionSubsystem::seesAprilTag).whileTrue(ledKwarqs.setYellow());
 
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterDown());

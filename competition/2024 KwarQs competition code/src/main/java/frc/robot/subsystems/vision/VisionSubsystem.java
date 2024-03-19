@@ -58,6 +58,13 @@ public class VisionSubsystem extends SubsystemBase {
         return null;
     }
 
+    public boolean seesAprilTag() {
+        if (getLatestResult() != null) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         // This is used to add things to NetworkTables
