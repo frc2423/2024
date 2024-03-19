@@ -53,6 +53,7 @@ public class ShooterAngle extends SubsystemBase {
   public static double climbAngle = 180; // is correct number now
   public static double shootAngle = 333.5; // is good
   public static double ampAngle = 141; // maybe good
+  public static double handOffAngle = 303.5; //maybe good 
   public double shooterSlowPivotMotorPercent = 0.02;
 
   private IntakeSubsystem intake;
@@ -142,9 +143,9 @@ public class ShooterAngle extends SubsystemBase {
     shooterPivotMotorPercent = calculatePid(setpoint);
     pivot.setAngle(-shooterPivotAngle.getDegrees() - 90);
     
-    if(intake.isIntakeDown() == false){
-      shooterPivotMotorPercent = 0;
-    }
+    // if(intake.isIntakeDown() == false){
+    //   shooterPivotMotorPercent = 0;
+    // }
 
     if (shooterPivotAngle.getDegrees() > maxShooterPivotAngle) {
       shooterPivotMotorPercent = Math.min(shooterPivotMotorPercent, 0);
