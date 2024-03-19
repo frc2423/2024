@@ -118,12 +118,14 @@ public class ShooterSubsystem extends SubsystemBase {
             shooterMotorOne.setSpeed(0);
             shooterMotorTwo.setSpeed(0);
         } else if (isPidMode) {
-            // shooterMotorOne.setPercent(calcShooterPID1(shooter1Speed) +
-            // calcShooterFeedFor(shooter1Speed));
-            // shooterMotorTwo.setPercent(calcShooterPID2(shooter2Speed) +
-            // calcShooterFeedFor(shooter2Speed));
-            shooterMotorOne.setPercent(calcShooterPID1(speed) + calcShooterFeedFor(speed));
-            shooterMotorTwo.setPercent(calcShooterPID2(speed) + calcShooterFeedFor(speed));
+            shooterMotorOne.setPercent(calcShooterPID1(shooter1Speed) +
+                    calcShooterFeedFor(shooter1Speed));
+            shooterMotorTwo.setPercent(calcShooterPID2(shooter2Speed) +
+                    calcShooterFeedFor(shooter2Speed));
+            // shooterMotorOne.setPercent(calcShooterPID1(speed) +
+            // calcShooterFeedFor(speed));
+            // shooterMotorTwo.setPercent(calcShooterPID2(speed) +
+            // calcShooterFeedFor(speed));
         } else {
             shooterMotorOne.setSpeed(shooter1Speed / RobotController.getBatteryVoltage());
             shooterMotorTwo.setSpeed(shooter2Speed / RobotController.getBatteryVoltage());
@@ -190,6 +192,8 @@ public class ShooterSubsystem extends SubsystemBase {
         });
         builder.addDoubleProperty("shooterMotor1Velocity", this::getShooterOneVelocity, null);
         builder.addDoubleProperty("shooterMotor2Velocity", this::getShooterTwoVelocity, null);
+        builder.addBooleanProperty("PIDMode",() -> isPidMode, null);
+        builder.addBooleanProperty("ShooterOn",() -> shooterOn, null);
 
         // builder.addDoubleProperty("shooterMotor1Value", shooterMotorOne::getValue,
         // null);

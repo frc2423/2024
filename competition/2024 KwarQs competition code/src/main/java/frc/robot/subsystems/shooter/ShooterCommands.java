@@ -142,7 +142,7 @@ public class ShooterCommands {
         return Commands.run(() -> {
             double distance = drivebase.getDistanceToSpeaker();
             DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
-            shooter.setPidSpeed(as.getVoltage());
+            shooter.setPidSpeed(as.getVelocity());
             shooter.shooterOn();
         }, shooter).withTimeout(10);
     }
