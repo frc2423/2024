@@ -50,6 +50,14 @@ public class ShooterAngleCommands {
     return command;
   }
 
+  public Command handOffAngleCommand() {
+    var command = shooterAngle.runOnce(() -> shooterAngle.setAngle(shooterAngle.handOffAngle));
+    command.addRequirements(shooterAngle);
+    // put in actual value
+    command.setName("Hand Off Angle");
+    return command;
+  }
+
   public Command moveShooterUp() {
     var command = shooterAngle.runOnce(() -> shooterAngle.setAngle(shooterAngle.setpoint.getDegrees() + 5));
     command.setName("Move Shooter Up");
@@ -83,7 +91,7 @@ public class ShooterAngleCommands {
       double distance = drivebase.getDistanceToSpeaker();
       DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
       shooterAngle.setAngle(as.getAngle());
-    }, shooterAngle).withTimeout(1.5);
+    }, shooterAngle);
 
   }
 

@@ -3,55 +3,49 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.47,
-        "y": 4.11
+        "x": 0.7636103146671328,
+        "y": 4.368142031576503
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.051802334703099,
-        "y": 3.9348410793825868
+        "x": 2.0166698250657547,
+        "y": 2.4007214918852084
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.7518994781213513,
-        "y": 4.403274541213847
+        "x": 8.141437338509483,
+        "y": 0.7846260485673593
       },
       "prevControl": {
-        "x": 1.1734895937694858,
-        "y": 4.087081954477746
+        "x": 4.862403105690661,
+        "y": 0.6675176831095445
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Feeder Center Note"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -36.870000000000005,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 350.0,
     "maxAngularAcceleration": 535.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -60.491911701300815,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Yo Autos",
+  "folder": "WEEK 4 PATHS",
   "previewStartingState": {
-    "rotation": 0.04804122554910139,
+    "rotation": -57.80426606528675,
     "velocity": 0
   },
   "useDefaultConstraints": true

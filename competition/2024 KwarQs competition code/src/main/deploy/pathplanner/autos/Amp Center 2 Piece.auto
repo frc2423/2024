@@ -1,10 +1,22 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.72,
+      "y": 6.71
+    },
+    "rotation": 65.0
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeDown"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -28,37 +40,19 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "lookAtMiddleNote"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "setRotationTargetMiddleNote"
+                        "name": "setRotationTargetCenterNote1"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Retrieve"
+                        "pathName": "Amp to center wall"
                       }
                     }
                   ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "HandOff"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "distanceShoot"
           }
         },
         {
@@ -68,41 +62,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeSequence"
+                  "name": "HandOff"
                 }
               },
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "lookAtAmpNote"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "setRotationTargetAmpNote"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Center to Amp"
-                      }
-                    }
-                  ]
+                  "pathName": "Amp center wall to shoot"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "HandOff"
           }
         },
         {
@@ -114,6 +83,6 @@
       ]
     }
   },
-  "folder": "New Yo YO",
+  "folder": "WEEK 4 AUTOS",
   "choreoAuto": false
 }

@@ -11,7 +11,7 @@
 package frc.robot.subsystems.shooter;
 
 import com.revrobotics.CANSparkLowLevel;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkFlex;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -29,15 +29,17 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private NeoMotor shooterMotorOne;
     private NeoMotor shooterMotorTwo;
-    private double shooterSpeed = -4.3 ;
-    private double shooterSpeed2 = -4.3 ;
-    public static double feederVoltage = -RobotController.getBatteryVoltage();
-    public static double feederFlopVoltage = 2;
-    private final CANSparkMax feeder_Motor;
+    private double shooterSpeed = -4.3;
+    private double shooterSpeed2 = -4.3;
+    public static Timer timer;
+    public static double feederVoltage = -RobotController.getBatteryVoltage() / 3;
+    public static double feederFlopVoltage = 1;
+    public static double feederFlopVoltageBackwards = 4;
+    private final CANSparkFlex feeder_Motor;
     public static final int kFeederMotorPort = 23;
     public double feederOnSec = 1.5;
-    public double isDoneSec = .5; // for revving not for shooting
-    public double isDoneShoot = 2; // sec
+    public double isDoneSec = 0.5; // for revving not for shooting
+    public double isDoneShoot = .5; // sec
 
     public final SimpleMotorFeedforward feedforward1 = new SimpleMotorFeedforward(0, 0, 0);
     public final SimpleMotorFeedforward feedforward2 = new SimpleMotorFeedforward(0, 0, 0);
@@ -47,7 +49,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     public ShooterSubsystem() {
-        feeder_Motor = new CANSparkMax(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
+        feeder_Motor = new CANSparkFlex(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
         shooterMotorOne = new NeoMotor(21); // Correct these when we know the numbers
         shooterMotorTwo = new NeoMotor(22);
         shooterMotorTwo.setInverted(true);

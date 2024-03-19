@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.72,
-      "y": 6.7
+      "x": 1.3842846515935527,
+      "y": 5.54
     },
-    "rotation": 63.69719737093483
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,19 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "RevvvvvandShoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
+            "name": "IntakeDown"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "IntakeDown"
+            "name": "distanceShoot"
           }
         },
         {
@@ -34,15 +28,28 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Amp Retrieve"
+                  "name": "IntakeSequence"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "IntakeUntill"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "setRotationTargetMiddleNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Retrieve"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -51,30 +58,18 @@
         {
           "type": "named",
           "data": {
-            "name": "IntakeUp"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Amp Retrieve Back"
+            "name": "HandOff"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "RevvvvvandShoot"
+            "name": "distanceShoot"
           }
         }
       ]
     }
   },
-  "folder": "Yo",
+  "folder": "WEEK 4 AUTOS",
   "choreoAuto": false
 }

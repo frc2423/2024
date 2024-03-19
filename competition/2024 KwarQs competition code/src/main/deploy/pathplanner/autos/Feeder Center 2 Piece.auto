@@ -1,10 +1,22 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.7636103146671328,
+      "y": 4.368142031576503
+    },
+    "rotation": -53.74616226255519
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeDown"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -28,37 +40,19 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "lookAtMiddleNote"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "setRotationTargetMiddleNote"
+                        "name": "setRotationTargetCenterNote5"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Retrieve"
+                        "pathName": "Feeder to center wall"
                       }
                     }
                   ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "HandOff"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "distanceShoot"
           }
         },
         {
@@ -68,29 +62,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeSequence"
+                  "name": "HandOff"
                 }
               },
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Center to Feeder"
-                      }
-                    }
-                  ]
+                  "pathName": "Feeder center wall to shoot"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "HandOff"
           }
         },
         {
@@ -102,6 +83,6 @@
       ]
     }
   },
-  "folder": "New Yo YO",
+  "folder": "WEEK 4 AUTOS",
   "choreoAuto": false
 }

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.83,
-        "y": 7.63
+        "x": 8.141437338509483,
+        "y": 0.7846260485673593
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1084093474600265,
-        "y": 7.634060683798327
+        "x": 9.141437338509485,
+        "y": 0.7846260485673593
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Feeder Center Note"
     },
     {
       "anchor": {
-        "x": 2.634896291170256,
-        "y": 7.341567937292645
+        "x": 2.086934844340443,
+        "y": 3.7943110408332084
       },
       "prevControl": {
-        "x": 2.4204016103994217,
-        "y": 7.52681334341291
+        "x": 1.0869348443404432,
+        "y": 3.7943110408332084
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,16 +34,19 @@
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAngularVelocity": 350.0,
+    "maxAngularAcceleration": 535.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -52.90716270295849,
+    "rotation": -44.99999999999995,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Amp",
-  "previewStartingState": null,
-  "useDefaultConstraints": false
+  "folder": "WEEK 4 PATHS",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
 }
