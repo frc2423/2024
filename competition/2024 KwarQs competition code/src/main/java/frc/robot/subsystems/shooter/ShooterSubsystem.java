@@ -17,7 +17,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.NTHelper;
 import frc.robot.devices.NeoMotor;
@@ -26,22 +25,23 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private NeoMotor shooterMotorOne;
     private NeoMotor shooterMotorTwo;
-    private double shooterSpeed = -4.3;
-    public static Timer timer;
-    public static double feederVoltage = -RobotController.getBatteryVoltage() / 3;
-    public static double feederFlopVoltage = 1;
-    public static double feederFlopVoltageBackwards = 4;
+    private double feederVoltage = -RobotController.getBatteryVoltage() / 3;
+    private double feederFlopVoltage = 1;
+    private double feederFlopVoltageBackwards = 4;
     private final CANSparkFlex feeder_Motor;
-    public static final int kFeederMotorPort = 23;
+    private final int kFeederMotorPort = 23;
     public double feederOnSec = 1.5;
     public double isDoneSec = 0.5; // for revving not for shooting
     public double isDoneShoot = .5; // sec
 
-    public final SimpleMotorFeedforward feedforward1 = new SimpleMotorFeedforward(0.15, 0.00016, 0);
-    public final SimpleMotorFeedforward feedforward2 = new SimpleMotorFeedforward(0.15, 0.00016, 0);
-    PIDController pid1 = new PIDController(.0005, 0, 0);
-    PIDController pid2 = new PIDController(.0005, 0, 0);
+    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.15, 0.000135, 0);
+    private PIDController pid1 = new PIDController(.0003, 0, 0.0001);
+    private PIDController pid2 = new PIDController(.0003, 0, 0.0001);
 
+    private boolean isPidMode = false;
+    private boolean shooterOn = false;
+    private double shooter1Speed = -4.3;
+    private double shooter2Speed = -4.3;
 
     public ShooterSubsystem() {
         feeder_Motor = new CANSparkFlex(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
@@ -49,17 +49,13 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotorTwo = new NeoMotor(22);
         shooterMotorTwo.setInverted(true);
         shooterMotorOne.setFollower(shooterMotorTwo);
-
-    }
-
-    // Shooter turns on/ shoots the note
-    public void startTimer() {
-        timer.start();
+        pid1.setTolerance(100, 100);
+        pid2.setTolerance(100, 100);
     }
 
     public double calcShooterFeedFor(double shooterSpeed) {
 
-        double feedforward_calc = feedforward1.calculate(shooterSpeed);
+        double feedforward_calc = feedforward.calculate(shooterSpeed);
         return feedforward_calc;
     }
 
@@ -74,27 +70,17 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void shooterOn() {
-        double speed = 3000;
-        NTHelper.setDouble("/debug/shooterFeedforward", calcShooterFeedFor(speed));
-        NTHelper.setDouble("/debug/shooterPid", calcShooterPID1(speed));
-        NTHelper.setDouble("/debug/shooterSpeed", shooterMotorOne.getSpeed());
-        NTHelper.setDouble("/debug/shooterSetpoint", speed);
-        NTHelper.setDouble("/debug/shooterAnglePid", calcShooterPID1(speed));
-
-        // System.out.println(calcShooterPID1(speed));
-        shooterMotorOne.setPercent(calcShooterPID1(speed) + calcShooterFeedFor(speed));
-        shooterMotorTwo.setPercent(calcShooterPID2(speed) + calcShooterFeedFor(speed));
+        shooterOn = true;
     }
 
     public void shooterOnFlop() {
-        shooterMotorOne.setSpeed(feederFlopVoltage / RobotController.getBatteryVoltage());
-        shooterMotorTwo.setSpeed(feederFlopVoltage / RobotController.getBatteryVoltage());
+        setVoltageSpeed(feederFlopVoltage);
+        shooterOn();
     }
 
     // stops the shooter
     public void shooterOff() {
-        shooterMotorOne.setSpeed(0);
-        shooterMotorTwo.setSpeed(0);
+        shooterOn = false;
     }
 
     public void everythingOffPlease() {
@@ -108,11 +94,40 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     // The goal speed for the shooter
-    public void setSpeed(double speed) {
-        shooterSpeed = speed;
+    public void setPidSpeed(double speed) {
+        isPidMode = true;
+        shooter1Speed = speed;
+        shooter2Speed = speed;
+    }
+
+    public void setVoltageSpeed(double speed) {
+        isPidMode = false;
+        shooter1Speed = speed;
+        shooter2Speed = speed;
     }
 
     public void periodic() {
+        double speed = 3000;
+        NTHelper.setDouble("/debug/shooterFeedforward", calcShooterFeedFor(speed));
+        NTHelper.setDouble("/debug/shooterPid", calcShooterPID1(speed));
+        NTHelper.setDouble("/debug/shooterSpeed", shooterMotorOne.getSpeed());
+        NTHelper.setDouble("/debug/shooterSetpoint", speed);
+        NTHelper.setDouble("/debug/shooterAnglePid", calcShooterPID1(speed));
+
+        if (!shooterOn) {
+            shooterMotorOne.setSpeed(0);
+            shooterMotorTwo.setSpeed(0);
+        } else if (isPidMode) {
+            // shooterMotorOne.setPercent(calcShooterPID1(shooter1Speed) +
+            // calcShooterFeedFor(shooter1Speed));
+            // shooterMotorTwo.setPercent(calcShooterPID2(shooter2Speed) +
+            // calcShooterFeedFor(shooter2Speed));
+            shooterMotorOne.setPercent(calcShooterPID1(speed) + calcShooterFeedFor(speed));
+            shooterMotorTwo.setPercent(calcShooterPID2(speed) + calcShooterFeedFor(speed));
+        } else {
+            shooterMotorOne.setSpeed(shooter1Speed / RobotController.getBatteryVoltage());
+            shooterMotorTwo.setSpeed(shooter2Speed / RobotController.getBatteryVoltage());
+        }
     }
 
     public void moveFeederMotor() {
@@ -133,16 +148,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void moveFeederAmpOpp() {
         feeder_Motor.setVoltage(-3);
-        shooterMotorOne.setSpeed(1 / RobotController.getBatteryVoltage());
-        shooterMotorTwo.setSpeed(1 / RobotController.getBatteryVoltage());
-        // shooterOnSource();
-        // feeder_Motor.setVoltage(-0.5);
+        setVoltageSpeed(1);
+        shooterOn();
     }
-   
+
     public void moveFeederAmpOppEnd() {
         feeder_Motor.setVoltage(0.6);
-        shooterMotorOne.setSpeed(1 / RobotController.getBatteryVoltage());
-        shooterMotorTwo.setSpeed(1 / RobotController.getBatteryVoltage());
+        setVoltageSpeed(1);
+        shooterOn();
     }
 
     public void moveFeederMotorBackwards() {
@@ -150,13 +163,11 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getShooterOneVelocity() {
-        double speed1 = shooterMotorOne.getSpeed();
-        return speed1;
+        return shooterMotorOne.getSpeed();
     }
 
     public double getShooterTwoVelocity() {
-        double speed2 = shooterMotorTwo.getSpeed();
-        return speed2;
+        return shooterMotorTwo.getSpeed();
     }
 
     public void stopFeederMotor() {
@@ -164,7 +175,8 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean isRevatSpeed() {
-        return Math.abs(shooterMotorOne.getSpeed() - shooterSpeed) < 0.2;
+        return false;
+        // return Math.abs(shooterMotorOne.getSpeed() - shooterSpeed) < 0.2;
     }
 
     @Override
@@ -172,15 +184,17 @@ public class ShooterSubsystem extends SubsystemBase {
         // This is used to add things to NetworkTables
         super.initSendable(builder);
 
-        
-            builder.addDoubleProperty("shooterSpeed", () -> shooterSpeed, (shooterSpeed) -> {
-                this.shooterSpeed = shooterSpeed;
-            });
+        builder.addDoubleProperty("shooterSpeed", () -> shooter1Speed, (shooterSpeed) -> {
+            this.shooter1Speed = shooterSpeed;
+            this.shooter2Speed = shooterSpeed;
+        });
         builder.addDoubleProperty("shooterMotor1Velocity", this::getShooterOneVelocity, null);
         builder.addDoubleProperty("shooterMotor2Velocity", this::getShooterTwoVelocity, null);
 
-        // builder.addDoubleProperty("shooterMotor1Value", shooterMotorOne::getValue, null);
-        // builder.addDoubleProperty("shooterMotor2Value", shooterMotorTwo::getValue, null);
+        // builder.addDoubleProperty("shooterMotor1Value", shooterMotorOne::getValue,
+        // null);
+        // builder.addDoubleProperty("shooterMotor2Value", shooterMotorTwo::getValue,
+        // null);
     }
 
 }
