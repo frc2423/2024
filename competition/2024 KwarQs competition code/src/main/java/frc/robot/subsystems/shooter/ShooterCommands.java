@@ -110,14 +110,9 @@ public class ShooterCommands {
     }
 
     public Command handOffCommand() {
-
-        var command = Commands.sequence(
-                // bring game piece in so its not on top of green wheel
-                intake.intakeInWithRevCommand().withTimeout(1),
-                // outtake, green forward, shooter backwards
-                Commands.parallel(moveFeedSlowCommand(), intake.intakeOutWithFeedCommand(), shooterOnFlop()),
-                moveFeedSlowReverseCommand(),
-                intake.intakeOutOfTheWayCommand().until(() -> iintake.isAngleGreat()));
+        var command = Commands.sequence( 
+                Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake()).until(() -> !iintake.isBeamBroken()));
+                //intake.intakeUp().until(() -> iintake.isAngleGreat()));
         command.setName("Hand Off");
         return command;
     }
@@ -166,7 +161,7 @@ public class ShooterCommands {
                         swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose, Rotation2d.fromDegrees(180)),
                         revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS().withTimeout(1.5)),
                         shoot(),
-                        shooterAngle.shooterAngleCommand()
+                        shooterAngle.handOffAngleCommand()
         );
         
         command.setName("shootFromDAS");

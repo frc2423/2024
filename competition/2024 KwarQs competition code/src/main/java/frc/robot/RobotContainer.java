@@ -69,10 +69,10 @@ public class RobotContainer {
   VisionSubsystem visionSubsystem = new VisionSubsystem();
   ShooterAngle shooterAngle = new ShooterAngle(intake);
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
-  IntakeCommands intakeCommands = new IntakeCommands(intake);
+  IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
-  drivebase, swerveCommands);
+      drivebase, swerveCommands);
   public static final DAS das = new DAS();
 
   public void JointReader() {
@@ -131,11 +131,11 @@ public class RobotContainer {
     m_chooser.addOption("Feeder Two-Piece Auto", "Feeder Two-Piece Auto");
     m_chooser.addOption("Amp Two-Piece Auto", "Amp Two-Piece Auto");
     m_chooser.addOption("Feeder to Far Middle ", "Feeder to Far Middle");
-    m_chooser.addOption("Amp Center 2 Piece","Amp Center 2 Piece");
-    m_chooser.addOption("Feeder Center 2 Piece","Feeder Center 2 Piece");
-    m_chooser.addOption("4 Note Auto","4 Note Auto");
-    m_chooser.addOption("Amp 3 Piece","Amp 3 Piece");
-    m_chooser.addOption("Feeder 3 Piece","Feeder 3 Piece");
+    m_chooser.addOption("Amp Center 2 Piece", "Amp Center 2 Piece");
+    m_chooser.addOption("Feeder Center 2 Piece", "Feeder Center 2 Piece");
+    m_chooser.addOption("4 Note Auto", "4 Note Auto");
+    m_chooser.addOption("Amp 3 Piece", "Amp 3 Piece");
+    m_chooser.addOption("Feeder 3 Piece", "Feeder 3 Piece");
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -191,7 +191,7 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("ShooterToAngle", shooterAngleCommands.setShooterAngleFromDAS().withTimeout(1.5));
 
-    //.withTimeout(1.5)
+    // .withTimeout(1.5)
 
     Command lookAtAmpNote = swerveCommands.lookAtTarget(Constants.autoAlign.ampNote, new Rotation2d());
     Command lookAtMiddleNote = swerveCommands.lookAtTarget(Constants.autoAlign.middleNote, new Rotation2d());
@@ -208,7 +208,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("setRotationTargetStageNote",
         Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.stageNote)));
     NamedCommands.registerCommand("setRotationTargetSpeaker",
-        Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.speakerLocationPose, Rotation2d.fromDegrees(180))));
+        Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.speakerLocationPose,
+            Rotation2d.fromDegrees(180))));
     NamedCommands.registerCommand("setRotationTargetCenterNote1",
         Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.center1Note)));
     NamedCommands.registerCommand("setRotationTargetCenterNote2",
@@ -236,7 +237,7 @@ public class RobotContainer {
     // .onFalse(new RunCommand(intake::beltStop));
 
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
-        .whileTrue(intakeCommands.intakeIntakeUntil());
+        .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
@@ -288,7 +289,8 @@ public class RobotContainer {
         .whileTrue(shooterAngleCommands.moveShooterUp());
 
     new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
-    new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
+    new JoystickButton(operator, XboxController.Button.kB.value)
+        .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
