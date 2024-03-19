@@ -39,10 +39,10 @@ public class IntakeSubsystem extends SubsystemBase {
     public static final double upPositionDegrees = 194; //290;// .4//0.3 //290
     public static Rotation2d setpoint = Rotation2d.fromDegrees(upPositionDegrees);
     private final CANSparkMax m_Pivot;
-    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : 0.005, 0, .001,
+    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : 0.003 ,0, 0, //0.005, 0, .001,
             new TrapezoidProfile.Constraints(350, 275));// noice
-    private final ArmFeedforward m_feedforward = new ArmFeedforward(
-           0.004, 0.02, 0.000, 0);
+    private final ArmFeedforward m_feedforward = new ArmFeedforward(0.01,0.03,0,0);
+           //0.004, 0.02, 0.000, 0);
     private CANSparkMax beltMotor;
     private double downPositionDegrees = 90;// .7, 0.755
     private boolean isDown = false;
@@ -67,11 +67,12 @@ public class IntakeSubsystem extends SubsystemBase {
         pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
 
         m_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
-        m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).setZeroOffset(58);
         m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).setPositionConversionFactor(360);
+        m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).setZeroOffset(150 + 110);
 
         // Start arm at rest in neutral position
         beltMotor = new CANSparkMax(19, CANSparkLowLevel.MotorType.kBrushless);
+        beltMotor.setInverted(true);
 
         Mechanism2d mech = new Mechanism2d(3, 3);
         // the mechanism root node
@@ -158,7 +159,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // checks if the beam is broken
     public boolean isBeamBroken() {
-        return beamBreakAverage > .5;
+       return beamBreakAverage > .5;
     }
     
     public boolean getRawBeamBroken() {

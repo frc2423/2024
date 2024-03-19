@@ -111,7 +111,7 @@ public class ShooterCommands {
 
     public Command handOffCommand() {
         var command = Commands.sequence( 
-                Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake()).until(() -> iintake.isBeamBroken()));
+                Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake()).until(() -> !iintake.isBeamBroken()));
                 //intake.intakeUp().until(() -> iintake.isAngleGreat()));
         command.setName("Hand Off");
         return command;
