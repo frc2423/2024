@@ -240,7 +240,7 @@ public class RobotContainer {
         .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
-   // Command intakeOrOuttake = Commands.either(intakeCommands.intakeOuttake(), intakeCommands.intakeIntake(), () -> driverXbox.getYButton());
+    // Command intakeOrOuttake = Commands.either(intakeCommands.intakeOuttake(), intakeCommands.intakeIntake(), () -> driverXbox.getYButton());
 
 
 
@@ -278,25 +278,28 @@ public class RobotContainer {
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
-      driverXbox.setRumble(RumbleType.kBothRumble, 1);
+      driverXbox.setRumble(RumbleType.kBothRumble, 1);      
     }).withTimeout(0.375).andThen(Commands.runOnce(() -> {
       operator.setRumble(RumbleType.kBothRumble, 0);
       driverXbox.setRumble(RumbleType.kBothRumble, 0);
     })));
+
+    new Trigger(intake::isBeamBroken).onTrue(shooterCommands.intakeSequencePlusHandoffCommand());
     // new Trigger(() -> operator.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shootAmp());
     // shooter.setDefaultCommand(shooterCommands.stopIt());
+
+    new Trigger(() -> driverXbox.getYButton() && intake.isIntakeDown()).onTrue(intakeCommands.intakeOuttake());
+    new Trigger(() -> !driverXbox.getYButton() && intake.isIntakeDown()).onTrue(intakeCommands.intakeIntake());
+
 
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterDown());
     new JoystickButton(operator, XboxController.Button.kRightBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterUp());
 
-    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
-    new JoystickButton(operator, XboxController.Button.kB.value)
-        .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
+    new JoystickButton(operator, XboxController.Button.kA.value).onTrue(intakeCommands.intakeDown().andThen(intakeCommands.intakeIntake()));
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
-    new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
 
     new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.autoFlopCommand());
