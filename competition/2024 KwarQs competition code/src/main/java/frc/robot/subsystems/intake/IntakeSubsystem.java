@@ -144,9 +144,13 @@ public class IntakeSubsystem extends SubsystemBase {
         setpoint = Rotation2d.fromDegrees(170);
     }
 
+    public void intake(double speed) {
+        intakeSpeed = speed;
+    }
+
     public void intake() {
         // slurp the note
-        intakeSpeed = .5;
+        intakeSpeed = .45;
     }
 
     public void outtake() {

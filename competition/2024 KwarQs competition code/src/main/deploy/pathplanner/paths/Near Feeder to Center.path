@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5905008158090483,
-        "y": 5.246454772510115
+        "x": 2.051802334703099,
+        "y": 4.637491272129477
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3914165945307624,
-        "y": 4.941973022319797
+        "x": 1.9112722961537205,
+        "y": 4.8131538203162
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.2119536546765417,
-        "y": 4.420390379242297
+        "x": 1.7238989114212167,
+        "y": 5.3752739745137115
       },
       "prevControl": {
-        "x": 2.286019065618729,
-        "y": 4.719467127949948
+        "x": 1.8292964403332503,
+        "y": 5.059081387777612
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -23.962488974578132,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "WEEK 4 PATHS",
   "previewStartingState": {
-    "rotation": 0.5507783204622452,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true
