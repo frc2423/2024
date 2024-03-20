@@ -68,11 +68,13 @@ public class ShooterCommands {
         command.setName("Feeding SLOW REVERSE");
         return command;
     }
+
     public Command moveFeedAmpCommand() {
         var command = Commands.run(() -> shooter.moveFeederAmpOpp(), shooter);
         command.setName("Feeding SLOW REVERSE");
         return command;
     }
+
     public Command moveFeedAmpCommandEnd() {
         var endCommand = Commands.run(() -> {
             shooter.moveFeederAmpOppEnd();
@@ -81,7 +83,8 @@ public class ShooterCommands {
         endCommand.setName("Feeding END");
         return endCommand;
     }
-     public Command moveFeedAmpOppCommand() {
+
+    public Command moveFeedAmpOppCommand() {
         var command = Commands.run(() -> shooter.moveFeederAmp(), shooter);
         command.setName("Feeding SLOW");
         return command;
@@ -110,14 +113,13 @@ public class ShooterCommands {
     }
 
     public Command handOffCommand() {
-
         var command = Commands.sequence(
-                // bring game piece in so its not on top of green wheel
-                intake.intakeInWithRevCommand().withTimeout(1),
-                // outtake, green forward, shooter backwards
-                Commands.parallel(moveFeedSlowCommand(), intake.intakeOutWithFeedCommand(), shooterOnFlop()),
-                moveFeedSlowReverseCommand(),
-                intake.intakeOutOfTheWayCommand().until(() -> iintake.isAngleGreat()));
+                Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop())
+                        .until(() -> !iintake.isBeamBroken()),
+                Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.25),
+                Commands.run(() -> shooter.moveFeederHandoff()).withTimeout(.1), 
+                Commands.runOnce(() -> shooter.everythingOffPlease()));
+        // intake.intakeUp().until(() -> iintake.isAngleGreat()));
         command.setName("Hand Off");
         return command;
     }
@@ -163,12 +165,12 @@ public class ShooterCommands {
     public Command shootFromDAS() {
         Command command = Commands.sequence(
                 Commands.parallel(
-                        swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose, Rotation2d.fromDegrees(180)),
+                        swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose,
+                                Rotation2d.fromDegrees(180)),
                         revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS().withTimeout(1.5)),
-                        shoot(),
-                        shooterAngle.shooterAngleCommand()
-        );
-        
+                shoot(),
+                shooterAngle.handOffAngleCommand());
+
         command.setName("shootFromDAS");
         return command;
     }
@@ -181,7 +183,8 @@ public class ShooterCommands {
         Command wait = Commands.waitSeconds(1);
         Command handoff = handOffCommand();
 
-        Command bestSequence = Commands.sequence(intakeDown, intakeStart.withTimeout(20), intakeStop, intakeUp, wait, handoff);
+        Command bestSequence = Commands.sequence(intakeDown, intakeStart.withTimeout(20), intakeStop, intakeUp, wait,
+                handoff);
         bestSequence.setName("Intake Sequence Plus Handoff");
         return bestSequence;
     }

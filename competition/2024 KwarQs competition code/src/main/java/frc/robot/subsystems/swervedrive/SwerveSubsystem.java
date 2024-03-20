@@ -583,8 +583,18 @@ public class SwerveSubsystem extends SubsystemBase {
     }
   }
 
+  public double getDistanceBetweenPoses(Pose2d a, Pose2d b) {
+    double y = a.getY() - b.getY();
+    double x = a.getX() - b.getX();
+    return Math.sqrt(Math.pow(y, 2) + Math.pow(x, 2));
+  }
+
   public Rotation2d getLookAngle(Pose2d targetPose) {
     Pose2d currentPose = this.getPose();
+    double distance = getDistanceBetweenPoses(currentPose, targetPose);
+    if (distance < Units.inchesToMeters(8)) {
+      return currentPose.getRotation();
+    }
     double angleRads = Math.atan2(targetPose.getY() - currentPose.getY(), targetPose.getX() - currentPose.getX());
     return new Rotation2d(angleRads);
   }

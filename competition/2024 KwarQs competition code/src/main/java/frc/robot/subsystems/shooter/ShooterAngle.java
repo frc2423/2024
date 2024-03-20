@@ -30,19 +30,19 @@ import com.ctre.phoenix6.hardware.CANcoder;
 
 /** A robot arm subsystem that moves with a motion profile. */
 public class ShooterAngle extends SubsystemBase {
-  private final CANSparkFlex shooter_Pivot = new CANSparkFlex(26,CANSparkLowLevel.MotorType.kBrushless);
-  private final CANSparkFlex shooter_Pivot2 = new CANSparkFlex(24,CANSparkLowLevel.MotorType.kBrushless);
-  private static final double kSVolts = 0; //1;
-  private static final double kGVolts = 0; //1;
-  private static final double kVVoltSecondPerRad = 0;//.5;// all things for feed forward is wrong, re do pls
-  private static final double kAVoltSecondSquaredPerRad = 0;//.1;
+  private final CANSparkFlex shooter_Pivot = new CANSparkFlex(26, CANSparkLowLevel.MotorType.kBrushless);
+  private final CANSparkFlex shooter_Pivot2 = new CANSparkFlex(24, CANSparkLowLevel.MotorType.kBrushless);
+  private static final double kSVolts = 0; // 1;
+  private static final double kGVolts = 0; // 1;
+  private static final double kVVoltSecondPerRad = 0;// .5;// all things for feed forward is wrong, re do pls
+  private static final double kAVoltSecondSquaredPerRad = 0;// .1;
   private static final int kMotorPort = 26; // right side
   private MechanismLigament2d pivot;
   private double pivotMotorPercent = 0;
   private final FlywheelSim pivotSimMotor = new FlywheelSim(DCMotor.getNEO(1), 6.75, 0.025);
 
   ProfiledPIDController shooter_pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? 0.001 : 0.6, 0, 0,
-      new TrapezoidProfile.Constraints(450, 600)); //.5, 500, 400
+      new TrapezoidProfile.Constraints(450, 600)); // .5, 500, 400
   private double shooterPivotMotorPercent = 0;
   private Rotation2d shooterPivotAngle = new Rotation2d(0);
   private static double maxShooterPivotAngle = 334;
@@ -53,6 +53,7 @@ public class ShooterAngle extends SubsystemBase {
   public static double climbAngle = 180; // is correct number now
   public static double shootAngle = 333.5; // is good
   public static double ampAngle = 141; // maybe good
+  public static double handOffAngle = 303.5; // maybe good
   public double shooterSlowPivotMotorPercent = 0.02;
 
   private IntakeSubsystem intake;
@@ -62,7 +63,8 @@ public class ShooterAngle extends SubsystemBase {
   private final ArmFeedforward m_feedforward = new ArmFeedforward(
       (Robot.isSimulation()) ? 0 : 0.0175 * 12, (Robot.isSimulation()) ? 0 : 0.01 * 12, 0, 0);
   // private final ArmFeedforward m_feedforward = new ArmFeedforward(
-  //     (Robot.isSimulation()) ? 0 : 0.02 * 12, (Robot.isSimulation()) ? 0 : 0.01 * 12, 0, 0);
+  // (Robot.isSimulation()) ? 0 : 0.02 * 12, (Robot.isSimulation()) ? 0 : 0.01 *
+  // 12, 0, 0);
 
   // 25 encoder 24 26 motors
 
@@ -72,6 +74,8 @@ public class ShooterAngle extends SubsystemBase {
     shooterAngle = new CANcoder(25);
 
     shooter_Pivot.setInverted(true);
+
+    saveMotorSettings();
 
     shooter_pivot_PID.setTolerance(RobotBase.isSimulation() ? 2 : 2);
 
@@ -93,9 +97,17 @@ public class ShooterAngle extends SubsystemBase {
     double pid = shooter_pivot_PID.calculate(shooterPivotAngle.getDegrees(), angle.getDegrees());
     var setpoint = shooter_pivot_PID.getSetpoint();
     double feedforward = m_feedforward.calculate(Math.toRadians(shooterPivotAngle.getDegrees() - 70),
-    setpoint.velocity);
+        setpoint.velocity);
     // return feedforward + pid;
     return (feedforward + pid) / RobotController.getBatteryVoltage();
+  }
+
+  private void saveMotorSettings() {
+    try {
+      Thread.sleep(200);
+    } catch (Exception e) {
+    }
+    shooter_Pivot.burnFlash();
   }
 
   private void updatePivotAngle() {
@@ -129,11 +141,11 @@ public class ShooterAngle extends SubsystemBase {
   }
 
   public void rotateDown() {
-      shooter_Pivot.set(shooterSlowPivotMotorPercent);
-      shooter_Pivot2.set(shooterSlowPivotMotorPercent);
+    shooter_Pivot.set(shooterSlowPivotMotorPercent);
+    shooter_Pivot2.set(shooterSlowPivotMotorPercent);
   }
 
-    public Rotation2d getShooterAngle(){
+  public Rotation2d getShooterAngle() {
     return shooterPivotAngle;
   }
 
@@ -141,10 +153,10 @@ public class ShooterAngle extends SubsystemBase {
   public void periodic() {
     shooterPivotMotorPercent = calculatePid(setpoint);
     pivot.setAngle(-shooterPivotAngle.getDegrees() - 90);
-    
-    if(intake.isIntakeDown() == false){
-      shooterPivotMotorPercent = 0;
-    }
+
+    // if(intake.isIntakeDown() == false){
+    // shooterPivotMotorPercent = 0;
+    // }
 
     if (shooterPivotAngle.getDegrees() > maxShooterPivotAngle) {
       shooterPivotMotorPercent = Math.min(shooterPivotMotorPercent, 0);
@@ -171,14 +183,13 @@ public class ShooterAngle extends SubsystemBase {
     builder.addDoubleProperty("Velocity", () -> getVelocity(), null);
     builder.addDoubleProperty("Angle", () -> shooterPivotAngle.getDegrees(), null);
     builder.addDoubleProperty("Error", () -> shooter_pivot_PID.getPositionError(), null);
-    builder.addDoubleProperty("MotorVoltage", () -> shooterPivotMotorPercent*12, null);
+    builder.addDoubleProperty("MotorVoltage", () -> shooterPivotMotorPercent * 12, null);
     builder.addDoubleProperty("ProfiledSetPoint", () -> shooter_pivot_PID.getSetpoint().position, null);
-
 
   }
 
   public boolean isShooterAtGoal() {
-    return(shooter_pivot_PID.atGoal());
+    return (shooter_pivot_PID.atGoal());
   }
 
 }

@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.shooter.ShooterAngle;
+import frc.robot.subsystems.shooter.ShooterAngleCommands;
 
 public class IntakeSubsystem extends SubsystemBase {
     public static final double kSVolts = Robot.isSimulation() ? 0 : 0.015;
@@ -34,13 +36,13 @@ public class IntakeSubsystem extends SubsystemBase {
     public static final double kAVoltSecondSquaredPerRad = 0.05;
     public static final int kMotorPort = 20;
 
-    public static final double upPositionDegrees = 290;// .4//0.3 //290
+    public static final double upPositionDegrees = 194; //290;// .4//0.3 //290
     public static Rotation2d setpoint = Rotation2d.fromDegrees(upPositionDegrees);
     private final CANSparkMax m_Pivot;
-    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : 0.005, 0, .001,
+    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : 0.01 ,0, 0, //0.005, 0, .001,
             new TrapezoidProfile.Constraints(350, 275));// noice
-    private final ArmFeedforward m_feedforward = new ArmFeedforward(
-           0.004, 0.02, 0.000, 0);
+    private final ArmFeedforward m_feedforward = new ArmFeedforward( 0.02, 0.025, 0, 0); //0.01,0.03,0,0);
+           //0.004, 0.02, 0.000, 0);
     private CANSparkMax beltMotor;
     private double downPositionDegrees = 90;// .7, 0.755
     private boolean isDown = false;
@@ -51,9 +53,9 @@ public class IntakeSubsystem extends SubsystemBase {
     private final FlywheelSim pivotSimMotor = new FlywheelSim(DCMotor.getNEO(1), 6.75, 0.025);
     private Rotation2d pivotAngle = new Rotation2d(0);
     private double pivotMotorPercent = 0;
-    private double maxPivotAngle = 290; // degrees
+    private double maxPivotAngle = 194; // degrees
     private double minPivotAngle = 90; // still 
-    private double intakeSpeed = .25;
+    private double intakeSpeed = .5;
     public double isDoneSec = .5; // for revving not for shooting
     public double isDoneShoot = 2; //sec
 
@@ -61,14 +63,18 @@ public class IntakeSubsystem extends SubsystemBase {
     private double beamBreakAverage = 0;
 
     public IntakeSubsystem() {
+
         pivot_PID.setTolerance(RobotBase.isSimulation() ? 5 : 5);
 
         m_Pivot = new CANSparkMax(kMotorPort, CANSparkLowLevel.MotorType.kBrushless);
-        m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).setZeroOffset(58);
         m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).setPositionConversionFactor(360);
+        m_Pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).setZeroOffset(150 + 110);
 
         // Start arm at rest in neutral position
         beltMotor = new CANSparkMax(19, CANSparkLowLevel.MotorType.kBrushless);
+        beltMotor.setInverted(true);
+
+        saveMotorSettings();
 
         Mechanism2d mech = new Mechanism2d(3, 3);
         // the mechanism root node
@@ -80,6 +86,14 @@ public class IntakeSubsystem extends SubsystemBase {
         pivotSimMotor.setInput(0);
 
     }
+
+    private void saveMotorSettings() {
+        try {
+          Thread.sleep(200);
+        } catch (Exception e) {
+        }
+        beltMotor.burnFlash();
+      }
 
     private double calculatePid(Rotation2d angle) {
         updatePivotAngle();
@@ -130,14 +144,18 @@ public class IntakeSubsystem extends SubsystemBase {
         setpoint = Rotation2d.fromDegrees(170);
     }
 
+    public void intake(double speed) {
+        intakeSpeed = speed;
+    }
+
     public void intake() {
         // slurp the note
-        intakeSpeed = -.3;
+        intakeSpeed = .45;
     }
 
     public void outtake() {
         // spit the note out
-        intakeSpeed = .3;
+        intakeSpeed = -.5;
     }
 
     public void beltStop() {
@@ -155,7 +173,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // checks if the beam is broken
     public boolean isBeamBroken() {
-        return beamBreakAverage > .5;
+       return beamBreakAverage > .5;
     }
     
     public boolean getRawBeamBroken() {
@@ -234,8 +252,6 @@ public class IntakeSubsystem extends SubsystemBase {
         
     }
     
-
-
     @Override
     public void initSendable(SendableBuilder builder) {
         // This is used to add things to NetworkTables

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.83,
-        "y": 7.63
+        "x": 2.051802334703099,
+        "y": 4.637491272129477
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1084093474600265,
-        "y": 7.634060683798327
+        "x": 1.9112722961537205,
+        "y": 4.8131538203162
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.634896291170256,
-        "y": 7.341567937292645
+        "x": 1.7238989114212167,
+        "y": 5.3752739745137115
       },
       "prevControl": {
-        "x": 2.4204016103994217,
-        "y": 7.52681334341291
+        "x": 1.8292964403332503,
+        "y": 5.059081387777612
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,16 +34,19 @@
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAngularVelocity": 350.0,
+    "maxAngularAcceleration": 535.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -52.90716270295849,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Amp",
-  "previewStartingState": null,
-  "useDefaultConstraints": false
+  "folder": "WEEK 4 PATHS",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
 }

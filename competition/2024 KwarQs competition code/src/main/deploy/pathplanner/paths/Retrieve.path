@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 2.883271729453586,
+        "x": 2.7310308543584263,
         "y": 5.54
       },
       "prevControl": {
-        "x": 2.6095829741013126,
+        "x": 2.4573420990061527,
         "y": 5.54
       },
       "nextControl": null,
@@ -32,8 +32,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.5,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Yo Autos",
+  "folder": "WEEK 4 PATHS",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }

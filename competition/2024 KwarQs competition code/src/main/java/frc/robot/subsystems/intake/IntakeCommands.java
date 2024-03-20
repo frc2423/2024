@@ -8,10 +8,11 @@ import frc.robot.subsystems.shooter.ShooterCommands;
 public class IntakeCommands {
 
     private IntakeSubsystem intake;
+    private ShooterAngleCommands shooterAngle;
 
-    public IntakeCommands(IntakeSubsystem intake) {
+    public IntakeCommands(IntakeSubsystem intake, ShooterAngleCommands shooterAngle) {
         this.intake = intake;
-
+        this.shooterAngle = shooterAngle;
     }
 
     public Command intakeDown() {
@@ -30,16 +31,11 @@ public class IntakeCommands {
         return command;
     }
 
-    public Command intakeOutOfTheWayCommand() {
-        var command = Commands.run(() -> {
-            intake.outOfTheWay();
-            System.out.println("INTAKE OUT OF THE WAY");
-
-        }, intake);
-        command.setName("Intake Out of The Way");
+    public Command intakeIntake(double speed) {
+        var command = Commands.run(() -> intake.intake(speed), intake);
+        command.setName("Intake Slurp");
         return command;
     }
-
     public Command intakeIntake() {
         var command = Commands.run(() -> intake.intake(), intake);
         command.setName("Intake Slurp");
@@ -76,8 +72,9 @@ public class IntakeCommands {
         Command intakeStart = intakeIntake().until(intake::isBeamBroken);
         Command intakeStop = Commands.runOnce(intake::beltStop);
         Command intakeRetract = Commands.runOnce(intake::retract);
+        Command shooterHandOff = shooterAngle.handOffAngleCommand();
 
-        Command sequence = Commands.sequence(intakeStart, intakeStop, intakeRetract);
+        Command sequence = Commands.sequence(shooterHandOff, intakeStart, intakeStop, intakeRetract);
         sequence.setName("Intake untill");
         return sequence;
     }
@@ -93,6 +90,7 @@ public class IntakeCommands {
         bestSequence.setName("Intake Sequence");
         return bestSequence;
     }
+
     public Command beltStopCommand() {
         var command = Commands.runOnce(intake::beltStop, intake);
         return command;

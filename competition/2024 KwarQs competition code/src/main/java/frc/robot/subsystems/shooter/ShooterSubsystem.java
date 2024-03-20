@@ -99,6 +99,11 @@ public class ShooterSubsystem extends SubsystemBase {
         feeder_Motor.setVoltage(5);
     }
 
+    public void moveFeederHandoff() {
+        feeder_Motor.setVoltage(0.6);
+
+    }
+
     public void moveFeederAmpOpp() {
         feeder_Motor.setVoltage(-3);
         shooterMotorOne.setSpeed(1 / RobotController.getBatteryVoltage());
