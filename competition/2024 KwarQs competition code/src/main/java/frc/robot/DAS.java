@@ -38,7 +38,8 @@ public class DAS {
         distanceMap.put(2.357, new MotorSettings(313, -12)); // -9
         distanceMap.put(2.7, new MotorSettings(310, -12));  // -9
         distanceMap.put(3.01, new MotorSettings(306, -12));  // -12
-        distanceMap.put(3.30, new MotorSettings(305, -12)); // -12
+        distanceMap.put(3.20, new MotorSettings(305, -12)); // -12
+        distanceMap.put(3.40, new MotorSettings(304, -12)); // -12
     }
 
     public MotorSettings calculateAS(double distance) {

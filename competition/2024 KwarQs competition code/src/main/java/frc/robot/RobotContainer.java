@@ -240,6 +240,10 @@ public class RobotContainer {
         .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
+   // Command intakeOrOuttake = Commands.either(intakeCommands.intakeOuttake(), intakeCommands.intakeIntake(), () -> driverXbox.getYButton());
+
+
+
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
     new JoystickButton(driverXbox, XboxController.Button.kRightBumper.value)
