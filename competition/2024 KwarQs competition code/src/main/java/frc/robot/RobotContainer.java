@@ -291,11 +291,9 @@ public class RobotContainer {
     // new Trigger(() -> operator.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shootAmp());
     // shooter.setDefaultCommand(shooterCommands.stopIt());
-    
-    
+
     RobotModeTriggers.disabled().whileTrue(Commands.either(
-      ledKwarqs.setYellow(), ledKwarqs.disable(), visionSubsystem::seesAprilTag
-    ));
+        ledKwarqs.setYellow(), ledKwarqs.disable(), visionSubsystem::seesAprilTag));
 
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterDown());
@@ -355,9 +353,12 @@ public class RobotContainer {
       NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));
       // NTHelper.setDoubleArray("Measurments/std",
       // NTHelper.getDoubleArrayPose2d(pose));
-
-      drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),
-          visionSubsystem.getTimestampSeconds(), std.get());
+      double distanceToSpeaker = drivebase.getDistanceToSpeaker(estimatedPose.get().estimatedPose.toPose2d());
+      // Pose estimation is very inacurrate past 4 meters and is throwing off our center piece autos
+      boolean skipAdding = RobotState.isAutonomous() && distanceToSpeaker > 4.0;
+      if (!skipAdding)
+        drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),
+            visionSubsystem.getTimestampSeconds(), std.get());
     }
   }
 

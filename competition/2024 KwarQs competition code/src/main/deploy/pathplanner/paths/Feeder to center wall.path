@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.971976665264806,
-        "y": 2.2205473919144563
+        "x": 4.5155127687304555,
+        "y": 1.4669070649616704
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.7887881677402704,
-        "y": 1.9379322693071617
+        "x": 6.116998463505122,
+        "y": 1.063171175522678
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.122220047718784,
-        "y": 2.4358731996152514
+        "x": 8.229882951569182,
+        "y": 2.3685838847087535
       },
       "prevControl": {
-        "x": 4.865417206244247,
-        "y": 1.7764379135315644
+        "x": 6.439987175056317,
+        "y": 1.3592441611112733
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "WEEK 4 PATHS",
   "previewStartingState": {
-    "rotation": -3.576334374997366,
+    "rotation": -1.684684317896303,
     "velocity": 0
   },
   "useDefaultConstraints": false
