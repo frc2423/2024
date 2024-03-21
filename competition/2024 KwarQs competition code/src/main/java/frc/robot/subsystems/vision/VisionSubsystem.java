@@ -52,9 +52,17 @@ public class VisionSubsystem extends SubsystemBase {
         PhotonTrackedTarget getLatestResult = visionInterface.getLatestResult().getBestTarget();
         if (getLatestResult != null) {
             getLatestId = getLatestResult.getFiducialId();
+            // setLEDColor();
             return Optional.ofNullable(getLatestResult.getBestCameraToTarget());
         }
         return null;
+    }
+
+    public boolean seesAprilTag() {
+        if (getLatestResult() != null) {
+            return true;
+        }
+        return false;
     }
 
     @Override

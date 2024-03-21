@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.141437338509483,
-        "y": 0.7846260485673593
+        "x": 4.596259946618255,
+        "y": 1.49382279092427
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.141437338509485,
-        "y": 0.7846260485673593
+        "x": 2.3084232397972997,
+        "y": 1.4534492019803695
       },
       "isLocked": false,
-      "linkedName": "Feeder Center Note"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.086934844340443,
-        "y": 3.7943110408332084
+        "x": 1.3394571051437192,
+        "y": 3.9027802645769225
       },
       "prevControl": {
-        "x": 1.0869348443404432,
-        "y": 3.7943110408332084
+        "x": 1.9585188022835063,
+        "y": 2.8530669520355434
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,5 +48,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
