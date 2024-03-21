@@ -76,7 +76,7 @@ public class RobotContainer {
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
       drivebase, swerveCommands);
-  KwarqsLed ledKwarqs = new KwarqsLed();
+  KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem);
 
   public static final DAS das = new DAS();
 
@@ -291,7 +291,7 @@ public class RobotContainer {
     // new Trigger(() -> operator.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shootAmp());
     // shooter.setDefaultCommand(shooterCommands.stopIt());
-    // new Trigger(visionSubsystem::seesAprilTag).whileTrue(ledKwarqs.setYellow());
+    
     
     RobotModeTriggers.disabled().whileTrue(Commands.either(
       ledKwarqs.setYellow(), ledKwarqs.disable(), visionSubsystem::seesAprilTag
