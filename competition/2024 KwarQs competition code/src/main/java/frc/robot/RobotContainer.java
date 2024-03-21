@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.LoggedCommand;
@@ -39,7 +41,6 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
-import frc.robot.vision.Vision;
 
 import java.util.Optional;
 
@@ -66,7 +67,6 @@ public class RobotContainer {
 
   XboxController driverXbox = new XboxController(0);
   XboxController operator = new XboxController(1);
-  Vision vision = new Vision();
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
   VisionSubsystem visionSubsystem = new VisionSubsystem();
@@ -257,10 +257,9 @@ public class RobotContainer {
 
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(Commands.runOnce(() -> {
-      shooterCommands.shootFromDAS();
-      ledKwarqs.setGreen();
-    })).onFalse(shooterAngleCommands.shooterAngleCommand());
+
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS())
+        .onFalse(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
     new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand())
         .onFalse(shooterCommands.moveFeedAmpCommandEnd());
@@ -292,7 +291,11 @@ public class RobotContainer {
     // new Trigger(() -> operator.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shootAmp());
     // shooter.setDefaultCommand(shooterCommands.stopIt());
-    new Trigger(visionSubsystem::seesAprilTag).whileTrue(ledKwarqs.setYellow());
+    // new Trigger(visionSubsystem::seesAprilTag).whileTrue(ledKwarqs.setYellow());
+    
+    RobotModeTriggers.disabled().whileTrue(Commands.either(
+      ledKwarqs.setYellow(), ledKwarqs.disable(), visionSubsystem::seesAprilTag
+    ));
 
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterDown());

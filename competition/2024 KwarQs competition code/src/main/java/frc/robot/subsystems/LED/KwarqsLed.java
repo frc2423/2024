@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class KwarqsLed extends SubsystemBase {
-    private LedController ledController = new LedController(36); // 36 on each side
+    private LedController ledController = new LedController(60); // 36 on each side
 
     public KwarqsLed() {
         ledController.add("yellow", new Yellow());
@@ -17,37 +17,43 @@ public class KwarqsLed extends SubsystemBase {
     }
 
     public Command disable() {
-        var command = Commands.run(()-> {
+        var command = Commands.run(() -> {
+                        System.out.println("SEEES DARK!!!");
+
             ledController.set("dark");
         });
+        // command.ignoringDisable(true);
+
         command.addRequirements(this);
         return command;
     }
 
     public Command setYellow() {
-        var command = Commands.run(()-> {
+        var command = Commands.run(() -> {
+            System.out.println("SEEES YELLOW!!!");
             ledController.set("yellow");
         });
+        // command.ignoringDisable(?true);
         command.addRequirements(this);
         return command;
-    } 
+    }
 
     public Command setPurple() {
-       var command = Commands.run(()-> {
+        var command = Commands.run(() -> {
             ledController.set("purple");
         });
         command.addRequirements(this);
         return command;
-    } 
+    }
 
     public Command setGreen() {
-        var command = Commands.run(()-> {
+        var command = Commands.run(() -> {
             System.out.println("!!!!!!!!");
             ledController.set("green");
         });
         command.addRequirements(this);
         return command;
-    } 
+    }
 
     @Override
     public void periodic() {
