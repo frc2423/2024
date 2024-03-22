@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.551768218290536,
-        "y": 1.5072806539055699
+        "x": 5.2556952327019415,
+        "y": 1.076629038503978
       },
       "prevControl": null,
       "nextControl": {
         "x": 3.048605703768785,
-        "y": 1.7495221875689648
+        "y": 1.318870572167373
       },
       "isLocked": false,
       "linkedName": null
@@ -33,7 +33,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 350.0,
     "maxAngularAcceleration": 535.0
   },
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "WEEK 4 PATHS",
   "previewStartingState": {
-    "rotation": 4.398705354995552,
+    "rotation": 3.3664606634299563,
     "velocity": 0
   },
   "useDefaultConstraints": false
