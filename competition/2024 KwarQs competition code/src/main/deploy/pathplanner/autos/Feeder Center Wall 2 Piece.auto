@@ -32,12 +32,6 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "setRotationTargetCenterNote4"
-                      }
-                    },
-                    {
                       "type": "path",
                       "data": {
                         "pathName": "Feeder to center wall"

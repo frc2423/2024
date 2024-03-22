@@ -559,13 +559,17 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public double getDistanceToSpeaker() {
+    return getDistanceToSpeaker(this.getPose());
+  }
+
+  public double getDistanceToSpeaker(Pose2d pose) {
 
     String usingThis = NTHelper.getString("/SmartDashboard/Shooter/usingThis", "vision");
 
     if (usingThis.equals("vision")) {
       Pose2d transformedPose = PoseTransformUtils.transformXRedPose(Constants.autoAlign.speakerLocationPose);
 
-      Transform2d diffPose = this.getPose().minus(transformedPose);
+      Transform2d diffPose = pose.minus(transformedPose);
 
       double ydistance = diffPose.getY();
       double xdistance = diffPose.getX();

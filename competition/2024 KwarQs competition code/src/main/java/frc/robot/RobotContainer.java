@@ -137,7 +137,8 @@ public class RobotContainer {
     m_chooser.addOption("Amp Two-Piece Auto", "Amp Two-Piece Auto");
     m_chooser.addOption("Feeder to Far Middle ", "Feeder to Far Middle");
     m_chooser.addOption("Amp Center 2 Piece", "Amp Center 2 Piece");
-    m_chooser.addOption("Feeder Center 2 Piece", "Feeder Center 2 Piece");
+    m_chooser.addOption("Feeder Center 2nd from Wall 2 Piece", "Feeder Center 2nd from Wall 2 Piece");
+    m_chooser.addOption("Feeder Center Wall 2 Piece", "Feeder Center Wall 2 Piece");
     m_chooser.addOption("4 Note Auto", "4 Note Auto");
     m_chooser.addOption("Amp 3 Piece", "Amp 3 Piece");
     m_chooser.addOption("Feeder 3 Piece", "Feeder 3 Piece");
@@ -291,11 +292,9 @@ public class RobotContainer {
     // new Trigger(() -> operator.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shootAmp());
     // shooter.setDefaultCommand(shooterCommands.stopIt());
-    
-    
+
     RobotModeTriggers.disabled().whileTrue(Commands.either(
-      ledKwarqs.setYellow(), ledKwarqs.disable(), visionSubsystem::seesAprilTag
-    ));
+        ledKwarqs.setYellow(), ledKwarqs.disable(), visionSubsystem::seesAprilTag));
 
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterDown());
@@ -355,9 +354,12 @@ public class RobotContainer {
       NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));
       // NTHelper.setDoubleArray("Measurments/std",
       // NTHelper.getDoubleArrayPose2d(pose));
-
-      drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),
-          visionSubsystem.getTimestampSeconds(), std.get());
+      double distanceToSpeaker = drivebase.getDistanceToSpeaker(estimatedPose.get().estimatedPose.toPose2d());
+      // Pose estimation is very inacurrate past 4 meters and is throwing off our center piece autos
+      boolean skipAdding = RobotState.isAutonomous() && distanceToSpeaker > 4.0;
+      if (!skipAdding)
+        drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),
+            visionSubsystem.getTimestampSeconds(), std.get());
     }
   }
 
