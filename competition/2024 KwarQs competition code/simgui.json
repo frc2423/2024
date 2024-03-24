@@ -1,5 +1,13 @@
 {
   "HALProvider": {
+    "Addressable LEDs": {
+      "0": {
+        "columns": 1
+      },
+      "window": {
+        "visible": true
+      }
+    },
     "DIO": {
       "window": {
         "visible": true
@@ -225,7 +233,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 0,
+          "height": 332,
           "series": [
             {
               "color": [
