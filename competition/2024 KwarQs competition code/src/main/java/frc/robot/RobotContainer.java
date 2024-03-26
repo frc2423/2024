@@ -109,39 +109,27 @@ public class RobotContainer {
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
-    m_chooser.addOption("Yo Auto", "Yo Auto");
-    m_chooser.addOption("Amp Yo Auto", "Amp Yo Auto");
-    m_chooser.addOption("Feeder Yo Auto", "Feeder Yo Auto");
-    // m_chooser.addOption("New Amp Yo Auto", "New Amp Yo Auto");
-    // m_chooser.addOption("New Feeder Yo Auto", "New Feeder Yo Auto");
-
-    // 2 game piece autos
-    m_chooser.addOption("New Yo Auto", "New Yo Auto");
-    m_chooser.addOption("New Feeder Yo Auto2", "New Feeder Yo Auto2");
-    m_chooser.addOption("New Amp Yo 2", "New Amp Yo 2");
-
+   
     // comp single game piece auto
     m_chooser.addOption("Comp Single Note", "Comp Single Note");
-
-    // more autos
-    m_chooser.addOption("Amp side to center", "Amp side to center");
-
-    // m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
-    // m_chooser.addOption("ShootAndStayStillFeeder", "ShootAndStayStillFeeder");
-    // m_chooser.addOption("ShootAndStayStillAmp", "ShootAndStayStillAmp");
-    m_chooser.addOption("YoYo Auto", "YoYo Auto");
-    m_chooser.addOption("Feeder YoYo Auto", "Feeder YoYo Auto");
-    m_chooser.addOption("Amp YoYo Auto", "Amp YoYo Auto");
-    m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
-    m_chooser.addOption("Feeder Two-Piece Auto", "Feeder Two-Piece Auto");
-    m_chooser.addOption("Amp Two-Piece Auto", "Amp Two-Piece Auto");
-    m_chooser.addOption("Feeder to Far Middle ", "Feeder to Far Middle");
-    m_chooser.addOption("Amp Center 2 Piece", "Amp Center 2 Piece");
+    
+    // comp 2 piece autos
+    m_chooser.addOption("Amp 2 Piece", "Amp 2 Piece");
+    m_chooser.addOption("Center 2 Piece", "Center 2 Piece");
+    m_chooser.addOption("Feeder 2 Piece", "Feeder 2 Piece");
+    
+    // center line autos
+    m_chooser.addOption("Amp Center Wall 3 Piece", "Amp Center Wall 3 Piece");
+    m_chooser.addOption("Amp Center Wall 2 Piece", "Amp Center 2 Piece");
     m_chooser.addOption("Feeder Center 2nd from Wall 2 Piece", "Feeder Center 2nd from Wall 2 Piece");
     m_chooser.addOption("Feeder Center Wall 2 Piece", "Feeder Center Wall 2 Piece");
-    m_chooser.addOption("4 Note Auto", "4 Note Auto");
+
+    // 3 piece autos
     m_chooser.addOption("Amp 3 Piece", "Amp 3 Piece");
     m_chooser.addOption("Feeder 3 Piece", "Feeder 3 Piece");
+
+    m_chooser.addOption("Taxi Amp Side", "Taxi Amp Side");
+
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -274,7 +262,7 @@ public class RobotContainer {
     new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
-    new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
+    new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterAngleCommands.handOffAngleCommand());
     new Trigger(() -> driverXbox.getPOV() == 180)
         .whileTrue(swerveCommands.autoAlignShootCommand(Constants.autoAlign.shootPose));
     new Trigger(() -> driverXbox.getPOV() == 270)
