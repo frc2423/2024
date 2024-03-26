@@ -32,6 +32,11 @@ import com.ctre.phoenix6.hardware.CANcoder;
 public class ShooterAngle extends SubsystemBase {
   private final CANSparkFlex shooter_Pivot = new CANSparkFlex(26, CANSparkLowLevel.MotorType.kBrushless);
   private final CANSparkFlex shooter_Pivot2 = new CANSparkFlex(24, CANSparkLowLevel.MotorType.kBrushless);
+  private static final double kSVolts = 0; // 1;
+  private static final double kGVolts = 0; // 1;
+  private static final double kVVoltSecondPerRad = 0;// .5;// all things for feed forward is wrong, re do pls
+  private static final double kAVoltSecondSquaredPerRad = 0;// .1;
+  private static final int kMotorPort = 26; // right side
   private MechanismLigament2d pivot;
   private final FlywheelSim pivotSimMotor = new FlywheelSim(DCMotor.getNEO(1), 6.75, 0.025);
 
@@ -145,6 +150,10 @@ public class ShooterAngle extends SubsystemBase {
   public void periodic() {
     shooterPivotMotorPercent = calculatePid(setpoint);
     pivot.setAngle(-shooterPivotAngle.getDegrees() - 90);
+
+    // if(intake.isIntakeDown() == false){
+    // shooterPivotMotorPercent = 0;
+    // }
 
     if (shooterPivotAngle.getDegrees() > maxShooterPivotAngle) {
       shooterPivotMotorPercent = Math.min(shooterPivotMotorPercent, 0);

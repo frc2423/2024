@@ -31,6 +31,11 @@ public class IntakeCommands {
         return command;
     }
 
+    public Command intakeIntake(double speed) {
+        var command = Commands.run(() -> intake.intake(speed), intake);
+        command.setName("Intake Slurp");
+        return command;
+    }
     public Command intakeIntake() {
         var command = Commands.run(() -> intake.intake(), intake);
         command.setName("Intake Slurp");

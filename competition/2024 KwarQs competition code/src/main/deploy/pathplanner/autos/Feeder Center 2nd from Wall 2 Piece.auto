@@ -34,7 +34,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Amp to center wall"
+                        "pathName": "Feeder to center 2nd from wall"
                       }
                     }
                   ]
@@ -56,7 +56,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Amp center wall to shoot"
+                  "pathName": "Feeder center 2nd from wall to shoot"
                 }
               }
             ]

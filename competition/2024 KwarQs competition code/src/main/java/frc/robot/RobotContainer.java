@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -26,9 +27,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.LoggedCommand;
+import frc.robot.subsystems.LED.KwarqsLed;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterAngle;
@@ -73,6 +76,8 @@ public class RobotContainer {
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
       drivebase, swerveCommands);
+  KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem);
+
   public static final DAS das = new DAS();
 
   public void JointReader() {
@@ -104,38 +109,27 @@ public class RobotContainer {
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
-    m_chooser.addOption("Yo Auto", "Yo Auto");
-    m_chooser.addOption("Amp Yo Auto", "Amp Yo Auto");
-    m_chooser.addOption("Feeder Yo Auto", "Feeder Yo Auto");
-    // m_chooser.addOption("New Amp Yo Auto", "New Amp Yo Auto");
-    // m_chooser.addOption("New Feeder Yo Auto", "New Feeder Yo Auto");
-
-    // 2 game piece autos
-    m_chooser.addOption("New Yo Auto", "New Yo Auto");
-    m_chooser.addOption("New Feeder Yo Auto2", "New Feeder Yo Auto2");
-    m_chooser.addOption("New Amp Yo 2", "New Amp Yo 2");
-
+   
     // comp single game piece auto
     m_chooser.addOption("Comp Single Note", "Comp Single Note");
+    
+    // comp 2 piece autos
+    m_chooser.addOption("Amp 2 Piece", "Amp 2 Piece");
+    m_chooser.addOption("Center 2 Piece", "Center 2 Piece");
+    m_chooser.addOption("Feeder 2 Piece", "Feeder 2 Piece");
+    
+    // center line autos
+    m_chooser.addOption("Amp Center Wall 3 Piece", "Amp Center Wall 3 Piece");
+    m_chooser.addOption("Amp Center Wall 2 Piece", "Amp Center 2 Piece");
+    m_chooser.addOption("Feeder Center 2nd from Wall 2 Piece", "Feeder Center 2nd from Wall 2 Piece");
+    m_chooser.addOption("Feeder Center Wall 2 Piece", "Feeder Center Wall 2 Piece");
 
-    // more autos
-    m_chooser.addOption("Amp side to center", "Amp side to center");
-
-    // m_chooser.addOption("ShootAndStayStill", "ShootAndStayStill");
-    // m_chooser.addOption("ShootAndStayStillFeeder", "ShootAndStayStillFeeder");
-    // m_chooser.addOption("ShootAndStayStillAmp", "ShootAndStayStillAmp");
-    m_chooser.addOption("YoYo Auto", "YoYo Auto");
-    m_chooser.addOption("Feeder YoYo Auto", "Feeder YoYo Auto");
-    m_chooser.addOption("Amp YoYo Auto", "Amp YoYo Auto");
-    m_chooser.addOption("Amp to Note Auto", "Amp to Note Auto");
-    m_chooser.addOption("Feeder Two-Piece Auto", "Feeder Two-Piece Auto");
-    m_chooser.addOption("Amp Two-Piece Auto", "Amp Two-Piece Auto");
-    m_chooser.addOption("Feeder to Far Middle ", "Feeder to Far Middle");
-    m_chooser.addOption("Amp Center 2 Piece", "Amp Center 2 Piece");
-    m_chooser.addOption("Feeder Center 2 Piece", "Feeder Center 2 Piece");
-    m_chooser.addOption("4 Note Auto", "4 Note Auto");
+    // 3 piece autos
     m_chooser.addOption("Amp 3 Piece", "Amp 3 Piece");
     m_chooser.addOption("Feeder 3 Piece", "Feeder 3 Piece");
+
+    m_chooser.addOption("Taxi Amp Side", "Taxi Amp Side");
+
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -240,6 +234,9 @@ public class RobotContainer {
         .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
+    // Command intakeOrOuttake = Commands.either(intakeCommands.intakeOuttake(),
+    // intakeCommands.intakeIntake(), () -> driverXbox.getYButton());
+
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
     new JoystickButton(driverXbox, XboxController.Button.kRightBumper.value)
@@ -249,6 +246,7 @@ public class RobotContainer {
 
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
+
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS())
         .onFalse(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
@@ -264,7 +262,7 @@ public class RobotContainer {
     new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
-    new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
+    new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterAngleCommands.handOffAngleCommand());
     new Trigger(() -> driverXbox.getPOV() == 180)
         .whileTrue(swerveCommands.autoAlignShootCommand(Constants.autoAlign.shootPose));
     new Trigger(() -> driverXbox.getPOV() == 270)
@@ -282,6 +280,9 @@ public class RobotContainer {
     // new Trigger(() -> operator.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shootAmp());
     // shooter.setDefaultCommand(shooterCommands.stopIt());
+
+    RobotModeTriggers.disabled().whileTrue(Commands.either(
+        ledKwarqs.setYellow(), ledKwarqs.disable(), visionSubsystem::seesAprilTag));
 
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterDown());
@@ -341,9 +342,12 @@ public class RobotContainer {
       NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));
       // NTHelper.setDoubleArray("Measurments/std",
       // NTHelper.getDoubleArrayPose2d(pose));
-
-      drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),
-          visionSubsystem.getTimestampSeconds(), std.get());
+      double distanceToSpeaker = drivebase.getDistanceToSpeaker(estimatedPose.get().estimatedPose.toPose2d());
+      // Pose estimation is very inacurrate past 4 meters and is throwing off our center piece autos
+      boolean skipAdding = RobotState.isAutonomous() && distanceToSpeaker > 4.0;
+      if (!skipAdding)
+        drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),
+            visionSubsystem.getTimestampSeconds(), std.get());
     }
   }
 
