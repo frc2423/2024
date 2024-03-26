@@ -128,6 +128,8 @@ public class RobotContainer {
     m_chooser.addOption("Amp 3 Piece", "Amp 3 Piece");
     m_chooser.addOption("Feeder 3 Piece", "Feeder 3 Piece");
 
+    m_chooser.addOption("Taxi Amp Side", "Taxi Amp Side");
+
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -260,7 +262,7 @@ public class RobotContainer {
     new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
-    new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterCommands.handOffCommand());
+    new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterAngleCommands.handOffAngleCommand());
     new Trigger(() -> driverXbox.getPOV() == 180)
         .whileTrue(swerveCommands.autoAlignShootCommand(Constants.autoAlign.shootPose));
     new Trigger(() -> driverXbox.getPOV() == 270)
