@@ -26,14 +26,17 @@ public class ShooterSubsystem extends SubsystemBase {
     private NeoMotor shooterMotorTwo;
     private double shooterSpeed = -4.3;
     public static Timer timer;
-    public static double feederVoltage = -RobotController.getBatteryVoltage() / 3;
+    public static double feederVoltage = -12.6 / 3; // Polling the battery voltage once on creation is not consistent
     public static double feederFlopVoltage = 1;
     public static double feederFlopVoltageBackwards = 4;
     private final CANSparkFlex feeder_Motor;
+    private DigitalInput beamBreak = new DigitalInput(9);
     public static final int kFeederMotorPort = 23;
     public double feederOnSec = 1.5;
     public double isDoneSec = 0.5; // for revving not for shooting
     public double isDoneShoot = .5; // sec
+    private MedianFilter beambreakFilter = new MedianFilter(5);
+    private double beamBreakAverage = 0;
 
     public ShooterSubsystem() {
         feeder_Motor = new CANSparkFlex(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
@@ -81,6 +84,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
+        beamBreakAverage = beambreakFilter.calculate(getRawBeamBroken() ? 1 : 0);
     }
 
     public void moveFeederMotor() {
@@ -111,7 +115,15 @@ public class ShooterSubsystem extends SubsystemBase {
         // shooterOnSource();
         // feeder_Motor.setVoltage(-0.5);
     }
-   
+
+    public boolean isBeamBroken() {
+        return beamBreakAverage > .5;
+     }
+     
+     public boolean getRawBeamBroken() {
+         return !beamBreak.get();
+     }
+ 
     public void moveFeederAmpOppEnd() {
         feeder_Motor.setVoltage(0.6);
         shooterMotorOne.setSpeed(1 / RobotController.getBatteryVoltage());

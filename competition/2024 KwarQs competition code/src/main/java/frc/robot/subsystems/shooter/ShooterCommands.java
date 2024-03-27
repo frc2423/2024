@@ -124,6 +124,15 @@ public class ShooterCommands {
         return command;
     }
 
+    public Command handOffWithBeamBreakCommand() {
+        var command = Commands.sequence(
+            /* change from "slow" to "handoff" */
+            Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7))
+                    .until(() -> shooter.isBeamBroken()),
+            Commands.runOnce(() -> shooter.everythingOffPlease())); 
+            return command;
+    }
+
     public Command flopAmpCommand() {
 
         var command = Commands.sequence(
@@ -145,7 +154,7 @@ public class ShooterCommands {
         return command;
     }
 
-    private Command revSpeedFromDAS() {
+    public Command revSpeedFromDAS() {
         return Commands.run(() -> {
             double distance = drivebase.getDistanceToSpeaker();
             DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
