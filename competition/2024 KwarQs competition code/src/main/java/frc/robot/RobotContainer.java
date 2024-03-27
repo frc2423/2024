@@ -239,17 +239,26 @@ public class RobotContainer {
 
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
-    new JoystickButton(driverXbox, XboxController.Button.kRightBumper.value)
-        .whileTrue(shooterAngleCommands.moveShooterDown());
+    new JoystickButton(driverXbox, XboxController.Button.kRightBumper.value).whileTrue(
+        Commands.parallel(
+            ShooterCommands.revSpeedFromDAS(),
+            shooterAngle.setShooterAngleFromDAS())
+    );
+    
     new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value)
-        .whileTrue(shooterAngleCommands.moveShooterUp());
+        .whileTrue(shooterCommands.rev());
+    
 
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
 
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS())
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5 && !driverXbox.getRightBumper()).whileTrue(shooterCommands.shootFromDAS())
         .onFalse(shooterAngleCommands.shooterAngleCommand());
-    new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
+    new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5 && !driverXbox.getLeftBumper()).whileTrue(shooterCommands.revAndShoot());
+    new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5 && driverXbox.getLeftBumper()).whileTrue(shooterCommands.shoot());
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5 && driverXbox.getRightBumper()).whileTrue(shooterCommands.shoot());
+    new Trigger(() -> driverXbox.getRightTriggerAxis() <= .5 && !driverXbox.getRightBumper()).onTrue(shooterAngleCommands.shooterAngleCommand());
+    // TODO: new Trigger for auto-align if we are still holding the right bumper but we are no longer trying to drive (driver analog stick axes all very small)
     new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand())
         .onFalse(shooterCommands.moveFeedAmpCommandEnd());
     new Trigger(() -> operator.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpOppCommand());
