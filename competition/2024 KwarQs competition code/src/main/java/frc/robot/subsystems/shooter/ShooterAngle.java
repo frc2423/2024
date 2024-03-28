@@ -129,8 +129,10 @@ public class ShooterAngle extends SubsystemBase {
 
   private void setMotorPercent() {
     if (RobotBase.isSimulation() == false) {
-      shooter_Pivot.set(shooterPivotMotorPercent);
-      shooter_Pivot2.set(shooterPivotMotorPercent);
+      // shooter_Pivot.set(shooterPivotMotorPercent);
+      // shooter_Pivot2.set(shooterPivotMotorPercent);
+      shooter_Pivot.set(0);
+      shooter_Pivot2.set(0);
     } else {
       pivotSimMotor.setInputVoltage(shooterPivotMotorPercent * RobotController.getBatteryVoltage());
       pivotSimMotor.update(.02);
@@ -138,8 +140,10 @@ public class ShooterAngle extends SubsystemBase {
   }
 
   public void rotateDown() {
-    shooter_Pivot.set(shooterSlowPivotMotorPercent);
-    shooter_Pivot2.set(shooterSlowPivotMotorPercent);
+    // shooter_Pivot.set(shooterSlowPivotMotorPercent);
+    // shooter_Pivot2.set(shooterSlowPivotMotorPercent);
+    shooter_Pivot.set(0);
+    shooter_Pivot2.set(0);
   }
 
   public Rotation2d getShooterAngle() {
