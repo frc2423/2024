@@ -248,7 +248,7 @@ public class RobotContainer {
     // .5).whileTrue(shooterCommands.shooterCommand());
 
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS())
-        .onFalse(shooterAngleCommands.shooterAngleCommand());
+        .onFalse(shooterAngleCommands.feederAngleCommand());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
     new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand())
         .onFalse(shooterCommands.moveFeedAmpCommandEnd());
