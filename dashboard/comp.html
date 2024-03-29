@@ -60,6 +60,8 @@
             <frc-field3d-urdf></frc-field3d-urdf>
             <!---->
             <frc-field3d-urdf></frc-field3d-urdf>
+            <!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
         </frc-field3d-urdf-wrapper><frc-field3d-pose-visualizer
             source-provider="NetworkTables"
             source-key="/best target"
@@ -75,7 +77,13 @@
         style="transform: translate(756.8px, 14.6px); width: 142px; height: 96.8px;"
         source-key="/SmartDashboard/VisionSubsystem/is connected"
         label="CameraConnected"
-    ></frc-boolean-box></dashboard-tab><dashboard-tab
+    ></frc-boolean-box><frc-toggle-group
+        source-provider="NetworkTables"
+        style="transform: translate(390px, 192px); flex-direction: column;"
+        source-key="/sourcePickUp"
+        options="[&quot;ground&quot;,&quot;source&quot;,&quot;none&quot;]"
+        value="source"
+    ></frc-toggle-group></dashboard-tab><dashboard-tab
     slot="tab"
     tab-name="Autonomous"
     source-provider="NetworkTables"
