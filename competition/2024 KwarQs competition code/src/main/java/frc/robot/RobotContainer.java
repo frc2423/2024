@@ -40,6 +40,7 @@ import frc.robot.subsystems.shooter.ShooterCommands;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.vision.VisionCommands;
 import frc.robot.subsystems.vision.VisionSubsystem;
 
 import java.util.Optional;
@@ -74,6 +75,7 @@ public class RobotContainer {
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
+  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
       drivebase, swerveCommands);
   KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem);
@@ -269,6 +271,8 @@ public class RobotContainer {
         .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.ampPose));
     new Trigger(() -> driverXbox.getPOV() == 90)
         .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.sourceMiddlePose));
+    new Trigger(() -> driverXbox.getPOV() == 0)
+        .whileTrue(visionCommands.noteAutoAlign());
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
@@ -362,6 +366,8 @@ public class RobotContainer {
       NTHelper.setDouble("Measurments/april-tag-id", visionSubsystem.getLatestId);
       addVision();
     }
+    visionSubsystem.updateNoteV();
+
     // NTHelper.setDouble("Measurments/april-tag-rot", bestResult.getRotation());
     // //"idk how much that is in practical suck terms" -travis 3/5/24 6:15 pm
   }

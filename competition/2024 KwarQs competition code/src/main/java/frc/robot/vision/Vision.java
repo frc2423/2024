@@ -100,6 +100,16 @@ public class Vision {
             cameraSim.enableDrawWireframe(true);
         }
     }
+    public Vision(boolean note) {
+        camera = new PhotonCamera(knoteCameraName);
+        camera.setPipelineIndex(0);; //pipline for notes
+                photonEstimator = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, kRobotToCam);
+
+    }
+
+    public boolean isCameraConnected() {
+        return camera.isConnected();
+    }
 
     public PhotonPipelineResult getLatestResult() {
         var result = camera.getLatestResult();
@@ -119,6 +129,21 @@ public class Vision {
             NTHelper.setDoubleArray("/best target/pose", new double[] { 0, 0, 100, 0, 0, 0, 0 });
         }
         return result;
+    }
+
+    public PhotonPipelineResult getLatestNoteResult() {
+        var result = camera.getLatestResult();
+        if (result == null) return null;
+        if (result.hasTargets()) {
+            var target = result.getBestTarget();
+            NTHelper.setDouble("/best target/yaw", target.getYaw());
+            
+            return result;
+            
+        } else {
+            NTHelper.setDoubleArray("/best target/pose", new double[] { 0, 0, 100, 0, 0, 0, 0 });
+        }
+        return null;
     }
 
     /**
