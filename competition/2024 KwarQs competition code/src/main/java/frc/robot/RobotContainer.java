@@ -109,15 +109,15 @@ public class RobotContainer {
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
-   
+
     // comp single game piece auto
     m_chooser.addOption("Comp Single Note", "Comp Single Note");
-    
+
     // comp 2 piece autos
     m_chooser.addOption("Amp 2 Piece", "Amp 2 Piece");
     m_chooser.addOption("Center 2 Piece", "Center 2 Piece");
     m_chooser.addOption("Feeder 2 Piece", "Feeder 2 Piece");
-    
+
     // center line autos
     m_chooser.addOption("Amp Center Wall 3 Piece", "Amp Center Wall 3 Piece");
     m_chooser.addOption("Amp Center Wall 2 Piece", "Amp Center 2 Piece");
@@ -129,7 +129,6 @@ public class RobotContainer {
     m_chooser.addOption("Feeder 3 Piece", "Feeder 3 Piece");
 
     m_chooser.addOption("Taxi Amp Side", "Taxi Amp Side");
-
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -182,6 +181,12 @@ public class RobotContainer {
     NamedCommands.registerCommand("HandOff", shooterCommands.handOffCommand());
 
     NamedCommands.registerCommand("IntakeSequence", intakeCommands.intakeSequence());
+
+    NamedCommands.registerCommand("rev Start", shooterCommands.revStartCommand().withName("rev Start"));
+
+    NamedCommands.registerCommand("shootFromIntake", shooterCommands.shootFromIntake().withName("shootFromIntake"));
+
+    NamedCommands.registerCommand("rev Stop", shooterCommands.revStopCommand().withName("rev Stop"));
 
     NamedCommands.registerCommand("ShooterToAngle", shooterAngleCommands.setShooterAngleFromDAS().withTimeout(1.5));
 
@@ -247,7 +252,7 @@ public class RobotContainer {
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
 
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS())
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromIntake())
         .onFalse(shooterAngleCommands.feederAngleCommand());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
     new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand())
@@ -343,7 +348,8 @@ public class RobotContainer {
       // NTHelper.setDoubleArray("Measurments/std",
       // NTHelper.getDoubleArrayPose2d(pose));
       double distanceToSpeaker = drivebase.getDistanceToSpeaker(estimatedPose.get().estimatedPose.toPose2d());
-      // Pose estimation is very inacurrate past 4 meters and is throwing off our center piece autos
+      // Pose estimation is very inacurrate past 4 meters and is throwing off our
+      // center piece autos
       boolean skipAdding = RobotState.isAutonomous() && distanceToSpeaker > 4.0;
       if (!skipAdding)
         drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),

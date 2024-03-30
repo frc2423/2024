@@ -40,6 +40,21 @@ public class ShooterCommands {
         return command;
     }
 
+    public Command shootFromIntake() {
+        Command command = Commands.sequence(
+                Commands.parallel(
+                        swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose,
+                                Rotation2d.fromDegrees(180)),
+                        revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS().withTimeout(1.5)),
+                Commands.parallel(
+                        shoot(), intake.intakeIntake()));
+        // Command command = Commands.sequence(shootFromDAS().withTimeout(1),
+        // intake.intakeIntake());
+        command.setName("shootFromIntake");
+        return command;
+
+    }
+
     public Command stopIt() {
         var command = Commands.run(() -> shooter.everythingOffPlease(), shooter);
         command.setName("Stop it");
@@ -153,6 +168,24 @@ public class ShooterCommands {
             shooter.setPidSpeed(as.getVelocity());
             shooter.shooterOn();
         }, shooter).until(() -> shooter.isRevatSpeed()).withTimeout(4);
+    }
+
+    public Command revStartCommand() {
+        Command command = Commands.run(() -> {
+            shooter.setVoltageSpeed(-12);
+            shooter.shooterOn();
+        }, shooter);
+        command.setName("rev Start");
+        return command;
+    }
+
+    public Command revStopCommand() {
+        Command command = Commands.run(() -> {
+            shooter.setVoltageSpeed(0);
+            shooter.shooterOff();
+        }, shooter);
+        command.setName("rev Stop");
+        return command;
     }
 
     public Command shooterCommand() {
