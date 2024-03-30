@@ -81,7 +81,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     public double getOffset(){
         var result = noteVision.getLatestNoteResult();
-        if (result != null) {
+        if (result == null) {
             return 0; //
         }
         double x = getX(result.getBestTarget().getPitch());
