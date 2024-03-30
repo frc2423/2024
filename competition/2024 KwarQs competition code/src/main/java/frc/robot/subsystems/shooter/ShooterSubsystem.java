@@ -34,9 +34,10 @@ public class ShooterSubsystem extends SubsystemBase {
     public double isDoneSec = 4; // for revving not for shooting
     public double isDoneShoot = .5; // sec
 
-    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.15, 0.000135, 0);
-    private PIDController pid1 = new PIDController(.0001, 0, 0.0001);
-    private PIDController pid2 = new PIDController(.0001, 0, 0.0001);
+    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.24, 0.00213, 0);
+    private PIDController pid1 = new PIDController(.0024, 0, 0.0012);
+    private PIDController pid2 = new PIDController(.0024, 0, 0.0012);
+
 
     private boolean isPidMode = false;
     private boolean shooterOn = false;
@@ -50,9 +51,11 @@ public class ShooterSubsystem extends SubsystemBase {
         saveMotorSettings();
         // shooterMotorTwo.setInverted(true);
         // shooterMotorOne.setFollower(shooterMotorTwo);
-        pid1.setTolerance(100, 100);
-        pid2.setTolerance(100, 100);
+        pid1.setTolerance(150, 100);
+        pid2.setTolerance(150, 100);
     }
+
+
 
     private void saveMotorSettings() {
         try {
@@ -71,10 +74,10 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotorTwo.setPercent(-percent);
     }
 
-    private double getMotorSpeedOne() {
+    private double getMotorOneSpeed() {
         return shooterMotorOne.getSpeed();
     }
-    private double getMotorSpeedTwo() {
+    private double getMotorTwoSpeed() {
         return -shooterMotorTwo.getSpeed();
     }
 
@@ -85,12 +88,12 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double calcShooterPID2(double shooterSpeed) {
-        double shooter_PID2 = pid2.calculate(shooterMotorTwo.getSpeed(), shooterSpeed);
+        double shooter_PID2 = pid2.calculate(getMotorTwoSpeed(), shooterSpeed);
         return shooter_PID2;
     }
 
     public double calcShooterPID1(double shooterSpeed) {
-        double shooter_PID1 = pid1.calculate(shooterMotorOne.getSpeed(), shooterSpeed);
+        double shooter_PID1 = pid1.calculate(getMotorOneSpeed(), shooterSpeed);
         return shooter_PID1;
     }
 
@@ -132,30 +135,23 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
-        double speed = -3000;
-        NTHelper.setDouble("/debug/shooterFeedforward", calcShooterFeedFor(speed));
-        NTHelper.setDouble("/debug/shooterPid", calcShooterPID1(speed));
-        NTHelper.setDouble("/debug/shooterSpeed", getMotorSpeedOne());
-        NTHelper.setDouble("/debug/shooterSpeed2", getMotorSpeedTwo());
-        NTHelper.setDouble("/debug/shooterSetpoint", speed);
-        NTHelper.setDouble("/debug/shooterAnglePid", calcShooterPID1(speed));
+        // double speed = -3000;
+        NTHelper.setDouble("/debug/shooterFeedforward", calcShooterFeedFor(shooter1Speed));
+        NTHelper.setDouble("/debug/error1", pid1.getPositionError());
+        NTHelper.setDouble("/debug/errr2", pid2.getPositionError());
+        NTHelper.setDouble("/debug/shooterSpeed", getMotorOneSpeed());
+        NTHelper.setDouble("/debug/shooterSpeed2", getMotorTwoSpeed());
+        NTHelper.setDouble("/debug/shooterSetpoint", shooter1Speed);
+        NTHelper.setDouble("/debug/shooterSetpoint2", shooter2Speed);
 
         if (!shooterOn) {
             setMotorOnePercent(0);
             setMotorTwoPercent(0);
         } else if (isPidMode) {
-            // shooterMotorOne.setPercent(calcShooterPID1(shooter1Speed) +
-            // calcShooterFeedFor(shooter1Speed));
-            // shooterMotorTwo.setPercent(calcShooterPID2(shooter2Speed) +
-            // calcShooterFeedFor(shooter2Speed));
 
-            // shooterMotorOne.setPercent(calcShooterPID1(speed) +
-            // calcShooterFeedFor(speed));
-            // shooterMotorTwo.setPercent(/*calcShooterPID2(speed) +*/
-            // calcShooterFeedFor(-speed));
-
-            setMotorOnePercent(calcShooterFeedFor(speed) + calcShooterPID1(speed));
-            setMotorTwoPercent(calcShooterFeedFor(speed) + calcShooterPID2(speed));
+            setMotorOnePercent((calcShooterFeedFor(shooter1Speed) + calcShooterPID1(shooter1Speed)) / RobotController.getBatteryVoltage());
+            setMotorTwoPercent((calcShooterFeedFor(shooter2Speed) + calcShooterPID2(shooter2Speed)) / RobotController.getBatteryVoltage());
+            
 
         } else {
             setMotorOnePercent(shooter1Speed / RobotController.getBatteryVoltage());
@@ -213,9 +209,12 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean isRevatSpeed() {
+        if(pid1.atSetpoint() && pid2.atSetpoint())
+            return true;
+        else
         return false;
-        // return Math.abs(shooterMotorOne.getSpeed() - shooterSpeed) < 0.2;
     }
+
 
     @Override
     public void initSendable(SendableBuilder builder) {

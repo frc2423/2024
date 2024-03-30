@@ -118,7 +118,7 @@ public class ShooterCommands {
                 Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop())
                         .until(() -> !iintake.isBeamBroken()),
                 Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.25),
-                Commands.run(() -> shooter.moveFeederHandoff()).withTimeout(.1), 
+                Commands.run(() -> shooter.moveFeederHandoff()).withTimeout(.1),
                 Commands.runOnce(() -> shooter.everythingOffPlease()));
         // intake.intakeUp().until(() -> iintake.isAngleGreat()));
         command.setName("Hand Off");
@@ -152,7 +152,7 @@ public class ShooterCommands {
             DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
             shooter.setPidSpeed(as.getVelocity());
             shooter.shooterOn();
-        }, shooter).withTimeout(10);
+        }, shooter).until(() -> shooter.isRevatSpeed()).withTimeout(4);
     }
 
     public Command shooterCommand() {
