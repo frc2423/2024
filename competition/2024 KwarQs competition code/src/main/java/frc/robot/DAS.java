@@ -7,19 +7,19 @@ import java.util.TreeMap;
 public class DAS {
     public class MotorSettings {
         double angle; // in degrees
-        double voltage; // in volts
+        double velocity; // in volts
 
-        public MotorSettings(double angle, double voltage) {
+        public MotorSettings(double angle, double velocity) {
             this.angle = angle;
-            this.voltage = voltage;
+            this.velocity = velocity;
         }
 
         public double getAngle() {
             return angle;
         }
 
-        public double getVoltage() {
-            return voltage;
+        public double getVelocity() {
+            return velocity;
         }
     }
 
@@ -32,18 +32,20 @@ public class DAS {
 
     private void initializeMap() {
         // Example values, replace these with your actual mappings
-        distanceMap.put(1.318, new MotorSettings(323, -12)); // fix values -8
-        distanceMap.put(1.655, new MotorSettings(321.5, -12)); // fix values -8
-        distanceMap.put(2.01, new MotorSettings(317.3, -12));//-8
-        distanceMap.put(2.357, new MotorSettings(313, -12)); // -9
-        distanceMap.put(2.7, new MotorSettings(310, -12));  // -9
-        distanceMap.put(3.01, new MotorSettings(306, -12));  // -12
-        distanceMap.put(3.20, new MotorSettings(305, -12)); // -12
-        distanceMap.put(3.40, new MotorSettings(304, -12)); // -12
+        distanceMap.put(1.318, new MotorSettings(323, -4900)); // fix values -8
+        distanceMap.put(1.655, new MotorSettings(321.5, -4900)); // fix values -8
+        distanceMap.put(2.01, new MotorSettings(317.3, -4900));//-8
+        distanceMap.put(2.357, new MotorSettings(313, -4900)); // -9
+        distanceMap.put(2.7, new MotorSettings(310, -4900));  // -9
+        distanceMap.put(3.01, new MotorSettings(306, -4900));  // -12
+        distanceMap.put(3.20, new MotorSettings(305, -4900)); // -12
+        distanceMap.put(3.40, new MotorSettings(304, -4900)); // -12
+        distanceMap.put(3.7, new MotorSettings(302, -4900)); // -12
     }
 
     public MotorSettings calculateAS(double distance) {
         // Direct match
+
         if (distanceMap.containsKey(distance)) {
             return distanceMap.get(distance);
         }
@@ -68,8 +70,8 @@ public class DAS {
         double ratio = (distance - lowerKey) / (higherKey - lowerKey);
         double interpolatedAngle = lowerSettings.getAngle()
                 + ratio * (higherSettings.getAngle() - lowerSettings.getAngle());
-        double interpolatedVoltage = lowerSettings.getVoltage()
-                + ratio * (higherSettings.getVoltage() - lowerSettings.getVoltage());
+        double interpolatedVoltage = lowerSettings.getVelocity()
+                + ratio * (higherSettings.getVelocity() - lowerSettings.getVelocity());
 
         return new MotorSettings(interpolatedAngle, interpolatedVoltage);
     }

@@ -70,7 +70,7 @@ public class RobotContainer {
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
   VisionSubsystem visionSubsystem = new VisionSubsystem();
-  ShooterAngle shooterAngle = new ShooterAngle(intake);
+  ShooterAngle shooterAngle = new ShooterAngle();
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
@@ -248,7 +248,7 @@ public class RobotContainer {
     // .5).whileTrue(shooterCommands.shooterCommand());
 
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS())
-        .onFalse(shooterAngleCommands.shooterAngleCommand());
+        .onFalse(shooterAngleCommands.feederAngleCommand());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
     new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand())
         .onFalse(shooterCommands.moveFeedAmpCommandEnd());
