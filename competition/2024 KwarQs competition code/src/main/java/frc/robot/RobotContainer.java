@@ -113,6 +113,9 @@ public class RobotContainer {
     // comp single game piece auto
     m_chooser.addOption("Comp Single Note", "Comp Single Note");
 
+    // faster middle 2 peice (emily and ben)
+    m_chooser.addOption("Faster Center 2 Peice", "Faster Center 2 Peice");
+
     // comp 2 piece autos
     m_chooser.addOption("Amp 2 Piece", "Amp 2 Piece");
     m_chooser.addOption("Center 2 Piece", "Center 2 Piece");
@@ -187,6 +190,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("shootFromIntake", shooterCommands.shootFromIntake().withName("shootFromIntake"));
 
     NamedCommands.registerCommand("rev Stop", shooterCommands.revStopCommand().withName("rev Stop"));
+
+    NamedCommands.registerCommand("Intake Slurp", shooterCommands.revStopCommand().withName("Intake Slurp"));
 
     NamedCommands.registerCommand("ShooterToAngle", shooterAngleCommands.setShooterAngleFromDAS().withTimeout(1.5));
 

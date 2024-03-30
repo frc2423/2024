@@ -56,9 +56,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "shootFromIntake"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootFromIntake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Slurp"
+                }
+              }
+            ]
           }
         }
       ]
