@@ -31,7 +31,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private final CANSparkFlex feeder_Motor;
     private final int kFeederMotorPort = 23;
     public double feederOnSec = 1.5;
-    public double isDoneSec = 4; // for revving not for shooting
+    public double isDoneSec = .5; // for revving not for shooting
     public double isDoneShoot = .5; // sec
 
     private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.24, 0.00213, 0);
