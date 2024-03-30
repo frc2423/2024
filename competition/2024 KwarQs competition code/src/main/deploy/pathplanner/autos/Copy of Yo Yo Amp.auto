@@ -8,7 +8,51 @@
         {
           "type": "named",
           "data": {
-            "name": "IntakeDown"
+            "name": "RevvvvvandShoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeSequence"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "lookAtMiddleNote"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "setRotationTargetMiddleNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Retrieve"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HandOff"
           }
         },
         {
@@ -32,21 +76,9 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "lookAtAmpNote"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "setRotationTargetAmpNote"
-                      }
-                    },
-                    {
                       "type": "path",
                       "data": {
-                        "pathName": "Amp Go Forward"
+                        "pathName": "Center to Feeder"
                       }
                     }
                   ]

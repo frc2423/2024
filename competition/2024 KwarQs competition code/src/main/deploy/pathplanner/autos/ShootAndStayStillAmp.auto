@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.7753211512129142,
+      "y": 6.722020177278586
+    },
+    "rotation": 59.47029410006587
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,13 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "IntakeDown"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "distanceShoot"
+            "name": "RevvvvvandShoot"
           }
         }
       ]

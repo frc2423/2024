@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7812469471092803,
-      "y": 6.739121939782341
+      "x": 0.72,
+      "y": 6.7
     },
-    "rotation": 59.03624346792652
+    "rotation": 63.69719737093483
   },
   "command": {
     "type": "sequential",
@@ -14,13 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "IntakeDown"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "distanceShoot"
+            "name": "RevvvvvandShoot"
           }
         },
         {
@@ -30,19 +24,25 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "IntakeDown"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Amp side to center wall"
+                  "pathName": "Amp Retrieve"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeSequence"
+                  "name": "IntakeUntill"
                 }
               }
             ]
@@ -51,7 +51,25 @@
         {
           "type": "named",
           "data": {
-            "name": "HandOff"
+            "name": "IntakeUp"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Amp Retrieve Back"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RevvvvvandShoot"
           }
         }
       ]

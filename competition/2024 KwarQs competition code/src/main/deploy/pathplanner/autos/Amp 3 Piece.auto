@@ -151,48 +151,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "setRotationTargetSpeaker"
-                }
-              },
-              {
-                "type": "deadline",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Near Amp to Center"
-                      }
-                    },
-                    {
-                      "type": "sequential",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "HandOff"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "ShooterToAngle"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "name": "HandOff"
           }
         },
         {
@@ -204,6 +165,6 @@
       ]
     }
   },
-  "folder": "WEEK 4 AUTOS",
+  "folder": null,
   "choreoAuto": false
 }
