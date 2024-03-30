@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.83,
-      "y": 4.13
+      "x": 1.3576779647621067,
+      "y": 5.537862667174266
     },
-    "rotation": -62.24000000000001
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -15,6 +15,18 @@
           "type": "named",
           "data": {
             "name": "RevvvvvandShoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeDown"
           }
         },
         {
@@ -30,40 +42,40 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeSequence"
+                  "name": "IntakeUntill"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Feeder to Far Middle Note"
+                  "pathName": "Retrieve"
                 }
               }
             ]
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "IntakeUp"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Back from Far Middle Note"
+            "pathName": "Back from note 2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "HandOff"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "distanceShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
+            "name": "RevvvvvandShoot"
           }
         }
       ]

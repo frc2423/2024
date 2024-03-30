@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.7636103146671328,
+      "y": 4.368142031576503
+    },
+    "rotation": -53.74616226255519
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -14,7 +20,7 @@
         {
           "type": "named",
           "data": {
-            "name": "distanceShoot"
+            "name": "RevvvvvandShoot"
           }
         },
         {
@@ -34,19 +40,13 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "lookAtAmpNote"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "setRotationTargetAmpNote"
+                        "name": "setRotationTargetCenterNote5"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Amp Go Forward"
+                        "pathName": "Feeder to center wall"
                       }
                     }
                   ]
@@ -56,9 +56,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "HandOff"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "HandOff"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Feeder center wall to shoot"
+                }
+              }
+            ]
           }
         },
         {

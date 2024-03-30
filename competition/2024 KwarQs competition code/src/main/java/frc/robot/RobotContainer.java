@@ -129,6 +129,9 @@ public class RobotContainer {
     m_chooser.addOption("Feeder 3 Piece", "Feeder 3 Piece");
 
     m_chooser.addOption("Taxi Amp Side", "Taxi Amp Side");
+    
+    m_chooser.addOption("Blitz Center Line Auto", "Blitz Center Line Auto");
+    m_chooser.addOption("Blitz Center Note Auto", "Blitz Center Note Auto");
 
 
     // Put the chooser on the dashboard

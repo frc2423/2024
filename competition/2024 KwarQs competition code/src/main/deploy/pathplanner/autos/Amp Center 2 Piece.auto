@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.72,
+      "y": 6.71
+    },
+    "rotation": 65.0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -14,7 +20,7 @@
         {
           "type": "named",
           "data": {
-            "name": "distanceShoot"
+            "name": "RevvvvvandShoot"
           }
         },
         {
@@ -31,6 +37,12 @@
                 "type": "sequential",
                 "data": {
                   "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "setRotationTargetCenterNote1"
+                      }
+                    },
                     {
                       "type": "path",
                       "data": {
@@ -71,6 +83,6 @@
       ]
     }
   },
-  "folder": "WEEK 4 AUTOS",
+  "folder": null,
   "choreoAuto": false
 }
