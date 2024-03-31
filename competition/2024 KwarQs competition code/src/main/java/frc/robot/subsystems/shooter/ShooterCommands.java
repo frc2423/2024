@@ -40,6 +40,14 @@ public class ShooterCommands {
         return command;
     }
 
+    public Command runDAS() {
+        Command command = Commands.parallel(
+                revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS());
+
+        command.setName("runDAS");
+        return command;
+    }
+
     public Command shootFromIntake() {
         Command command = Commands.sequence(
                 Commands.parallel(
@@ -47,9 +55,7 @@ public class ShooterCommands {
                                 Rotation2d.fromDegrees(180)),
                         revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS().withTimeout(1.5)),
                 Commands.parallel(
-                        shoot(), intake.intakeIntake()));
-        // Command command = Commands.sequence(shootFromDAS().withTimeout(1),
-        // intake.intakeIntake());
+                        shoot(), intake.intakeHandoff()));
         command.setName("shootFromIntake");
         return command;
 

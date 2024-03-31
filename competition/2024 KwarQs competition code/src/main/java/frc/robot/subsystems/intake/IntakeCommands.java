@@ -43,6 +43,12 @@ public class IntakeCommands {
         return command;
     }
 
+    public Command intakeHandoff() {
+        Command intakeStart = intakeIntake().until(intake::isBeamUnbroken);
+        intakeStart.setName("Intake to Handoff");
+        return intakeStart;
+    }
+
     public Command intakeAndUp() {
         Command intakeDown = Commands.runOnce(intake::extend);
         Command intakeStart = intakeIntake().until(intake::isBeamBroken);

@@ -113,8 +113,11 @@ public class RobotContainer {
     // comp single game piece auto
     m_chooser.addOption("Comp Single Note", "Comp Single Note");
 
-    // faster middle 2 peice (emily and ben)
-    m_chooser.addOption("Faster Center 2 Peice", "Faster Center 2 Peice");
+    // faster middle 2 Piece (emily and ben)
+    m_chooser.addOption("Faster Amp 2 Piece", "Faster Amp 2 Piece");
+    m_chooser.addOption("Faster Center 2 Piece", "Faster Center 2 Piece");
+    m_chooser.addOption("Faster Feeder 2 Piece", "Faster Feeder 2 Piece");
+    m_chooser.addOption("echarles testing", "echarles testing");
 
     // comp 2 piece autos
     m_chooser.addOption("Amp 2 Piece", "Amp 2 Piece");
@@ -132,6 +135,10 @@ public class RobotContainer {
     m_chooser.addOption("Feeder 3 Piece", "Feeder 3 Piece");
 
     m_chooser.addOption("Taxi Amp Side", "Taxi Amp Side");
+
+    // faster 3 piece autos
+    m_chooser.addOption("Faster Feeder 3 Piece", "Faster Feeder 3 Piece");
+    m_chooser.addOption("Faster Amp 3 Piece", "Faster Amp 3 Piece");
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);

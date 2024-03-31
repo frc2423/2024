@@ -24,6 +24,12 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "rev Start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "IntakeSequence"
                 }
               },
@@ -45,12 +51,6 @@
                     }
                   ]
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "rev Start"
-                }
               }
             ]
           }
@@ -63,12 +63,6 @@
                 "type": "named",
                 "data": {
                   "name": "shootFromIntake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Slurp"
                 }
               }
             ]
