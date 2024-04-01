@@ -3,7 +3,6 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.Constants;
 import frc.robot.DAS;
 import frc.robot.RobotContainer;
@@ -11,10 +10,12 @@ import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.shooter.ShooterFeedSubsystem;
 
 public class ShooterCommands {
 
     private ShooterSubsystem shooter;
+    private ShooterFeedSubsystem shooterFeed;
     private ShooterAngleCommands shooterAngle;
     private IntakeCommands intake;
     private IntakeSubsystem iintake;
@@ -22,13 +23,30 @@ public class ShooterCommands {
     private SwerveCommands swerveCommands;
 
     public ShooterCommands(ShooterSubsystem shooter, ShooterAngleCommands shooterAngle, IntakeCommands intake,
-            IntakeSubsystem iintake, SwerveSubsystem drivebase, SwerveCommands swerveCommands) {
+            IntakeSubsystem iintake, SwerveSubsystem drivebase, SwerveCommands swerveCommands,
+            ShooterFeedSubsystem shooterFeed) {
         this.shooter = shooter;
+        this.shooterFeed = shooterFeed;
         this.intake = intake;
         this.shooterAngle = shooterAngle;
         this.iintake = iintake;
         this.drivebase = drivebase;
         this.swerveCommands = swerveCommands;
+    }
+
+    // new auto command:
+    // feed to shooter
+    // wait until beam unbroken
+    // intake down
+    // continue running green wheels with timeout
+
+    public Command shootInAuto() {
+        Command command = Commands.sequence(
+                this.moveFeedMotor().until(() -> !iintake.isBeamBroken()),
+                intake.intakeDown() // green wheels?
+        );
+        command.setName("shoot in auto");
+        return command;
     }
 
     public Command rev() {
@@ -43,7 +61,6 @@ public class ShooterCommands {
     public Command runDAS() {
         Command command = Commands.parallel(
                 revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS());
-
         command.setName("runDAS");
         return command;
     }
@@ -62,37 +79,44 @@ public class ShooterCommands {
     }
 
     public Command stopIt() {
-        var command = Commands.run(() -> shooter.everythingOffPlease(), shooter);
+        var command = Commands.run(() -> {
+            shooter.shooterOff();
+            shooterFeed.stopFeederMotor();
+        }, shooter);
+
         command.setName("Stop it");
         return command;
     }
 
     public Command shootAmp() {
-        var command = Commands.run(() -> shooter.moveFeederMotorBackwards(), shooter);
+        var command = Commands.run(() -> shooterFeed.moveFeederMotorBackwards(), shooter);
         command.setName("Shooting amp");
         return command;
     }
 
     public Command moveFeedMotor() {
-        var command = Commands.run(() -> shooter.moveFeederMotor(), shooter).withTimeout(.1);
+        var command = Commands.run(() -> shooterFeed.moveFeederMotor(), shooter).withTimeout(.1);
         command.setName("Feeding");
         return command;
     }
 
     public Command moveFeedSlowCommand() {
-        var command = Commands.run(() -> shooter.moveFeederSlow(), shooter).withTimeout(.3);
+        var command = Commands.run(() -> shooterFeed.moveFeederSlow(), shooter).withTimeout(.3);
         command.setName("Feeding SLOW");
         return command;
     }
 
     public Command moveFeedSlowReverseCommand() {
-        var command = Commands.run(() -> shooter.moveFeederslowReverse(), shooter).withTimeout(.1);
+        var command = Commands.run(() -> shooterFeed.moveFeederslowReverse(), shooter).withTimeout(.1);
         command.setName("Feeding SLOW REVERSE");
         return command;
     }
 
     public Command moveFeedAmpCommand() {
-        var command = Commands.run(() -> shooter.moveFeederAmpOpp(), shooter);
+        var command = Commands.run(() -> {
+            shooter.moveFeederAmpOpp();
+            shooterFeed.moveFeederAmpOpp();
+        }, shooter);
         command.setName("Feeding SLOW REVERSE");
         return command;
     }
@@ -100,6 +124,7 @@ public class ShooterCommands {
     public Command moveFeedAmpCommandEnd() {
         var endCommand = Commands.run(() -> {
             shooter.moveFeederAmpOppEnd();
+            shooterFeed.moveFeederAmpOppEnd();
         }, shooter).withTimeout(.35);
         // endCommand.withInterruptBehavior(InterruptionBehavior.)
         endCommand.setName("Feeding END");
@@ -107,14 +132,14 @@ public class ShooterCommands {
     }
 
     public Command moveFeedAmpOppCommand() {
-        var command = Commands.run(() -> shooter.moveFeederAmp(), shooter);
+        var command = Commands.run(() -> shooterFeed.moveFeederAmp(), shooter);
         command.setName("Feeding SLOW");
         return command;
     }
 
     public Command shoot() {
         var command = Commands.run(() -> {
-            shooter.moveFeederMotor();
+            shooterFeed.moveFeederMotor();
         }, shooter).withTimeout(shooter.isDoneShoot);
         command.setName("Shoot");
         return command;
@@ -139,8 +164,11 @@ public class ShooterCommands {
                 Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop())
                         .until(() -> !iintake.isBeamBroken()),
                 Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.25),
-                Commands.run(() -> shooter.moveFeederHandoff()).withTimeout(.1),
-                Commands.runOnce(() -> shooter.everythingOffPlease()));
+                Commands.run(() -> shooterFeed.moveFeederHandoff()).withTimeout(.1),
+                Commands.runOnce(() -> {
+                    shooter.shooterOff();
+                    shooterFeed.feedOff();
+                }));
         // intake.intakeUp().until(() -> iintake.isAngleGreat()));
         command.setName("Hand Off");
         return command;

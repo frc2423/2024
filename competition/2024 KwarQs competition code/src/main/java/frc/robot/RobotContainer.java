@@ -37,6 +37,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterAngle;
 import frc.robot.subsystems.shooter.ShooterAngleCommands;
 import frc.robot.subsystems.shooter.ShooterCommands;
+import frc.robot.subsystems.shooter.ShooterFeedSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -69,13 +70,14 @@ public class RobotContainer {
   XboxController operator = new XboxController(1);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
+  ShooterFeedSubsystem shooterFeed = new ShooterFeedSubsystem();
   VisionSubsystem visionSubsystem = new VisionSubsystem();
   ShooterAngle shooterAngle = new ShooterAngle();
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
-      drivebase, swerveCommands);
+      drivebase, swerveCommands, shooterFeed);
   KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem);
 
   public static final DAS das = new DAS();
@@ -117,7 +119,7 @@ public class RobotContainer {
     m_chooser.addOption("Faster Amp 2 Piece", "Faster Amp 2 Piece");
     m_chooser.addOption("Faster Center 2 Piece", "Faster Center 2 Piece");
     m_chooser.addOption("Faster Feeder 2 Piece", "Faster Feeder 2 Piece");
-    m_chooser.addOption("echarles testing", "echarles testing");
+    m_chooser.addOption("echarles Amp 3 Piece", "echarles Amp 3 Piece");
 
     // comp 2 piece autos
     m_chooser.addOption("Amp 2 Piece", "Amp 2 Piece");
@@ -185,6 +187,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
 
     NamedCommands.registerCommand("Shoot", shooterCommands.shoot());
+
+    NamedCommands.registerCommand("echarles Amp 3 Piece", shooterCommands.shootInAuto());
 
     NamedCommands.registerCommand("distanceShoot", shooterCommands.shootFromDAS());
 
