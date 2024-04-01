@@ -39,7 +39,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "Center Note to Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "distanceShoot"
           }
         }
       ]
