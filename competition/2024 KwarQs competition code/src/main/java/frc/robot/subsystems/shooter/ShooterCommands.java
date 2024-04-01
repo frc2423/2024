@@ -34,17 +34,20 @@ public class ShooterCommands {
         this.swerveCommands = swerveCommands;
     }
 
-    // new auto command:
-    // feed to shooter
-    // wait until beam unbroken
-    // intake down
-    // continue running green wheels with timeout
-
-    public Command shootInAuto() {
+    public Command shootFromIntakeAuto() {
         Command command = Commands.sequence(
-                this.moveFeedMotor().until(() -> !iintake.isBeamBroken()),
-                intake.intakeDown() // green wheels?
-        );
+                // shoot by intaking and running feeder motor. Once beam break no longer detects
+                // game piece move on to next step
+                Commands.parallel(moveFeedMotor(), intake.intakeIntake()).until(() -> !iintake.isBeamBroken()),
+                // Game piece no longer in intake so stop intake and bring it down to prepare
+                // for intaking the next game piece. Continue running feeder motor briefly since
+                // game piece
+                // might still be in the shooter
+                Commands.parallel(
+                        moveFeedMotor(),
+                        Commands.sequence(intake.beltStopCommand(), intake.intakeDown())).withTimeout(.3),
+                // shooting finished, stop feeder motor
+                Commands.runOnce(shooterFeed::stopFeederMotor));
         command.setName("shoot in auto");
         return command;
     }
@@ -60,7 +63,7 @@ public class ShooterCommands {
 
     public Command runDAS() {
         Command command = Commands.parallel(
-                revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS());
+                revStartCommand(), shooterAngle.setShooterAngleFromDAS());
         command.setName("runDAS");
         return command;
     }
@@ -82,32 +85,32 @@ public class ShooterCommands {
         var command = Commands.run(() -> {
             shooter.shooterOff();
             shooterFeed.stopFeederMotor();
-        }, shooter);
+        }, shooter, shooterFeed);
 
         command.setName("Stop it");
         return command;
     }
 
     public Command shootAmp() {
-        var command = Commands.run(() -> shooterFeed.moveFeederMotorBackwards(), shooter);
+        var command = Commands.run(() -> shooterFeed.moveFeederMotorBackwards(), shooterFeed);
         command.setName("Shooting amp");
         return command;
     }
 
     public Command moveFeedMotor() {
-        var command = Commands.run(() -> shooterFeed.moveFeederMotor(), shooter).withTimeout(.1);
+        var command = Commands.run(() -> shooterFeed.moveFeederMotor(), shooterFeed).withTimeout(.1);
         command.setName("Feeding");
         return command;
     }
 
     public Command moveFeedSlowCommand() {
-        var command = Commands.run(() -> shooterFeed.moveFeederSlow(), shooter).withTimeout(.3);
+        var command = Commands.run(() -> shooterFeed.moveFeederSlow(), shooterFeed).withTimeout(.3);
         command.setName("Feeding SLOW");
         return command;
     }
 
     public Command moveFeedSlowReverseCommand() {
-        var command = Commands.run(() -> shooterFeed.moveFeederslowReverse(), shooter).withTimeout(.1);
+        var command = Commands.run(() -> shooterFeed.moveFeederslowReverse(), shooterFeed).withTimeout(.1);
         command.setName("Feeding SLOW REVERSE");
         return command;
     }
@@ -116,7 +119,7 @@ public class ShooterCommands {
         var command = Commands.run(() -> {
             shooter.moveFeederAmpOpp();
             shooterFeed.moveFeederAmpOpp();
-        }, shooter);
+        }, shooter, shooterFeed);
         command.setName("Feeding SLOW REVERSE");
         return command;
     }
@@ -125,14 +128,14 @@ public class ShooterCommands {
         var endCommand = Commands.run(() -> {
             shooter.moveFeederAmpOppEnd();
             shooterFeed.moveFeederAmpOppEnd();
-        }, shooter).withTimeout(.35);
+        }, shooter, shooterFeed).withTimeout(.35);
         // endCommand.withInterruptBehavior(InterruptionBehavior.)
         endCommand.setName("Feeding END");
         return endCommand;
     }
 
     public Command moveFeedAmpOppCommand() {
-        var command = Commands.run(() -> shooterFeed.moveFeederAmp(), shooter);
+        var command = Commands.run(() -> shooterFeed.moveFeederAmp(), shooterFeed);
         command.setName("Feeding SLOW");
         return command;
     }
@@ -140,7 +143,7 @@ public class ShooterCommands {
     public Command shoot() {
         var command = Commands.run(() -> {
             shooterFeed.moveFeederMotor();
-        }, shooter).withTimeout(shooter.isDoneShoot);
+        }, shooterFeed).withTimeout(shooter.isDoneShoot);
         command.setName("Shoot");
         return command;
     }
@@ -154,7 +157,7 @@ public class ShooterCommands {
     }
 
     public Command shooterOnFlop() {
-        var command = Commands.run(() -> shooter.shooterOnFlop()).withTimeout(0.1);
+        var command = Commands.run(() -> shooter.shooterOnFlop(), shooter).withTimeout(0.1);
         command.setName("sPiNiNg");
         return command;
     }

@@ -92,7 +92,7 @@
                                 {
                                   "type": "named",
                                   "data": {
-                                    "name": "// new auto shoot"
+                                    "name": "shootFromIntake"
                                   }
                                 }
                               ]
@@ -162,7 +162,7 @@
                                 {
                                   "type": "named",
                                   "data": {
-                                    "name": null
+                                    "name": "shootFromIntake"
                                   }
                                 }
                               ]

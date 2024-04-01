@@ -188,7 +188,7 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("Shoot", shooterCommands.shoot());
 
-    NamedCommands.registerCommand("echarles Amp 3 Piece", shooterCommands.shootInAuto());
+    // NamedCommands.registerCommand("echarles Amp 3 Piece", shooterCommands.shootFromIntakeAuto());
 
     NamedCommands.registerCommand("distanceShoot", shooterCommands.shootFromDAS());
 
@@ -198,13 +198,16 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("rev Start", shooterCommands.revStartCommand().withName("rev Start"));
 
-    NamedCommands.registerCommand("shootFromIntake", shooterCommands.shootFromIntake().withName("shootFromIntake"));
+    NamedCommands.registerCommand("shootFromIntake", shooterCommands.shootFromIntakeAuto().withName("shootFromIntake"));
 
     NamedCommands.registerCommand("rev Stop", shooterCommands.revStopCommand().withName("rev Stop"));
 
     NamedCommands.registerCommand("Intake Slurp", shooterCommands.revStopCommand().withName("Intake Slurp"));
 
     NamedCommands.registerCommand("ShooterToAngle", shooterAngleCommands.setShooterAngleFromDAS().withTimeout(1.5));
+    
+    NamedCommands.registerCommand("runDAS", shooterCommands.runDAS());
+
 
     // .withTimeout(1.5)
 
