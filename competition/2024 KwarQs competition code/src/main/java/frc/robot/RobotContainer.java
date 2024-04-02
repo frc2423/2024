@@ -75,7 +75,7 @@ public class RobotContainer {
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
-  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands);
+  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands, shooterAngleCommands);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
       drivebase, swerveCommands);
   KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem);
@@ -232,8 +232,8 @@ public class RobotContainer {
     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()); // intake.intakeOuttake
     // .onFalse(new RunCommand(intake::beltStop));
 
-    new JoystickButton(driverXbox, XboxController.Button.kB.value)
-        .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
+    new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
+        //.whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
     // Command intakeOrOuttake = Commands.either(intakeCommands.intakeOuttake(),
@@ -271,8 +271,8 @@ public class RobotContainer {
         .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.ampPose));
     new Trigger(() -> driverXbox.getPOV() == 90)
         .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.sourceMiddlePose));
-    new Trigger(() -> driverXbox.getPOV() == 0)
-        .whileTrue(visionCommands.noteAutoAlignPickUp());
+    // new Trigger(() -> driverXbox.getPOV() == 0)
+    //     .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.handOffCommand()));
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);

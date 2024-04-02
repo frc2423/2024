@@ -83,6 +83,14 @@ public class VisionSubsystem extends SubsystemBase {
         return angle;
     }
 
+    public boolean seesNote() {
+        if (noteResult.hasTargets()){
+            return true;
+        } else{
+            return false;
+        }
+    }
+
     public double getNoteYaw() {
         if (!noteResult.hasTargets()) {
             return 0;
@@ -95,7 +103,18 @@ public class VisionSubsystem extends SubsystemBase {
         if (!noteResult.hasTargets()) {
             return false;
         }
-        return Math.abs(noteResult.getBestTarget().getYaw()) < 1;
+        return Math.abs(noteResult.getBestTarget().getYaw()) < 1.5;
+    }
+
+    public double yawAfterAligned(){
+        if (!noteResult.hasTargets()) {
+            return 0;
+        }
+        if(Math.abs(noteResult.getBestTarget().getYaw()) < .5){
+            return 0;
+        } else {
+            return -getNoteYaw() * .075;
+        }
     }
 
     private double getX(double camx) {
