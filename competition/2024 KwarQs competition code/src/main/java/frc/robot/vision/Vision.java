@@ -54,7 +54,8 @@ import org.photonvision.simulation.VisionTargetSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 public class Vision {
-    private final PhotonCamera camera;
+    private final PhotonCamera aprilTagCamera;
+    private final PhotonCamera noteCamera;
     private final PhotonPoseEstimator photonEstimator;
     private double lastEstTimestamp = 0;
 
@@ -63,9 +64,12 @@ public class Vision {
     private VisionSystemSim visionSim;
 
     public Vision() {
-        camera = new PhotonCamera(kCameraName);
+        aprilTagCamera = new PhotonCamera(kCameraName);
+        noteCamera = new PhotonCamera(knoteCameraName);
+        noteCamera.setPipelineIndex(0);
 
-        photonEstimator = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, kRobotToCam);
+        photonEstimator = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, aprilTagCamera,
+                kRobotToCam);
         photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
         // ----- Simulation
@@ -93,33 +97,31 @@ public class Vision {
             // Create a PhotonCameraSim which will update the linked PhotonCamera's values
             // with visible
             // targets.
-            cameraSim = new PhotonCameraSim(camera, cameraProp);
+            cameraSim = new PhotonCameraSim(aprilTagCamera, cameraProp);
             // Add the simulated camera to view the targets on this simulated field.
             visionSim.addCamera(cameraSim, kRobotToCam);
 
             cameraSim.enableDrawWireframe(true);
         }
     }
-    public Vision(boolean note) {
-        camera = new PhotonCamera(knoteCameraName);
-        camera.setPipelineIndex(0);; //pipline for notes
-                photonEstimator = new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, kRobotToCam);
 
+    public boolean isAprilTagCameraConnected() {
+        return aprilTagCamera.isConnected();
     }
 
-    public boolean isCameraConnected() {
-        return camera.isConnected();
+    public boolean isNoteCameraConnected() {
+        return noteCamera.isConnected();
     }
 
     public PhotonPipelineResult getLatestResult() {
-        var result = camera.getLatestResult();
+        var result = aprilTagCamera.getLatestResult();
         if (result.hasTargets()) {
             var target = result.getBestTarget();
             NTHelper.setDouble("/best target/yaw", target.getYaw());
-            
+
             var pose3d = kTagLayout.getTagPose(target.getFiducialId());
             if (pose3d.isPresent()) {
-                double pitch = Rotation2d.fromDegrees(target.getPitch()).getRadians();                
+                double pitch = Rotation2d.fromDegrees(target.getPitch()).getRadians();
                 double yaw = Rotation2d.fromDegrees(target.getYaw()).getRadians();
                 Transform3d transform = new Transform3d(new Translation3d(), new Rotation3d(0, pitch, yaw));
                 Pose3d newPose = pose3d.get().plus(transform);
@@ -132,18 +134,7 @@ public class Vision {
     }
 
     public PhotonPipelineResult getLatestNoteResult() {
-        var result = camera.getLatestResult();
-        if (result == null) return null;
-        if (result.hasTargets()) {
-            var target = result.getBestTarget();
-            NTHelper.setDouble("/best target/yaw", target.getYaw());
-            
-            return result;
-            
-        } else {
-            NTHelper.setDoubleArray("/best target/pose", new double[] { 0, 0, 100, 0, 0, 0, 0 });
-        }
-        return null;
+        return noteCamera.getLatestResult();
     }
 
     /**
@@ -157,7 +148,7 @@ public class Vision {
      */
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
         var visionEst = photonEstimator.update();
-        double latestTimestamp = camera.getLatestResult().getTimestampSeconds();
+        double latestTimestamp = aprilTagCamera.getLatestResult().getTimestampSeconds();
         boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
         if (Robot.isSimulation()) {
             visionEst.ifPresentOrElse(
@@ -210,8 +201,12 @@ public class Vision {
         return estStdDevs;
     }
 
-    public PhotonCamera getCamera() {
-        return camera;
+    public PhotonCamera getAprilTagCamera() {
+        return aprilTagCamera;
+    }
+
+    public PhotonCamera getNoteCamera() {
+        return noteCamera;
     }
 
     // ----- Simulation

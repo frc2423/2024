@@ -342,8 +342,8 @@ public class RobotContainer {
     var estimatedPose = visionSubsystem.getEstimatedRobotPose();
     var std = visionSubsystem.getStandardDeviations();
     if (estimatedPose.isPresent() && std.isPresent()) {
-      var pose = estimatedPose.get().estimatedPose.toPose2d();
-      NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));
+      // var pose = estimatedPose.get().estimatedPose.toPose2d();
+      // NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));
       // NTHelper.setDoubleArray("Measurments/std",
       // NTHelper.getDoubleArrayPose2d(pose));
       double distanceToSpeaker = drivebase.getDistanceToSpeaker(estimatedPose.get().estimatedPose.toPose2d());
@@ -359,14 +359,14 @@ public class RobotContainer {
     // visionSubsystem.periodic();
     Optional<Transform3d> bestResult = visionSubsystem.getLatestResult();
     if (bestResult != null && bestResult.isPresent()) {
-      Transform3d transform = bestResult.get();
-      NTHelper.setDouble("Measurments/april-tag-x", transform.getX());
-      NTHelper.setDouble("Measurments/april-tag-y", transform.getY());
-      NTHelper.setDouble("Measurments/april-tag-z", transform.getZ());
-      NTHelper.setDouble("Measurments/april-tag-id", visionSubsystem.getLatestId);
+      // Transform3d transform = bestResult.get();
+      // NTHelper.setDouble("Measurments/april-tag-x", transform.getX());
+      // NTHelper.setDouble("Measurments/april-tag-y", transform.getY());
+      // NTHelper.setDouble("Measurments/april-tag-z", transform.getZ());
+      // NTHelper.setDouble("Measurments/april-tag-id", visionSubsystem.getLatestId);
       addVision();
     }
-    visionSubsystem.updateNoteV();
+    // visionSubsystem.updateNoteV();
 
     // NTHelper.setDouble("Measurments/april-tag-rot", bestResult.getRotation());
     // //"idk how much that is in practical suck terms" -travis 3/5/24 6:15 pm

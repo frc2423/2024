@@ -45,4 +45,13 @@ public class VisionCommands {
         return command;
     }
 
+    // public Command noteAutoAlignPickUpHandoff() {
+    //     Command turn = Commands.run(() -> drivebase.turn(-vision.getNoteYaw() * .1), drivebase, vision);
+    //     Command driveAndTurn = Commands.run(() -> drivebase.turnAndGo(.8, -vision.getNoteYaw() * .1), drivebase, vision);
+    //     Command command = Commands.sequence(
+    //             turn.until(() -> vision.isAlignedNote()),
+    //             // intakeCommands.intakeDown(),
+    //             Commands.parallel(driveAndTurn, intakeCommands.intakeIntake())).until(() -> intake.isBeamBroken());
+    //     return command;
+    // }
 }
