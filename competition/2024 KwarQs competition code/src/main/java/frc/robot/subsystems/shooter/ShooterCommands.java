@@ -33,6 +33,7 @@ public class ShooterCommands {
 
     public Command rev() {
         var command = Commands.run(() -> {
+            shooter.setVoltageSpeed(-12);
             shooter.shooterOn();
         }).withTimeout(shooter.isDoneSec);
         command.setName("Revvvvv");
@@ -117,7 +118,7 @@ public class ShooterCommands {
                 Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop())
                         .until(() -> !iintake.isBeamBroken()),
                 Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.25),
-                Commands.run(() -> shooter.moveFeederHandoff()).withTimeout(.1), 
+                Commands.run(() -> shooter.moveFeederHandoff()).withTimeout(.1),
                 Commands.runOnce(() -> shooter.everythingOffPlease()));
         // intake.intakeUp().until(() -> iintake.isAngleGreat()));
         command.setName("Hand Off");
@@ -149,9 +150,9 @@ public class ShooterCommands {
         return Commands.run(() -> {
             double distance = drivebase.getDistanceToSpeaker();
             DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
-            shooter.setSpeed(as.getVoltage());
+            shooter.setPidSpeed(as.getVelocity());
             shooter.shooterOn();
-        }, shooter).withTimeout(0.3);
+        }, shooter).until(() -> shooter.isRevatSpeed()).withTimeout(4);
     }
 
     public Command shooterCommand() {

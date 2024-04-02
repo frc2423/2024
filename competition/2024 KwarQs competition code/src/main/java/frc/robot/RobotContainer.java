@@ -30,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.LED.KwarqsLed;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -71,7 +70,7 @@ public class RobotContainer {
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
   VisionSubsystem visionSubsystem = new VisionSubsystem();
-  ShooterAngle shooterAngle = new ShooterAngle(intake);
+  ShooterAngle shooterAngle = new ShooterAngle();
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
@@ -163,19 +162,19 @@ public class RobotContainer {
     // EXAMPLE: NamedCommands.registerCommand("useless",
     // exampleSubsystem.exampleCommand());
     NamedCommands.registerCommand("RevvvvvandShoot",
-        new LoggedCommand(shooterCommands.shooterCommand().andThen(shooterCommands.stopIt().withTimeout(.1))
-            .withName("RevvvvvandShoot auto")));
+        shooterCommands.shooterCommand().andThen(shooterCommands.stopIt().withTimeout(.1))
+            .withName("RevvvvvandShoot auto"));
 
     NamedCommands.registerCommand("IntakeSlurp",
-        new LoggedCommand(intakeCommands.intakeIntake().withName("IntakeSlurp auto")));
+        intakeCommands.intakeIntake().withName("IntakeSlurp auto"));
     NamedCommands.registerCommand("IntakeDown",
-        new LoggedCommand(intakeCommands.intakeDown().withTimeout(0.01).withName("IntakeDown auto")));
+        intakeCommands.intakeDown().withTimeout(0.01).withName("IntakeDown auto"));
     NamedCommands.registerCommand("IntakeUntill",
-        new LoggedCommand(intakeCommands.intakeIntakeUntil().andThen(intakeCommands.beltStopCommand())
-            .withName("IntakeUntill auto")));
+        intakeCommands.intakeIntakeUntil().andThen(intakeCommands.beltStopCommand())
+            .withName("IntakeUntill auto"));
     NamedCommands.registerCommand("IntakeUp",
-        new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
-    NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
+        intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto"));
+    NamedCommands.registerCommand("stopIt", shooterCommands.stopIt().withName("stopIt auto"));
 
     NamedCommands.registerCommand("Shoot", shooterCommands.shoot());
 
@@ -250,7 +249,7 @@ public class RobotContainer {
     // .5).whileTrue(shooterCommands.shooterCommand());
 
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS())
-        .onFalse(shooterAngleCommands.shooterAngleCommand());
+        .onFalse(shooterAngleCommands.feederAngleCommand());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
     new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand())
         .onFalse(shooterCommands.moveFeedAmpCommandEnd());
