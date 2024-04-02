@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkFlex;
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
@@ -38,14 +39,13 @@ public class ShooterAngle extends SubsystemBase {
   private static final double kAVoltSecondSquaredPerRad = 0;// .1;
   private static final int kMotorPort = 26; // right side
   private MechanismLigament2d pivot;
-  private double pivotMotorPercent = 0;
   private final FlywheelSim pivotSimMotor = new FlywheelSim(DCMotor.getNEO(1), 6.75, 0.025);
 
   ProfiledPIDController shooter_pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? 0.001 : 0.6, 0, 0,
       new TrapezoidProfile.Constraints(450, 600)); // .5, 500, 400
   private double shooterPivotMotorPercent = 0;
   private Rotation2d shooterPivotAngle = new Rotation2d(0);
-  private static double maxShooterPivotAngle = 334;
+  private static double maxShooterPivotAngle = 329; // 334
   private static double minShooterPivotAngle = 140;
   private CANcoder shooterAngle; // figured out? i think
 
@@ -55,8 +55,6 @@ public class ShooterAngle extends SubsystemBase {
   public static double ampAngle = 141; // maybe good
   public static double handOffAngle = 303.5; // maybe good
   public double shooterSlowPivotMotorPercent = 0.02;
-
-  private IntakeSubsystem intake;
 
   public static Rotation2d setpoint = Rotation2d.fromDegrees(feedAngle); // Enter Rot2d value
 
@@ -69,11 +67,12 @@ public class ShooterAngle extends SubsystemBase {
   // 25 encoder 24 26 motors
 
   /** Create a new ArmSubsystem. */
-  public ShooterAngle(IntakeSubsystem intake) {
-    this.intake = intake;
+  public ShooterAngle() {
     shooterAngle = new CANcoder(25);
 
     shooter_Pivot.setInverted(true);
+    shooter_Pivot.setIdleMode(IdleMode.kBrake);
+    shooter_Pivot2.setIdleMode(IdleMode.kBrake);
 
     saveMotorSettings();
 
@@ -107,6 +106,7 @@ public class ShooterAngle extends SubsystemBase {
       Thread.sleep(200);
     } catch (Exception e) {
     }
+
     shooter_Pivot.burnFlash();
   }
 
@@ -134,6 +134,8 @@ public class ShooterAngle extends SubsystemBase {
     if (RobotBase.isSimulation() == false) {
       shooter_Pivot.set(shooterPivotMotorPercent);
       shooter_Pivot2.set(shooterPivotMotorPercent);
+      // shooter_Pivot.set(0);
+      // shooter_Pivot2.set(0);
     } else {
       pivotSimMotor.setInputVoltage(shooterPivotMotorPercent * RobotController.getBatteryVoltage());
       pivotSimMotor.update(.02);
@@ -143,6 +145,8 @@ public class ShooterAngle extends SubsystemBase {
   public void rotateDown() {
     shooter_Pivot.set(shooterSlowPivotMotorPercent);
     shooter_Pivot2.set(shooterSlowPivotMotorPercent);
+    // shooter_Pivot.set(0);
+    // shooter_Pivot2.set(0);
   }
 
   public Rotation2d getShooterAngle() {
@@ -157,6 +161,12 @@ public class ShooterAngle extends SubsystemBase {
     // if(intake.isIntakeDown() == false){
     // shooterPivotMotorPercent = 0;
     // }
+
+    if (shooterPivotAngle.getDegrees() > setpoint.getDegrees() + 5) {
+      shooterPivotMotorPercent = Math.min(shooterPivotMotorPercent, 0);
+    } else if (shooterPivotAngle.getDegrees() < setpoint.getDegrees() -5) {
+      shooterPivotMotorPercent = Math.max(shooterPivotMotorPercent, 0);
+    }
 
     if (shooterPivotAngle.getDegrees() > maxShooterPivotAngle) {
       shooterPivotMotorPercent = Math.min(shooterPivotMotorPercent, 0);
