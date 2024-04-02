@@ -131,6 +131,11 @@ public class RobotContainer {
     m_chooser.addOption("Taxi Amp Side", "Taxi Amp Side");
 
 
+    // Blitz autos
+        m_chooser.addOption("Blitz Center Note Auto", "Blitz Center Note Auto");
+
+        m_chooser.addOption("Blitz Center Line Auto", "Blitz Center Line Auto");
+
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
 
