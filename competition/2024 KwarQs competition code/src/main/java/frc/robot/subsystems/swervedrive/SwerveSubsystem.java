@@ -614,4 +614,13 @@ public class SwerveSubsystem extends SubsystemBase {
     this.drive(desiredSpeeds);
   }
 
+  public void turn(double speed) {
+    ChassisSpeeds speeds = new ChassisSpeeds(0,0,speed);
+    drive(speeds);
+  }
+
+  public void turnAndGo(double x, double turn) {
+    ChassisSpeeds speeds = new ChassisSpeeds(x,0,turn);
+    drive(speeds);
+  }
 }

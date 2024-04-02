@@ -9,18 +9,23 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.NTHelper;
+import frc.robot.subsystems.swervedrive.SwerveCommands;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.vision.Vision;
+import swervelib.SwerveDrive;
 
 public class VisionSubsystem extends SubsystemBase {
     private Vision visionInterface = new Vision();
     private Vision noteVision = new Vision(true);
     public double getLatestId = 0;
     private Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
+
 
     @Override
     public void periodic() {
@@ -81,7 +86,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     public double getOffset(){
         var result = noteVision.getLatestNoteResult();
-        if (result == null) {
+        if (result == null || !result.hasTargets()) {
             return 0; //
         }
         double x = getX(result.getBestTarget().getPitch());
@@ -90,6 +95,23 @@ public class VisionSubsystem extends SubsystemBase {
         double angle = Math.tan(x/y);
         return angle;
     }
+
+    public double getNoteYaw() {
+        var result = noteVision.getLatestNoteResult();
+        if (result == null || !result.hasTargets()) {
+            return 0;
+        }
+        double noteYaw = result.getBestTarget().getYaw();
+        return noteYaw;
+    }
+
+    public boolean isAlignedNote (){
+        var result = noteVision.getLatestNoteResult();
+        if (result == null) {
+            return false; 
+        }
+        return Math.abs(result.getBestTarget().getYaw()) < 1;
+    } 
 
     private double getX(double camx){
         double x = (.163 * Math.pow(camx, 2)) + (1.298 * camx) + 28.7; 

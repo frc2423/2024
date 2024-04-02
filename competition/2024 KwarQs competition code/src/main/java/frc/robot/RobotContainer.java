@@ -75,7 +75,7 @@ public class RobotContainer {
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
-  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake);
+  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
       drivebase, swerveCommands);
   KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem);
@@ -272,7 +272,7 @@ public class RobotContainer {
     new Trigger(() -> driverXbox.getPOV() == 90)
         .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.sourceMiddlePose));
     new Trigger(() -> driverXbox.getPOV() == 0)
-        .whileTrue(visionCommands.noteAutoAlign());
+        .whileTrue(visionCommands.noteAutoAlignPickUp());
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);

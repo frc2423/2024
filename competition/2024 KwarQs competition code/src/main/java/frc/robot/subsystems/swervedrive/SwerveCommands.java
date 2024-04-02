@@ -24,7 +24,7 @@ public class SwerveCommands {
         this.swerve = swerve;
     }
 
-    public double normalizedAngle(double currentAngleDegrees) {
+    public static double normalizedAngle(double currentAngleDegrees) {
         double angle = currentAngleDegrees % 360;
         if (angle < 0) {
             angle += 360;
@@ -32,7 +32,7 @@ public class SwerveCommands {
         return angle;
     }
 
-    public double getNormalizedAngleDiff(double a, double b) {
+    public static double getNormalizedAngleDiff(double a, double b) {
         double diff = Math.abs(a - b);
         if (diff < 180) {
             return diff;
