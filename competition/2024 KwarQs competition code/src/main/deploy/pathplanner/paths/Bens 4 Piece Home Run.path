@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.38,
-        "y": 5.54
+        "x": 2.4499707772596704,
+        "y": 4.180768646843998
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.969826478882628,
-        "y": 5.925683292165444
+        "x": 2.2274648828898216,
+        "y": 4.496961233580098
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Bens 4 Piece Source Note End"
     },
     {
       "anchor": {
-        "x": 2.695898344721082,
-        "y": 6.90939356201109
+        "x": 1.8175856037874687,
+        "y": 5.012238041594486
       },
       "prevControl": {
-        "x": 1.6958983447210807,
-        "y": 6.90939356201109
+        "x": 2.0635131712488803,
+        "y": 4.73117796449573
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Amp Note"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 34.020229498137695,
+    "rotation": -15.708637829015956,
     "rotateFast": false
   },
   "reversed": false,

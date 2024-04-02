@@ -45,7 +45,7 @@ public class ShooterCommands {
                 // might still be in the shooter
                 Commands.parallel(
                         moveFeedMotor(),
-                        Commands.sequence(intake.beltStopCommand(), intake.intakeDown())).withTimeout(.3),
+                        Commands.sequence(intake.beltStopCommand(), intake.intakeDown())).withTimeout(.04),
                 // shooting finished, stop feeder motor
                 Commands.runOnce(shooterFeed::stopFeederMotor));
         command.setName("shoot in auto");
@@ -106,6 +106,12 @@ public class ShooterCommands {
     public Command moveFeedSlowCommand() {
         var command = Commands.run(() -> shooterFeed.moveFeederSlow(), shooterFeed).withTimeout(.3);
         command.setName("Feeding SLOW");
+        return command;
+    }
+
+    public Command moveFeedSlowCommandAuto() {
+        var command = Commands.run(() -> shooterFeed.moveFeederSlow(), shooterFeed).withTimeout(.5);
+        command.setName("Feeding SLOW AUTO");
         return command;
     }
 

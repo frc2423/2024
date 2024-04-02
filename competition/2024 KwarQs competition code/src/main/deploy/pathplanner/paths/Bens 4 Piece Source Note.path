@@ -3,43 +3,49 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.38,
-        "y": 5.54
+        "x": 1.8878506230621577,
+        "y": 5.972526638348569
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.969826478882628,
-        "y": 5.925683292165444
+        "x": 1.665344728692309,
+        "y": 5.105924733960737
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Bens Amp 3 Peice End Pose"
     },
     {
       "anchor": {
-        "x": 2.695898344721082,
-        "y": 6.90939356201109
+        "x": 2.4499707772596704,
+        "y": 4.180768646843998
       },
       "prevControl": {
-        "x": 1.6958983447210807,
-        "y": 6.90939356201109
+        "x": 1.9346939692452838,
+        "y": 4.578937089400569
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Amp Note"
+      "linkedName": "Bens 4 Piece Source Note End"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.6,
+      "rotationDegrees": -8.56543221461054,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 6.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 350.0,
     "maxAngularAcceleration": 535.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 34.020229498137695,
+    "rotation": -7.495857639729857,
     "rotateFast": false
   },
   "reversed": false,
@@ -48,5 +54,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

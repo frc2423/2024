@@ -76,6 +76,12 @@
                       }
                     },
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "shootFromIntake"
+                      }
+                    },
+                    {
                       "type": "parallel",
                       "data": {
                         "commands": [
@@ -93,18 +99,6 @@
                                   "type": "path",
                                   "data": {
                                     "pathName": "Center to Near Amp"
-                                  }
-                                },
-                                {
-                                  "type": "wait",
-                                  "data": {
-                                    "waitTime": 0.75
-                                  }
-                                },
-                                {
-                                  "type": "named",
-                                  "data": {
-                                    "name": "shootFromIntake"
                                   }
                                 }
                               ]

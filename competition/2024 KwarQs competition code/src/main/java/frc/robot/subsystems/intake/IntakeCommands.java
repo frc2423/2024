@@ -103,7 +103,7 @@ public class IntakeCommands {
         Command intakeStart = intakeIntake().until(intake::isBeamBroken);
         Command intakeStop = Commands.runOnce(intake::beltStop);
         Command intakeUp = Commands.runOnce(intake::retract);
-        Command wait = Commands.waitSeconds(1);
+        Command wait = Commands.waitSeconds(0.02);
         ;
         Command bestSequence = Commands.sequence(intakeDown, intakeStart.withTimeout(20), intakeStop, intakeUp, wait);
         bestSequence.setName("Intake Sequence");

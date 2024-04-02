@@ -65,6 +65,14 @@ public class VisionSubsystem extends SubsystemBase {
         return false;
     }
 
+    // public double getoffset(){
+
+    // }
+
+    public double getTurnThing(double offset) {
+        return offset / 16;
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         // This is used to add things to NetworkTables

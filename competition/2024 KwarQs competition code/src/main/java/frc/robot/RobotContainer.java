@@ -120,6 +120,8 @@ public class RobotContainer {
     m_chooser.addOption("Faster Center 2 Piece", "Faster Center 2 Piece");
     m_chooser.addOption("Faster Feeder 2 Piece", "Faster Feeder 2 Piece");
     m_chooser.addOption("echarles Amp 3 Piece", "echarles Amp 3 Piece");
+    m_chooser.addOption("Bens Amp 3 Piece", "Bens Amp 3 Piece");
+
 
     // comp 2 piece autos
     m_chooser.addOption("Amp 2 Piece", "Amp 2 Piece");
@@ -131,6 +133,8 @@ public class RobotContainer {
     m_chooser.addOption("Amp Center Wall 2 Piece", "Amp Center 2 Piece");
     m_chooser.addOption("Feeder Center 2nd from Wall 2 Piece", "Feeder Center 2nd from Wall 2 Piece");
     m_chooser.addOption("Feeder Center Wall 2 Piece", "Feeder Center Wall 2 Piece");
+    m_chooser.addOption("Bens 4 Piece", "Bens 4 Piece");
+
 
     // 3 piece autos
     m_chooser.addOption("Amp 3 Piece", "Amp 3 Piece");
@@ -195,6 +199,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("HandOff", shooterCommands.handOffCommand());
 
     NamedCommands.registerCommand("IntakeSequence", intakeCommands.intakeSequence());
+
+    NamedCommands.registerCommand("Week 0 Shot", intakeCommands.intakeSequence());
+
+    NamedCommands.registerCommand("moveFeedSlowCommand", shooterCommands.moveFeedSlowCommandAuto());
+
 
     NamedCommands.registerCommand("rev Start", shooterCommands.revStartCommand().withName("rev Start"));
 

@@ -76,6 +76,12 @@
                       }
                     },
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "shootFromIntake"
+                      }
+                    },
+                    {
                       "type": "parallel",
                       "data": {
                         "commands": [
@@ -93,18 +99,6 @@
                                   "type": "path",
                                   "data": {
                                     "pathName": "Center to Near Amp"
-                                  }
-                                },
-                                {
-                                  "type": "wait",
-                                  "data": {
-                                    "waitTime": 0.75
-                                  }
-                                },
-                                {
-                                  "type": "named",
-                                  "data": {
-                                    "name": "shootFromIntake"
                                   }
                                 }
                               ]
@@ -184,6 +178,44 @@
                                   }
                                 }
                               ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "IntakeSequence"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "Bens 4 Piece Source Note"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "Bens 4 Piece Home Run"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "shootFromIntake"
                             }
                           }
                         ]

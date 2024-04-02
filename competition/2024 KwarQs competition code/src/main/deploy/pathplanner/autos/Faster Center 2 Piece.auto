@@ -64,6 +64,12 @@
                 "data": {
                   "name": "shootFromIntake"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Slurp"
+                }
               }
             ]
           }
