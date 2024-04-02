@@ -125,6 +125,19 @@ public class ShooterCommands {
         return command;
     }
 
+      public Command handOffCommandAuto() {
+        Command shooterHandOff = shooterAngle.handOffAngleCommand();
+        var command = Commands.sequence(shooterHandOff.withTimeout(0.02),
+                Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop())
+                        .until(() -> !iintake.isBeamBroken()),
+                Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.75),
+                Commands.run(() -> shooter.moveFeederHandoff()).withTimeout(.1),
+                Commands.runOnce(() -> shooter.everythingOffPlease()));
+        // intake.intakeUp().until(() -> iintake.isAngleGreat()));
+        command.setName("Hand off Auto");
+        return command;
+    }
+
     public Command flopAmpCommand() {
 
         var command = Commands.sequence(

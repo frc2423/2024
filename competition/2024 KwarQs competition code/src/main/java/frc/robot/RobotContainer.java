@@ -185,7 +185,9 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("distanceShoot", shooterCommands.shootFromDAS());
 
-    NamedCommands.registerCommand("HandOff", shooterCommands.handOffCommand());
+    NamedCommands.registerCommand("shooterHandOffAngle", shooterAngleCommands.handOffAngleCommand());
+
+    NamedCommands.registerCommand("HandOff", shooterCommands.handOffCommandAuto());
 
     NamedCommands.registerCommand("IntakeSequence", intakeCommands.intakeSequence());
 

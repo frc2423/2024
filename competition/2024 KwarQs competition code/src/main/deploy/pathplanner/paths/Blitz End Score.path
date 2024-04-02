@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.81,
-        "y": 1.83
+        "x": 1.1444205629528006,
+        "y": 1.9088663569623863
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0138449889839813,
-        "y": 2.9617893887407325
+        "x": 1.3482655519367819,
+        "y": 3.040655745703119
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Blitz End Score End Pose"
     },
     {
       "anchor": {
-        "x": 0.81,
-        "y": 4.25
+        "x": 1.14,
+        "y": 3.95
       },
       "prevControl": {
-        "x": 1.0131407020801642,
-        "y": 2.9659696829286397
+        "x": 1.3431407020801642,
+        "y": 2.66596968292864
       },
       "nextControl": null,
       "isLocked": false,
@@ -51,7 +51,7 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": -120.13999999999999,
+    "rotation": -87.26254534954013,
     "velocity": 0
   },
   "useDefaultConstraints": true
