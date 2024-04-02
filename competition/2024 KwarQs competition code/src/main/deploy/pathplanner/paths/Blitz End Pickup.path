@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.81,
-        "y": 4.25
+        "x": 1.1444205629528006,
+        "y": 3.9504634542264014
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9112382104857087,
-        "y": 3.034207737836084
+        "x": 1.2456587734385094,
+        "y": 2.7346711920624855
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Back From Source Center End"
     },
     {
       "anchor": {

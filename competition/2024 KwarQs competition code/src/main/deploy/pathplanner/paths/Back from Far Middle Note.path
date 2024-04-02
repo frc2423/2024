@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.883798934502291,
-        "y": 0.7846260485673593
+        "x": 8.103570318815764,
+        "y": 0.7500879976379238
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9028428716755905,
-        "y": 0.7250850643833279
+        "x": 1.9611830492696514,
+        "y": 0.5667331537708767
       },
       "isLocked": false,
-      "linkedName": "Feeder Far Middle"
+      "linkedName": "Blitz to Center Source End"
     },
     {
       "anchor": {
-        "x": 0.81,
-        "y": 4.25
+        "x": 1.1444205629528006,
+        "y": 3.9504634542264014
       },
       "prevControl": {
-        "x": 1.8605916076903468,
-        "y": 0.9953637263358273
+        "x": 2.0861977155426383,
+        "y": 1.2501466627298743
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Feeder Start"
+      "linkedName": "Back From Source Center End"
     }
   ],
   "rotationTargets": [
@@ -45,7 +45,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -59.40561486138954,
+    "rotation": -54.72757855140158,
     "rotateFast": false
   },
   "reversed": false,

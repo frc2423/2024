@@ -16,21 +16,21 @@
     },
     {
       "anchor": {
-        "x": 7.88,
-        "y": 0.78
+        "x": 8.103570318815764,
+        "y": 0.7500879976379238
       },
       "prevControl": {
-        "x": 3.3110875362448144,
-        "y": 0.8796940246079441
+        "x": 6.186678769296626,
+        "y": 0.7917595530622532
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Blitz to Center Source End"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.25,
       "rotationDegrees": 0.0,
       "rotateFast": false
     }
