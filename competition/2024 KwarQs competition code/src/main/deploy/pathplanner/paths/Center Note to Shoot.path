@@ -3,34 +3,34 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.103570318815764,
-        "y": 0.7500879976379238
+        "x": 7.81,
+        "y": 4.13
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9611830492696514,
-        "y": 0.5667331537708767
+        "x": 5.264904386951632,
+        "y": 4.141568997423709
       },
       "isLocked": false,
-      "linkedName": "Blitz to Center Source End"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.1444205629528006,
-        "y": 3.9504634542264014
+        "x": 3.98,
+        "y": 5.0
       },
       "prevControl": {
-        "x": 2.0861977155426383,
-        "y": 1.2501466627298743
+        "x": 4.644635146413151,
+        "y": 5.005515439602308
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Back From Source Center End"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.35,
       "rotationDegrees": 0.0,
       "rotateFast": false
     }
@@ -44,14 +44,14 @@
     "maxAngularAcceleration": 535.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -54.72757855140158,
+    "velocity": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Middle Auto Paths",
+  "folder": null,
   "previewStartingState": {
-    "rotation": 0.0,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true
