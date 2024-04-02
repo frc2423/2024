@@ -39,6 +39,7 @@ import frc.robot.subsystems.shooter.ShooterCommands;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.vision.VisionCommands;
 import frc.robot.subsystems.vision.VisionSubsystem;
 
 import java.util.Optional;
@@ -73,6 +74,7 @@ public class RobotContainer {
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
+  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands, shooterAngleCommands);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
       drivebase, swerveCommands);
   KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem);
@@ -236,8 +238,8 @@ public class RobotContainer {
     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()); // intake.intakeOuttake
     // .onFalse(new RunCommand(intake::beltStop));
 
-    new JoystickButton(driverXbox, XboxController.Button.kB.value)
-        .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
+    new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
+        //.whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
     // Command intakeOrOuttake = Commands.either(intakeCommands.intakeOuttake(),
@@ -275,6 +277,8 @@ public class RobotContainer {
         .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.ampPose));
     new Trigger(() -> driverXbox.getPOV() == 90)
         .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.sourceMiddlePose));
+    // new Trigger(() -> driverXbox.getPOV() == 0)
+    //     .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.handOffCommand()));
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
@@ -344,8 +348,8 @@ public class RobotContainer {
     var estimatedPose = visionSubsystem.getEstimatedRobotPose();
     var std = visionSubsystem.getStandardDeviations();
     if (estimatedPose.isPresent() && std.isPresent()) {
-      var pose = estimatedPose.get().estimatedPose.toPose2d();
-      NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));
+      // var pose = estimatedPose.get().estimatedPose.toPose2d();
+      // NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));
       // NTHelper.setDoubleArray("Measurments/std",
       // NTHelper.getDoubleArrayPose2d(pose));
       double distanceToSpeaker = drivebase.getDistanceToSpeaker(estimatedPose.get().estimatedPose.toPose2d());
@@ -361,13 +365,15 @@ public class RobotContainer {
     // visionSubsystem.periodic();
     Optional<Transform3d> bestResult = visionSubsystem.getLatestResult();
     if (bestResult != null && bestResult.isPresent()) {
-      Transform3d transform = bestResult.get();
-      NTHelper.setDouble("Measurments/april-tag-x", transform.getX());
-      NTHelper.setDouble("Measurments/april-tag-y", transform.getY());
-      NTHelper.setDouble("Measurments/april-tag-z", transform.getZ());
-      NTHelper.setDouble("Measurments/april-tag-id", visionSubsystem.getLatestId);
+      // Transform3d transform = bestResult.get();
+      // NTHelper.setDouble("Measurments/april-tag-x", transform.getX());
+      // NTHelper.setDouble("Measurments/april-tag-y", transform.getY());
+      // NTHelper.setDouble("Measurments/april-tag-z", transform.getZ());
+      // NTHelper.setDouble("Measurments/april-tag-id", visionSubsystem.getLatestId);
       addVision();
     }
+    // visionSubsystem.updateNoteV();
+
     // NTHelper.setDouble("Measurments/april-tag-rot", bestResult.getRotation());
     // //"idk how much that is in practical suck terms" -travis 3/5/24 6:15 pm
   }

@@ -77,11 +77,11 @@ public class ShooterAngleCommands {
           boolean isAtSetpoint = false;
           return isStopped || isAtSetpoint;
         }),
-        Commands.run(() -> {shooterAngle.rotateDown();
+        Commands.run(() -> {
+          shooterAngle.rotateDown();
         }).until(() -> {
           return smallVelocity > shooterAngle.getVelocity();
-        })
-    );
+        }));
     command.setName("Move Shooter Down / Reset Boom");
     return command;
   }
