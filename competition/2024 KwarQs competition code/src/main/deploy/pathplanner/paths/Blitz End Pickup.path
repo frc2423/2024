@@ -16,22 +16,22 @@
     },
     {
       "anchor": {
-        "x": 0.81,
-        "y": 1.83
+        "x": 1.1444205629528006,
+        "y": 1.9088663569623863
       },
       "prevControl": {
-        "x": 0.9563882887322872,
-        "y": 2.7888902277748127
+        "x": 1.0798029014032335,
+        "y": 2.85744411717069
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Blitz End Score End Pose"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.4,
-      "rotationDegrees": -121.32999999999998,
+      "rotationDegrees": -84.73375707324256,
       "rotateFast": false
     }
   ],
@@ -39,13 +39,13 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 350.0,
     "maxAngularAcceleration": 535.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -120.11000000000001,
+    "rotation": -85.69835805947845,
     "rotateFast": false
   },
   "reversed": false,
@@ -54,5 +54,5 @@
     "rotation": -59.360000000000014,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

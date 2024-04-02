@@ -20,20 +20,39 @@
                 "data": {
                   "pathName": "Blitz to Center Line"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooterHandOffAngle"
+                }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Back from Far Middle Note"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Back from Far Middle Note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "HandOff"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "RevvvvvandShoot"
+            "name": "distanceShoot"
           }
         },
         {
@@ -64,7 +83,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RevvvvvandShoot"
+            "name": "distanceShoot"
           }
         }
       ]
