@@ -30,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.LED.KwarqsLed;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -166,19 +165,19 @@ public class RobotContainer {
     // EXAMPLE: NamedCommands.registerCommand("useless",
     // exampleSubsystem.exampleCommand());
     NamedCommands.registerCommand("RevvvvvandShoot",
-        new LoggedCommand(shooterCommands.shooterCommand().andThen(shooterCommands.stopIt().withTimeout(.1))
-            .withName("RevvvvvandShoot auto")));
+        shooterCommands.shooterCommand().andThen(shooterCommands.stopIt().withTimeout(.1))
+            .withName("RevvvvvandShoot auto"));
 
     NamedCommands.registerCommand("IntakeSlurp",
-        new LoggedCommand(intakeCommands.intakeIntake().withName("IntakeSlurp auto")));
+        intakeCommands.intakeIntake().withName("IntakeSlurp auto"));
     NamedCommands.registerCommand("IntakeDown",
-        new LoggedCommand(intakeCommands.intakeDown().withTimeout(0.01).withName("IntakeDown auto")));
+        intakeCommands.intakeDown().withTimeout(0.01).withName("IntakeDown auto"));
     NamedCommands.registerCommand("IntakeUntill",
-        new LoggedCommand(intakeCommands.intakeIntakeUntil().andThen(intakeCommands.beltStopCommand())
-            .withName("IntakeUntill auto")));
+        intakeCommands.intakeIntakeUntil().andThen(intakeCommands.beltStopCommand())
+            .withName("IntakeUntill auto"));
     NamedCommands.registerCommand("IntakeUp",
-        new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
-    NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
+        intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto"));
+    NamedCommands.registerCommand("stopIt", shooterCommands.stopIt().withName("stopIt auto"));
 
     NamedCommands.registerCommand("Shoot", shooterCommands.shoot());
 
