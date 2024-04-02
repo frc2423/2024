@@ -1,6 +1,7 @@
 package frc.robot.subsystems.LED;
 
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -10,8 +11,10 @@ import frc.robot.subsystems.vision.VisionSubsystem;
 public class KwarqsLed extends SubsystemBase {
     private final LedController ledController = new LedController(60); // 36 on each side
     private final VisionSubsystem visionSubsystem;
+    private final XboxController xboxController;
 
-    public KwarqsLed(VisionSubsystem visionSubsystem) {
+    public KwarqsLed(VisionSubsystem visionSubsystem, XboxController xboxController) {
+        this.xboxController = xboxController;
         this.visionSubsystem = visionSubsystem;
         ledController.add("yellow", new Yellow());
         ledController.add("orange", new Orange());
@@ -96,7 +99,13 @@ public class KwarqsLed extends SubsystemBase {
                                                                  // confused as to who amory is I
             // am too)
             if (visionSubsystem.seesNote()) {
-                ledController.set("orange");
+                if (xboxController.getBButton()){
+                    ledController.set("rainbow");
+                }
+                else {
+                    ledController.set("orange");
+
+                }
             } else if (isGroundPickUp()) {
                 ledController.set("green");
             } else if (isSourceFeed()) {

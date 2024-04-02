@@ -77,7 +77,7 @@ public class RobotContainer {
   VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands, shooterAngleCommands);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
       drivebase, swerveCommands);
-  KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem);
+  KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem, driverXbox);
 
   public static final DAS das = new DAS();
 
