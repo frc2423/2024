@@ -8,7 +8,7 @@ public class Orange implements Led {
 
     public void run(AddressableLEDBuffer buffer, int length) {
         for (var i = 0; i < buffer.getLength(); i++) {
-            buffer.setRGB(i, 255, 140, 00);
+            buffer.setRGB(i, 255, 20, 00);
         }
 
     }
