@@ -24,6 +24,12 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "rev Start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "IntakeSequence"
                 }
               },
@@ -54,56 +60,18 @@
           "data": {
             "commands": [
               {
-                "type": "parallel",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Center Forward"
-                      }
-                    },
-                    {
-                      "type": "sequential",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "HandOff"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "IntakeDown"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "ShooterToAngle"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
+                  "name": "shootFromIntake"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "setRotationTargetSpeaker"
+                  "name": "Intake Slurp"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "distanceShoot"
           }
         }
       ]

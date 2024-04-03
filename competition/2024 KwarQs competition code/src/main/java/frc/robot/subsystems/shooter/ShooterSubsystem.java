@@ -10,9 +10,6 @@
 
 package frc.robot.subsystems.shooter;
 
-import com.revrobotics.CANSparkLowLevel;
-import com.revrobotics.CANSparkFlex;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -25,12 +22,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private NeoMotor shooterMotorOne;
     private NeoMotor shooterMotorTwo;
-    private double feederVoltage = -RobotController.getBatteryVoltage() / 3;
-    private double feederFlopVoltage = 1;
-    private double feederFlopVoltageBackwards = 4;
-    private final CANSparkFlex feeder_Motor;
-    private final int kFeederMotorPort = 23;
-    public double feederOnSec = 1.5;
     public double isDoneSec = .5; // for revving not for shooting
     public double isDoneShoot = .5; // sec
 
@@ -38,33 +29,28 @@ public class ShooterSubsystem extends SubsystemBase {
     private PIDController pid1 = new PIDController(.0024, 0, 0.0012);
     private PIDController pid2 = new PIDController(.0024, 0, 0.0012);
 
-
     private boolean isPidMode = false;
     private boolean shooterOn = false;
     private double shooter1Speed = -4.3;
     private double shooter2Speed = -4.3;
 
     public ShooterSubsystem() {
-        feeder_Motor = new CANSparkFlex(kFeederMotorPort, CANSparkLowLevel.MotorType.kBrushless);
         shooterMotorOne = new NeoMotor(21); // Correct these when we know the numbers
         shooterMotorTwo = new NeoMotor(22);
         saveMotorSettings();
-        // shooterMotorTwo.setInverted(true);
-        // shooterMotorOne.setFollower(shooterMotorTwo);
+
         pid1.setTolerance(150, 100);
         pid2.setTolerance(150, 100);
     }
 
-
-
     private void saveMotorSettings() {
         try {
-          Thread.sleep(200);
+            Thread.sleep(200);
         } catch (Exception e) {
         }
-    
+
         shooterMotorTwo.getSparkMax().burnFlash();
-      }
+    }
 
     private void setMotorOnePercent(double percent) {
         shooterMotorOne.setPercent(percent);
@@ -77,6 +63,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private double getMotorOneSpeed() {
         return shooterMotorOne.getSpeed();
     }
+
     private double getMotorTwoSpeed() {
         return -shooterMotorTwo.getSpeed();
     }
@@ -102,18 +89,13 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void shooterOnFlop() {
-        setVoltageSpeed(feederFlopVoltage);
+        setVoltageSpeed(1);
         shooterOn();
     }
 
     // stops the shooter
     public void shooterOff() {
         shooterOn = false;
-    }
-
-    public void everythingOffPlease() {
-        shooterOff();
-        stopFeederMotor();
     }
 
     // Gets the current speed of the shooter
@@ -149,9 +131,10 @@ public class ShooterSubsystem extends SubsystemBase {
             setMotorTwoPercent(0);
         } else if (isPidMode) {
 
-            setMotorOnePercent((calcShooterFeedFor(shooter1Speed) + calcShooterPID1(shooter1Speed)) / RobotController.getBatteryVoltage());
-            setMotorTwoPercent((calcShooterFeedFor(shooter2Speed) + calcShooterPID2(shooter2Speed)) / RobotController.getBatteryVoltage());
-            
+            setMotorOnePercent((calcShooterFeedFor(shooter1Speed) + calcShooterPID1(shooter1Speed))
+                    / RobotController.getBatteryVoltage());
+            setMotorTwoPercent((calcShooterFeedFor(shooter2Speed) + calcShooterPID2(shooter2Speed))
+                    / RobotController.getBatteryVoltage());
 
         } else {
             setMotorOnePercent(shooter1Speed / RobotController.getBatteryVoltage());
@@ -159,41 +142,14 @@ public class ShooterSubsystem extends SubsystemBase {
         }
     }
 
-    public void moveFeederMotor() {
-        feeder_Motor.setVoltage(feederVoltage);
-    }
-
-    public void moveFeederSlow() {
-        feeder_Motor.setVoltage(-feederFlopVoltage);
-    }
-
-    public void moveFeederslowReverse() {
-        feeder_Motor.setVoltage(0.5);
-    }
-
-    public void moveFeederAmp() {
-        feeder_Motor.setVoltage(5);
-    }
-
-    public void moveFeederHandoff() {
-        feeder_Motor.setVoltage(0.6);
-
-    }
-
     public void moveFeederAmpOpp() {
-        feeder_Motor.setVoltage(-3);
         setVoltageSpeed(1);
         shooterOn();
     }
 
     public void moveFeederAmpOppEnd() {
-        feeder_Motor.setVoltage(0.6);
         setVoltageSpeed(1);
         shooterOn();
-    }
-
-    public void moveFeederMotorBackwards() {
-        feeder_Motor.setVoltage(feederFlopVoltageBackwards);
     }
 
     public double getShooterOneVelocity() {
@@ -204,17 +160,12 @@ public class ShooterSubsystem extends SubsystemBase {
         return shooterMotorTwo.getSpeed();
     }
 
-    public void stopFeederMotor() {
-        feeder_Motor.setVoltage(0);
-    }
-
     public boolean isRevatSpeed() {
-        if(pid1.atSetpoint() && pid2.atSetpoint())
+        if (pid1.atSetpoint() && pid2.atSetpoint())
             return true;
         else
-        return false;
+            return false;
     }
-
 
     @Override
     public void initSendable(SendableBuilder builder) {

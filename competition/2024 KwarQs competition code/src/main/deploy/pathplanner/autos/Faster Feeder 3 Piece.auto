@@ -34,25 +34,37 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "lookAtStageNote"
+                        "name": "lookAtMiddleNote"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "setRotationTargetStageNote"
+                        "name": "setRotationTargetMiddleNote"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Feeder Go Forward"
+                        "pathName": "Retrieve"
                       }
                     }
                   ]
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rev Start"
+                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootFromIntake"
           }
         },
         {
@@ -62,42 +74,29 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "setRotationTargetSpeaker"
+                  "name": "IntakeSequence"
                 }
               },
               {
-                "type": "parallel",
+                "type": "sequential",
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
+                      "type": "named",
                       "data": {
-                        "pathName": "Feeder Forward"
+                        "name": "lookAtFeederNote"
                       }
                     },
                     {
-                      "type": "sequential",
+                      "type": "named",
                       "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "HandOff"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "IntakeDown"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "ShooterToAngle"
-                            }
-                          }
-                        ]
+                        "name": "setRotationTargetFeederNote"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Near Feeder to Feeder"
                       }
                     }
                   ]
@@ -109,7 +108,7 @@
         {
           "type": "named",
           "data": {
-            "name": "distanceShoot"
+            "name": "shootFromIntake"
           }
         }
       ]

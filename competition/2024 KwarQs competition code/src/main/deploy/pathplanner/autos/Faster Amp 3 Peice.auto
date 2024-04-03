@@ -66,26 +66,13 @@
                 }
               },
               {
-                "type": "parallel",
+                "type": "deadline",
                 "data": {
                   "commands": [
                     {
-                      "type": "sequential",
+                      "type": "path",
                       "data": {
-                        "commands": [
-                          {
-                            "type": "path",
-                            "data": {
-                              "pathName": "Center to Near Amp"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "lookAtSpeaker"
-                            }
-                          }
-                        ]
+                        "pathName": "Center to Near Amp"
                       }
                     },
                     {
@@ -174,7 +161,7 @@
                 }
               },
               {
-                "type": "parallel",
+                "type": "deadline",
                 "data": {
                   "commands": [
                     {
@@ -217,6 +204,6 @@
       ]
     }
   },
-  "folder": "WEEK 4 AUTOS",
+  "folder": null,
   "choreoAuto": false
 }
