@@ -134,6 +134,7 @@ public class RobotContainer {
     m_chooser.addOption("Amp Center Wall 2 Piece", "Amp Center 2 Piece");
     m_chooser.addOption("Feeder Center 2nd from Wall 2 Piece", "Feeder Center 2nd from Wall 2 Piece");
     m_chooser.addOption("Feeder Center Wall 2 Piece", "Feeder Center Wall 2 Piece");
+    m_chooser.addOption("Bens 4 Piece2", "Bens 4 Piece2");
     m_chooser.addOption("Bens 4 Piece", "Bens 4 Piece");
 
 
