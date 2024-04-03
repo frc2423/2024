@@ -122,6 +122,7 @@ public class RobotContainer {
     m_chooser.addOption("Faster Feeder 2 Piece", "Faster Feeder 2 Piece");
     m_chooser.addOption("echarles Amp 3 Piece", "echarles Amp 3 Piece");
     m_chooser.addOption("Bens Amp 3 Piece", "Bens Amp 3 Piece");
+    m_chooser.addOption("Bens Feeder 3 Piece", "Bens Feeder 3 Piece");
 
 
     // comp 2 piece autos

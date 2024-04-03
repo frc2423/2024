@@ -92,7 +92,7 @@
                                 {
                                   "type": "path",
                                   "data": {
-                                    "pathName": "Center to Near Amp"
+                                    "pathName": "Center to Near Feeder"
                                   }
                                 },
                                 {
@@ -130,19 +130,19 @@
                                 {
                                   "type": "named",
                                   "data": {
-                                    "name": "lookAtAmpNote"
+                                    "name": "lookAtStageNote"
                                   }
                                 },
                                 {
                                   "type": "named",
                                   "data": {
-                                    "name": "setRotationTargetAmpNote"
+                                    "name": "setRotationTargetStageNote"
                                   }
                                 },
                                 {
                                   "type": "path",
                                   "data": {
-                                    "pathName": "Near Amp to Amp"
+                                    "pathName": "Near Feeder to Feeder"
                                   }
                                 }
                               ]
@@ -168,7 +168,7 @@
                                 {
                                   "type": "path",
                                   "data": {
-                                    "pathName": "Near Amp to Center"
+                                    "pathName": "Near Feeder to Center"
                                   }
                                 },
                                 {
