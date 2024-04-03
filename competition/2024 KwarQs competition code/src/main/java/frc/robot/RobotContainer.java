@@ -36,6 +36,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterAngle;
 import frc.robot.subsystems.shooter.ShooterAngleCommands;
 import frc.robot.subsystems.shooter.ShooterCommands;
+import frc.robot.subsystems.shooter.ShooterFeedSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -69,14 +70,16 @@ public class RobotContainer {
   XboxController operator = new XboxController(1);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
+  ShooterFeedSubsystem shooterFeed = new ShooterFeedSubsystem();
   VisionSubsystem visionSubsystem = new VisionSubsystem();
   ShooterAngle shooterAngle = new ShooterAngle();
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
-  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands, shooterAngleCommands);
+  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands,
+      shooterAngleCommands);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
-      drivebase, swerveCommands);
+      drivebase, swerveCommands, shooterFeed);
   KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem, driverXbox);
 
   public static final DAS das = new DAS();
@@ -110,15 +113,21 @@ public class RobotContainer {
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
-   
+
     // comp single game piece auto
     m_chooser.addOption("Comp Single Note", "Comp Single Note");
-    
+
+    // faster middle 2 Piece (emily and ben)
+    m_chooser.addOption("Faster Amp 2 Piece", "Faster Amp 2 Piece");
+    m_chooser.addOption("Faster Center 2 Piece", "Faster Center 2 Piece");
+    m_chooser.addOption("Faster Feeder 2 Piece", "Faster Feeder 2 Piece");
+    m_chooser.addOption("echarles Amp 3 Piece", "echarles Amp 3 Piece");
+
     // comp 2 piece autos
     m_chooser.addOption("Amp 2 Piece", "Amp 2 Piece");
     m_chooser.addOption("Center 2 Piece", "Center 2 Piece");
     m_chooser.addOption("Feeder 2 Piece", "Feeder 2 Piece");
-    
+
     // center line autos
     m_chooser.addOption("Amp Center Wall 3 Piece", "Amp Center Wall 3 Piece");
     m_chooser.addOption("Amp Center Wall 2 Piece", "Amp Center 2 Piece");
@@ -131,11 +140,14 @@ public class RobotContainer {
 
     m_chooser.addOption("Taxi Amp Side", "Taxi Amp Side");
 
+    // faster 3 piece autos
+    m_chooser.addOption("Faster Feeder 3 Piece", "Faster Feeder 3 Piece");
+    m_chooser.addOption("Faster Amp 3 Piece", "Faster Amp 3 Piece");
 
     // Blitz autos
-        m_chooser.addOption("Blitz Center Note Auto", "Blitz Center Note Auto");
+    m_chooser.addOption("Blitz Center Note Auto", "Blitz Center Note Auto");
 
-        m_chooser.addOption("Blitz Center Line Auto", "Blitz Center Line Auto");
+    m_chooser.addOption("Blitz Center Line Auto", "Blitz Center Line Auto");
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -183,6 +195,9 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("Shoot", shooterCommands.shoot());
 
+    // NamedCommands.registerCommand("echarles Amp 3 Piece",
+    // shooterCommands.shootFromIntakeAuto());
+
     NamedCommands.registerCommand("distanceShoot", shooterCommands.shootFromDAS());
 
     NamedCommands.registerCommand("shooterHandOffAngle", shooterAngleCommands.handOffAngleCommand());
@@ -191,7 +206,17 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("IntakeSequence", intakeCommands.intakeSequence());
 
+    NamedCommands.registerCommand("rev Start", shooterCommands.revStartCommand().withName("rev Start"));
+
+    NamedCommands.registerCommand("shootFromIntake", shooterCommands.shootFromIntakeAuto().withName("shootFromIntake"));
+
+    NamedCommands.registerCommand("rev Stop", shooterCommands.revStopCommand().withName("rev Stop"));
+
+    NamedCommands.registerCommand("Intake Slurp", shooterCommands.revStopCommand().withName("Intake Slurp"));
+
     NamedCommands.registerCommand("ShooterToAngle", shooterAngleCommands.setShooterAngleFromDAS().withTimeout(1.5));
+
+    NamedCommands.registerCommand("runDAS", shooterCommands.runDAS());
 
     // .withTimeout(1.5)
 
@@ -238,8 +263,9 @@ public class RobotContainer {
     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()); // intake.intakeOuttake
     // .onFalse(new RunCommand(intake::beltStop));
 
-    new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
-        //.whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
+    new JoystickButton(driverXbox, XboxController.Button.kB.value)
+        .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
+    // .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
     // Command intakeOrOuttake = Commands.either(intakeCommands.intakeOuttake(),
@@ -255,7 +281,7 @@ public class RobotContainer {
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
 
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromDAS())
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromIntake())
         .onFalse(shooterAngleCommands.feederAngleCommand());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
     new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand())
@@ -278,7 +304,7 @@ public class RobotContainer {
     new Trigger(() -> driverXbox.getPOV() == 90)
         .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.sourceMiddlePose));
     // new Trigger(() -> driverXbox.getPOV() == 0)
-    //     .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.handOffCommand()));
+    // .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.handOffCommand()));
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
@@ -349,11 +375,13 @@ public class RobotContainer {
     var std = visionSubsystem.getStandardDeviations();
     if (estimatedPose.isPresent() && std.isPresent()) {
       // var pose = estimatedPose.get().estimatedPose.toPose2d();
-      // NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));
+      // NTHelper.setDoubleArray("Measurments/estimatedPose",
+      // NTHelper.getDoubleArrayPose2d(pose));
       // NTHelper.setDoubleArray("Measurments/std",
       // NTHelper.getDoubleArrayPose2d(pose));
       double distanceToSpeaker = drivebase.getDistanceToSpeaker(estimatedPose.get().estimatedPose.toPose2d());
-      // Pose estimation is very inacurrate past 4 meters and is throwing off our center piece autos
+      // Pose estimation is very inacurrate past 4 meters and is throwing off our
+      // center piece autos
       boolean skipAdding = RobotState.isAutonomous() && distanceToSpeaker > 4.0;
       if (!skipAdding)
         drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),

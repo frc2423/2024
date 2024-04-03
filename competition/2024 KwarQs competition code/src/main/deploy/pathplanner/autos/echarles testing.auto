@@ -1,10 +1,28 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.7824530941501242,
+      "y": 5.54
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeDown"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "distanceShoot"
+          }
+        },
         {
           "type": "parallel",
           "data": {
@@ -24,65 +42,73 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "named",
-                            "data": {
-                              "name": "IntakeSequence"
-                            }
-                          },
-                          {
                             "type": "path",
                             "data": {
-                              "pathName": "Blitz to Center Line"
+                              "pathName": "Retrieve"
                             }
                           },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "shooterHandOffAngle"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
-                          {
-                            "type": "path",
-                            "data": {
-                              "pathName": "Back from Far Middle Note"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "HandOff"
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "distanceShoot"
-                      }
-                    },
-                    {
-                      "type": "parallel",
-                      "data": {
-                        "commands": [
                           {
                             "type": "named",
                             "data": {
                               "name": "IntakeSequence"
                             }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Shoot"
+                            }
                           },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Intake Slurp"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "runDAS"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Blitz End Pickup"
+                              "pathName": "Center to Near Amp"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "IntakeSequence"
                             }
                           }
                         ]
@@ -93,24 +119,18 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "path",
+                            "type": "named",
                             "data": {
-                              "pathName": "Blitz End Score"
+                              "name": "Shoot"
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "HandOff"
+                              "name": "Intake Slurp"
                             }
                           }
                         ]
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "distanceShoot"
                       }
                     }
                   ]
