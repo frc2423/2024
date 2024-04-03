@@ -191,6 +191,9 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("IntakeSequence", intakeCommands.intakeSequence());
 
+    NamedCommands.registerCommand("revStart",shooterCommands.revStart());
+
+
     NamedCommands.registerCommand("ShooterToAngle", shooterAngleCommands.setShooterAngleFromDAS().withTimeout(1.5));
 
     // .withTimeout(1.5)

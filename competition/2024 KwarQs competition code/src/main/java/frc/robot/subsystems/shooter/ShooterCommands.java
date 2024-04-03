@@ -99,6 +99,15 @@ public class ShooterCommands {
         return command;
     }
 
+public Command revStart() {
+        var command = Commands.sequence(
+                rev());
+        command.setName("revStart");
+        return command;
+    }
+
+
+
     public Command revAndShoot() {
         var command = Commands.sequence(
                 rev(),

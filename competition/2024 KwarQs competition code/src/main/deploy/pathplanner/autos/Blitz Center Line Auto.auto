@@ -6,6 +6,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "revStart"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -75,9 +81,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Blitz End Score"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Blitz End Score"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "HandOff"
+                }
+              }
+            ]
           }
         },
         {
