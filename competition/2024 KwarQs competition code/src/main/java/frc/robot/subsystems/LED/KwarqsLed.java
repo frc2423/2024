@@ -1,6 +1,7 @@
 package frc.robot.subsystems.LED;
 
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -10,10 +11,13 @@ import frc.robot.subsystems.vision.VisionSubsystem;
 public class KwarqsLed extends SubsystemBase {
     private final LedController ledController = new LedController(60); // 36 on each side
     private final VisionSubsystem visionSubsystem;
+    private final XboxController xboxController;
 
-    public KwarqsLed(VisionSubsystem visionSubsystem) {
+    public KwarqsLed(VisionSubsystem visionSubsystem, XboxController xboxController) {
+        this.xboxController = xboxController;
         this.visionSubsystem = visionSubsystem;
         ledController.add("yellow", new Yellow());
+        ledController.add("orange", new Orange());
         ledController.add("purple", new Purple());
         ledController.add("green", new Green());
         ledController.add("rainbow", new Rainbow());
@@ -46,6 +50,16 @@ public class KwarqsLed extends SubsystemBase {
         return command;
     }
 
+    public Command setOrange() {
+        var command = Commands.run(() -> {
+            // System.out.println("SEEES YELLOW!!!");
+            // ledController.set("yellow");
+        });
+        // command.ignoringDisable(?true);
+        command.addRequirements(this);
+        return command;
+    }
+
     public Command setPurple() {
         var command = Commands.run(() -> {
             // ledController.set("purple");
@@ -53,8 +67,6 @@ public class KwarqsLed extends SubsystemBase {
         command.addRequirements(this);
         return command;
     }
-
-    
 
     public Command setGreen() {
         var command = Commands.run(() -> {
@@ -83,18 +95,27 @@ public class KwarqsLed extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (RobotState.isTeleop() && !RobotState.isDisabled()) { // if this is wrong its amory's fault (if you are confused as to who amory is I
-                                     // am too)
-            if (isGroundPickUp()) {
+        if (RobotState.isTeleop() && !RobotState.isDisabled()) { // if this is wrong its amory's fault (if you are
+                                                                 // confused as to who amory is I
+            // am too)
+            if (visionSubsystem.seesNote()) {
+                if (xboxController.getBButton()){
+                    ledController.set("rainbow");
+                }
+                else {
+                    ledController.set("orange");
+
+                }
+            } else if (isGroundPickUp()) {
                 ledController.set("green");
             } else if (isSourceFeed()) {
                 ledController.set("purple");
             } else {
                 ledController.set("dark");
             }
-        } if (RobotState.isAutonomous() && !RobotState.isDisabled())
-             ledController.set("rainbow");
-             else {    
+        } else if (RobotState.isAutonomous() && !RobotState.isDisabled()) {
+            ledController.set("rainbow");
+        } else {
             // System.out.println("disabled");
             if (RobotState.isDisabled() && visionSubsystem.seesAprilTag()) {
                 ledController.set("yellow");
@@ -105,4 +126,5 @@ public class KwarqsLed extends SubsystemBase {
         ledController.run();
 
     }
+
 }

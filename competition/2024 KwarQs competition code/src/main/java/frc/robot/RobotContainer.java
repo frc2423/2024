@@ -30,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.LED.KwarqsLed;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -41,6 +40,7 @@ import frc.robot.subsystems.shooter.ShooterFeedSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.vision.VisionCommands;
 import frc.robot.subsystems.vision.VisionSubsystem;
 
 import java.util.Optional;
@@ -76,9 +76,10 @@ public class RobotContainer {
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
+  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands, shooterAngleCommands);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
       drivebase, swerveCommands, shooterFeed);
-  KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem);
+  KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem, driverXbox);
 
   public static final DAS das = new DAS();
 
@@ -146,6 +147,11 @@ public class RobotContainer {
     m_chooser.addOption("Faster Feeder 3 Piece", "Faster Feeder 3 Piece");
     m_chooser.addOption("Faster Amp 3 Piece", "Faster Amp 3 Piece");
 
+    // Blitz autos
+        m_chooser.addOption("Blitz Center Note Auto", "Blitz Center Note Auto");
+
+        m_chooser.addOption("Blitz Center Line Auto", "Blitz Center Line Auto");
+
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
 
@@ -176,19 +182,19 @@ public class RobotContainer {
     // EXAMPLE: NamedCommands.registerCommand("useless",
     // exampleSubsystem.exampleCommand());
     NamedCommands.registerCommand("RevvvvvandShoot",
-        new LoggedCommand(shooterCommands.shooterCommand().andThen(shooterCommands.stopIt().withTimeout(.1))
-            .withName("RevvvvvandShoot auto")));
+        shooterCommands.shooterCommand().andThen(shooterCommands.stopIt().withTimeout(.1))
+            .withName("RevvvvvandShoot auto"));
 
     NamedCommands.registerCommand("IntakeSlurp",
-        new LoggedCommand(intakeCommands.intakeIntake().withName("IntakeSlurp auto")));
+        intakeCommands.intakeIntake().withName("IntakeSlurp auto"));
     NamedCommands.registerCommand("IntakeDown",
-        new LoggedCommand(intakeCommands.intakeDown().withTimeout(0.01).withName("IntakeDown auto")));
+        intakeCommands.intakeDown().withTimeout(0.01).withName("IntakeDown auto"));
     NamedCommands.registerCommand("IntakeUntill",
-        new LoggedCommand(intakeCommands.intakeIntakeUntil().andThen(intakeCommands.beltStopCommand())
-            .withName("IntakeUntill auto")));
+        intakeCommands.intakeIntakeUntil().andThen(intakeCommands.beltStopCommand())
+            .withName("IntakeUntill auto"));
     NamedCommands.registerCommand("IntakeUp",
-        new LoggedCommand(intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto")));
-    NamedCommands.registerCommand("stopIt", new LoggedCommand(shooterCommands.stopIt().withName("stopIt auto")));
+        intakeCommands.intakeUp().withTimeout(2).withName("IntakeUp auto"));
+    NamedCommands.registerCommand("stopIt", shooterCommands.stopIt().withName("stopIt auto"));
 
     NamedCommands.registerCommand("Shoot", shooterCommands.shoot());
 
@@ -196,7 +202,9 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("distanceShoot", shooterCommands.shootFromDAS());
 
-    NamedCommands.registerCommand("HandOff", shooterCommands.handOffCommand());
+    NamedCommands.registerCommand("shooterHandOffAngle", shooterAngleCommands.handOffAngleCommand());
+
+    NamedCommands.registerCommand("HandOff", shooterCommands.handOffCommandAuto());
 
     NamedCommands.registerCommand("IntakeSequence", intakeCommands.intakeSequence());
 
@@ -263,8 +271,8 @@ public class RobotContainer {
     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()); // intake.intakeOuttake
     // .onFalse(new RunCommand(intake::beltStop));
 
-    new JoystickButton(driverXbox, XboxController.Button.kB.value)
-        .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
+    new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
+        //.whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
     // Command intakeOrOuttake = Commands.either(intakeCommands.intakeOuttake(),
@@ -302,6 +310,8 @@ public class RobotContainer {
         .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.ampPose));
     new Trigger(() -> driverXbox.getPOV() == 90)
         .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.sourceMiddlePose));
+    // new Trigger(() -> driverXbox.getPOV() == 0)
+    //     .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.handOffCommand()));
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
@@ -371,8 +381,8 @@ public class RobotContainer {
     var estimatedPose = visionSubsystem.getEstimatedRobotPose();
     var std = visionSubsystem.getStandardDeviations();
     if (estimatedPose.isPresent() && std.isPresent()) {
-      var pose = estimatedPose.get().estimatedPose.toPose2d();
-      NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));
+      // var pose = estimatedPose.get().estimatedPose.toPose2d();
+      // NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));
       // NTHelper.setDoubleArray("Measurments/std",
       // NTHelper.getDoubleArrayPose2d(pose));
       double distanceToSpeaker = drivebase.getDistanceToSpeaker(estimatedPose.get().estimatedPose.toPose2d());
@@ -389,13 +399,15 @@ public class RobotContainer {
     // visionSubsystem.periodic();
     Optional<Transform3d> bestResult = visionSubsystem.getLatestResult();
     if (bestResult != null && bestResult.isPresent()) {
-      Transform3d transform = bestResult.get();
-      NTHelper.setDouble("Measurments/april-tag-x", transform.getX());
-      NTHelper.setDouble("Measurments/april-tag-y", transform.getY());
-      NTHelper.setDouble("Measurments/april-tag-z", transform.getZ());
-      NTHelper.setDouble("Measurments/april-tag-id", visionSubsystem.getLatestId);
+      // Transform3d transform = bestResult.get();
+      // NTHelper.setDouble("Measurments/april-tag-x", transform.getX());
+      // NTHelper.setDouble("Measurments/april-tag-y", transform.getY());
+      // NTHelper.setDouble("Measurments/april-tag-z", transform.getZ());
+      // NTHelper.setDouble("Measurments/april-tag-id", visionSubsystem.getLatestId);
       addVision();
     }
+    // visionSubsystem.updateNoteV();
+
     // NTHelper.setDouble("Measurments/april-tag-rot", bestResult.getRotation());
     // //"idk how much that is in practical suck terms" -travis 3/5/24 6:15 pm
   }

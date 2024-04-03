@@ -10,7 +10,6 @@ import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import frc.robot.subsystems.shooter.ShooterFeedSubsystem;
 
 public class ShooterCommands {
 
@@ -180,6 +179,22 @@ public class ShooterCommands {
                 }));
         // intake.intakeUp().until(() -> iintake.isAngleGreat()));
         command.setName("Hand Off");
+        return command;
+    }
+
+      public Command handOffCommandAuto() {
+        Command shooterHandOff = shooterAngle.handOffAngleCommand();
+        var command = Commands.sequence(shooterHandOff.withTimeout(0.02),
+                Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop())
+                        .until(() -> !iintake.isBeamBroken()),
+                Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.75),
+                Commands.run(() -> shooterFeed.moveFeederHandoff()).withTimeout(.1),
+                Commands.runOnce(() -> {
+                    shooter.shooterOff();
+                    shooterFeed.feedOff();
+                }));
+        // intake.intakeUp().until(() -> iintake.isAngleGreat()));
+        command.setName("Hand off Auto");
         return command;
     }
 
