@@ -6,103 +6,117 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "revStart"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeSequence"
+                  "name": "revStart"
                 }
               },
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "Blitz to Center Line"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "shooterHandOffAngle"
+                  "commands": [
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "IntakeSequence"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "Blitz to Center Line"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "shooterHandOffAngle"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "Back from Far Middle Note"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "HandOff"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "distanceShoot"
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "IntakeSequence"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "Blitz End Pickup"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "Blitz End Score"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "HandOff"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "distanceShoot"
+                      }
+                    }
+                  ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Back from Far Middle Note"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "HandOff"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "distanceShoot"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeSequence"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Blitz End Pickup"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Blitz End Score"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "HandOff"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "distanceShoot"
           }
         }
       ]
