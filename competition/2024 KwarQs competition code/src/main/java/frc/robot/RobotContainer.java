@@ -106,6 +106,7 @@ public class RobotContainer {
     intake.beltStop();
     SmartDashboard.putData("Intake", intake);
     SmartDashboard.putData("SwerveSubsystem", drivebase);
+    SmartDashboard.putData("ShooterFeed", shooterFeed);
     SmartDashboard.putData("Shooter", shooter);
     SmartDashboard.putData("ShooterAngle", shooterAngle);
     SmartDashboard.putData("VisionSubsystem", visionSubsystem);
@@ -153,6 +154,7 @@ public class RobotContainer {
         m_chooser.addOption("Blitz Center Note Auto", "Blitz Center Note Auto");
 
         m_chooser.addOption("Blitz Center Line Auto", "Blitz Center Line Auto");
+        m_chooser.addOption("Blitz Center Line Auto2", "Blitz Center Line Auto2");
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -302,7 +304,8 @@ public class RobotContainer {
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
 
-    shooter.setDefaultCommand(shooterCommands.stopIt());
+    shooter.setDefaultCommand(shooterCommands.stopShooter());
+    shooterFeed.setDefaultCommand(shooterCommands.stopFeeder());
 
     new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
