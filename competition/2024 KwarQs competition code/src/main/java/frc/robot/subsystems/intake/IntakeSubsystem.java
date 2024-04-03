@@ -36,13 +36,14 @@ public class IntakeSubsystem extends SubsystemBase {
     public static final double kAVoltSecondSquaredPerRad = 0.05;
     public static final int kMotorPort = 20;
 
-    public static final double upPositionDegrees = 194; //290;// .4//0.3 //290
+    public static final double upPositionDegrees = 194; // 290;// .4//0.3 //290
     public static Rotation2d setpoint = Rotation2d.fromDegrees(upPositionDegrees);
     private final CANSparkMax m_Pivot;
-    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : 0.01 ,0, 0, //0.005, 0, .001,
+    ProfiledPIDController pivot_PID = new ProfiledPIDController((Robot.isSimulation()) ? .001 : 0.01, 0, 0, // 0.005, 0,
+                                                                                                            // .001,
             new TrapezoidProfile.Constraints(350, 275));// noice
-    private final ArmFeedforward m_feedforward = new ArmFeedforward( 0.02, 0.025, 0, 0); //0.01,0.03,0,0);
-           //0.004, 0.02, 0.000, 0);
+    private final ArmFeedforward m_feedforward = new ArmFeedforward(0.02, 0.025, 0, 0); // 0.01,0.03,0,0);
+    // 0.004, 0.02, 0.000, 0);
     private CANSparkMax beltMotor;
     private double downPositionDegrees = 90;// .7, 0.755
     private boolean isDown = false;
@@ -54,10 +55,10 @@ public class IntakeSubsystem extends SubsystemBase {
     private Rotation2d pivotAngle = new Rotation2d(0);
     private double pivotMotorPercent = 0;
     private double maxPivotAngle = 194; // degrees
-    private double minPivotAngle = 90; // still 
+    private double minPivotAngle = 90; // still
     private double intakeSpeed = .5;
     public double isDoneSec = .5; // for revving not for shooting
-    public double isDoneShoot = 2; //sec
+    public double isDoneShoot = 2; // sec
 
     private MedianFilter beambreakFilter = new MedianFilter(5);
     private double beamBreakAverage = 0;
@@ -89,11 +90,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private void saveMotorSettings() {
         try {
-          Thread.sleep(200);
+            Thread.sleep(200);
         } catch (Exception e) {
         }
         beltMotor.burnFlash();
-      }
+    }
 
     private double calculatePid(Rotation2d angle) {
         updatePivotAngle();
@@ -113,7 +114,7 @@ public class IntakeSubsystem extends SubsystemBase {
             var encoderRateSign = 1;
             var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() * encoderRateSign;
             pivotAngle = pivotAngle.plus(Rotation2d.fromRadians(pivotRate * 0.02));
-            if (pivotAngle.getDegrees() < 0){
+            if (pivotAngle.getDegrees() < 0) {
                 pivotAngle = Rotation2d.fromDegrees(360 + pivotAngle.getDegrees());
             }
         } else {
@@ -137,7 +138,7 @@ public class IntakeSubsystem extends SubsystemBase {
         setpoint = Rotation2d.fromDegrees(upPositionDegrees);
     }
 
-     public void outOfTheWay() {
+    public void outOfTheWay() {
         // make it up angle
         isDown = false;
         intakeState = "Static";
@@ -173,14 +174,18 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // checks if the beam is broken
     public boolean isBeamBroken() {
-       return beamBreakAverage > .5;
+        return beamBreakAverage > .5;
     }
-    
+
+    public boolean isBeamUnbroken() {
+        return beamBreakAverage > .5;
+    }
+
     public boolean getRawBeamBroken() {
         return !beamBreak.get();
     }
 
-    public boolean isIntakeDown(){
+    public boolean isIntakeDown() {
         return getPivotAngle().getDegrees() < 180;
     }
 
@@ -229,7 +234,6 @@ public class IntakeSubsystem extends SubsystemBase {
         // Move simulation forward dt seconds
         pivotSimMotor.update(.02);
         // var encoderRateSign = 1;
-        
 
         // Get state from simulation devices (telescopeDist and shoulderAngle)
         // var pivotRate = pivotSimMotor.getAngularVelocityRadPerSec() *
@@ -244,14 +248,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
         return pivotAngle;
     }
+
     public boolean isAngleGreat() {
         if (pivotAngle.getDegrees() < 180) {
-        return true;
+            return true;
+        } else
+            return false;
+
     }
-        else return false;
-        
-    }
-    
+
     @Override
     public void initSendable(SendableBuilder builder) {
         // This is used to add things to NetworkTables

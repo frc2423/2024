@@ -34,10 +34,10 @@ public class DAS {
         // Example values, replace these with your actual mappings
         distanceMap.put(1.318, new MotorSettings(323, -4900)); // fix values -8
         distanceMap.put(1.655, new MotorSettings(321.5, -4900)); // fix values -8
-        distanceMap.put(2.01, new MotorSettings(317.3, -4900));//-8
+        distanceMap.put(2.01, new MotorSettings(317.3, -4900));// -8
         distanceMap.put(2.357, new MotorSettings(313, -4900)); // -9
-        distanceMap.put(2.7, new MotorSettings(310, -4900));  // -9
-        distanceMap.put(3.01, new MotorSettings(306, -4900));  // -12
+        distanceMap.put(2.7, new MotorSettings(310, -4900)); // -9
+        distanceMap.put(3.01, new MotorSettings(306, -4900)); // -12
         distanceMap.put(3.20, new MotorSettings(305, -4900)); // -12
         distanceMap.put(3.40, new MotorSettings(304, -4900)); // -12
         distanceMap.put(3.7, new MotorSettings(302, -4900)); // -12
