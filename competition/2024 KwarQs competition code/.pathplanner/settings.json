@@ -17,7 +17,7 @@
     "WEEK 4 AUTOS"
   ],
   "defaultMaxVel": 3.0,
-  "defaultMaxAccel": 6.0,
+  "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 350.0,
   "defaultMaxAngAccel": 535.0,
   "maxModuleSpeed": 4.5

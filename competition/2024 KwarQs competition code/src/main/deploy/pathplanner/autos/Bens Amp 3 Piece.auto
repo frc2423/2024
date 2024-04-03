@@ -76,12 +76,6 @@
                       }
                     },
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "shootFromIntake"
-                      }
-                    },
-                    {
                       "type": "parallel",
                       "data": {
                         "commands": [
@@ -99,6 +93,18 @@
                                   "type": "path",
                                   "data": {
                                     "pathName": "Center to Near Amp"
+                                  }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "lookAtSpeaker"
+                                  }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "shootFromIntake"
                                   }
                                 }
                               ]

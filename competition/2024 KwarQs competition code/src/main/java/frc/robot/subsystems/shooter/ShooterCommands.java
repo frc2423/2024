@@ -81,7 +81,7 @@ public class ShooterCommands {
     }
 
     public Command stopIt() {
-        var command = Commands.run(() -> {
+        var command = Commands.runOnce(() -> {
             shooter.shooterOff();
             shooterFeed.stopFeederMotor();
         }, shooter, shooterFeed);
@@ -169,10 +169,10 @@ public class ShooterCommands {
 
     public Command handOffCommand() {
         var command = Commands.sequence(
-                Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop())
+                Commands.parallel(moveFeedMotor(), intake.intakeIntake(.7), shooterOnFlop())
                         .until(() -> !iintake.isBeamBroken()),
-                Commands.parallel(moveFeedSlowCommand(), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.25),
-                Commands.run(() -> shooterFeed.moveFeederHandoff()).withTimeout(.1),
+                Commands.parallel(moveFeedMotor(), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.5),
+                Commands.run(() -> shooterFeed.moveFeederHandoff()).withTimeout(.15),
                 Commands.runOnce(() -> {
                     shooter.shooterOff();
                     shooterFeed.feedOff();
@@ -261,6 +261,7 @@ public class ShooterCommands {
                                 Rotation2d.fromDegrees(180)),
                         revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS().withTimeout(1.5)),
                 shoot(),
+                stopIt(),
                 shooterAngle.handOffAngleCommand());
 
         command.setName("shootFromDAS");

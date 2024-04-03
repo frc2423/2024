@@ -66,13 +66,26 @@
                 }
               },
               {
-                "type": "deadline",
+                "type": "parallel",
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
+                      "type": "sequential",
                       "data": {
-                        "pathName": "Center to Near Amp"
+                        "commands": [
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "Center to Near Amp"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "lookAtSpeaker"
+                            }
+                          }
+                        ]
                       }
                     },
                     {
@@ -161,7 +174,7 @@
                 }
               },
               {
-                "type": "deadline",
+                "type": "parallel",
                 "data": {
                   "commands": [
                     {

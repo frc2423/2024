@@ -204,7 +204,7 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("shooterHandOffAngle", shooterAngleCommands.handOffAngleCommand());
 
-    NamedCommands.registerCommand("HandOff", shooterCommands.handOffCommandAuto());
+    NamedCommands.registerCommand("HandOff", shooterCommands.intakeSequencePlusHandoffCommand());
 
     NamedCommands.registerCommand("IntakeSequence", intakeCommands.intakeSequence());
 
@@ -231,10 +231,12 @@ public class RobotContainer {
     Command lookAtAmpNote = swerveCommands.lookAtTarget(Constants.autoAlign.ampNote, new Rotation2d());
     Command lookAtMiddleNote = swerveCommands.lookAtTarget(Constants.autoAlign.middleNote, new Rotation2d());
     Command lookAtStageNote = swerveCommands.lookAtTarget(Constants.autoAlign.stageNote, new Rotation2d());
+    Command lookAtSpeaker = swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose, Rotation2d.fromDegrees(180));
 
     NamedCommands.registerCommand("lookAtAmpNote", lookAtAmpNote);
     NamedCommands.registerCommand("lookAtMiddleNote", lookAtMiddleNote);
     NamedCommands.registerCommand("lookAtStageNote", lookAtStageNote);
+    NamedCommands.registerCommand("lookAtSpeaker", lookAtSpeaker);
 
     NamedCommands.registerCommand("setRotationTargetAmpNote",
         Commands.runOnce(() -> drivebase.setAutoRotationTarget(Constants.autoAlign.ampNote)));
