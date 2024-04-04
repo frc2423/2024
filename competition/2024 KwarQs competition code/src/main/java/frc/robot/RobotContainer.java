@@ -158,28 +158,10 @@ public class RobotContainer {
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
 
-    Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> {
-          double y = MathUtil.applyDeadband(
-              -driverXbox.getLeftY(),
-              OperatorConstants.LEFT_Y_DEADBAND);
-          if (PoseTransformUtils.isRedAlliance()) {
-            y *= -1;
-          }
-          return m_yspeedLimiter.calculate(y);
-        },
-        () -> {
-          double x = MathUtil.applyDeadband(
-              -driverXbox.getLeftX(),
-              OperatorConstants.LEFT_X_DEADBAND);
-          if (PoseTransformUtils.isRedAlliance()) {
-            x *= -1;
-          }
-          return m_xspeedLimiter.calculate(x);
-        },
-        () -> -driverXbox.getRightX());
 
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    Command driveFieldOrientedAngularVelocity = getTeleopDriveCommand();
+
+    drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
 
     // auto commands
     // EXAMPLE: NamedCommands.registerCommand("useless",
@@ -266,6 +248,30 @@ public class RobotContainer {
     });
   }
 
+  private Command getTeleopDriveCommand(){
+    Command driveFieldOrientedAngularVelocity = drivebase.driveCommand(
+        () -> {
+          double y = MathUtil.applyDeadband(
+              -driverXbox.getLeftY(),
+              OperatorConstants.LEFT_Y_DEADBAND);
+          if (PoseTransformUtils.isRedAlliance()) {
+            y *= -1;
+          }
+          return m_yspeedLimiter.calculate(y);
+        },
+        () -> {
+          double x = MathUtil.applyDeadband(
+              -driverXbox.getLeftX(),
+              OperatorConstants.LEFT_X_DEADBAND);
+          if (PoseTransformUtils.isRedAlliance()) {
+            x *= -1;
+          }
+          return m_xspeedLimiter.calculate(x);
+        },
+        () -> -driverXbox.getRightX());
+        return driveFieldOrientedAngularVelocity;
+  }
+
   private void configureBindings() {
 
     new JoystickButton(driverXbox, XboxController.Button.kStart.value)
@@ -277,7 +283,7 @@ public class RobotContainer {
     // .onFalse(new RunCommand(intake::beltStop));
 
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
-        .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
+        .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(Commands.parallel(shooterCommands.intakeSequencePlusHandoffCommand(), getTeleopDriveCommand())));
     // .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
@@ -396,7 +402,7 @@ public class RobotContainer {
       double distanceToSpeaker = drivebase.getDistanceToSpeaker(estimatedPose.get().estimatedPose.toPose2d());
       // Pose estimation is very inacurrate past 4 meters and is throwing off our
       // center piece autos
-      boolean skipAdding = RobotState.isAutonomous() && distanceToSpeaker > 4.0;
+      boolean skipAdding = RobotState.isAutonomous() && distanceToSpeaker > 4.0 && RobotState.isEnabled();
       if (!skipAdding)
         drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),
             visionSubsystem.getTimestampSeconds(), std.get());
