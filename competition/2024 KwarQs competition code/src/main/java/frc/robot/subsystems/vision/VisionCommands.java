@@ -40,7 +40,7 @@ public class VisionCommands {
 
     public Command noteAutoAlignPickUp() {
         Command turn = Commands.run(() -> drivebase.turn(-vision.getNoteYaw() * .075), drivebase, vision);
-        Command driveAndTurn = Commands.run(() -> drivebase.turnAndGo(1, vision.yawAfterAligned()), drivebase, vision);
+        Command driveAndTurn = Commands.run(() -> drivebase.turnAndGo(2, vision.yawAfterAligned()), drivebase, vision);
         Command stopMoving =  Commands.runOnce(() -> drivebase.turnAndGo(0, 0), drivebase);
         Command command = Commands.sequence(
                 Commands.parallel(intakeCommands.intakeDown(), shooterAngleCommands.handOffAngleCommand()).withTimeout(.2),
