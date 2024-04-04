@@ -39,8 +39,8 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotorTwo = new NeoMotor(22);
         saveMotorSettings();
 
-        pid1.setTolerance(150, 100);
-        pid2.setTolerance(150, 100);
+        pid1.setTolerance(900);
+        pid2.setTolerance(900);
     }
 
     private void saveMotorSettings() {
