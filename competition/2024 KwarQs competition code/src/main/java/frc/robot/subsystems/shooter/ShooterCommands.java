@@ -56,7 +56,7 @@ public class ShooterCommands {
         var command = Commands.run(() -> {
             shooter.setVoltageSpeed(-12);
             shooter.shooterOn();
-        }).withTimeout(shooter.isDoneSec);
+        }, shooter).withTimeout(shooter.isDoneSec);
         command.setName("Revvvvv");
         return command;
     }
