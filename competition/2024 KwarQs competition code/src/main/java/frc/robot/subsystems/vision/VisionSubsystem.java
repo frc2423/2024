@@ -84,15 +84,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public boolean seesNote() {
-        if (noteResult.hasTargets()){
-            return true;
-        } else{
-            return false;
-        }
+        return noteResult.hasTargets();
     }
 
     public double getNoteYaw() {
-        if (!noteResult.hasTargets()) {
+        if (!seesNote()) {
             return 0;
         }
         double noteYaw = noteResult.getBestTarget().getYaw();
@@ -100,14 +96,14 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public boolean isAlignedNote() {
-        if (!noteResult.hasTargets()) {
+        if (!seesNote()) {
             return false;
         }
-        return Math.abs(noteResult.getBestTarget().getYaw()) < 1.5;
+        return Math.abs(noteResult.getBestTarget().getYaw()) < 4;
     }
 
     public double yawAfterAligned(){
-        if (!noteResult.hasTargets()) {
+        if (!seesNote()) {
             return 0;
         }
         if(Math.abs(noteResult.getBestTarget().getYaw()) < .5){

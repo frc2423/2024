@@ -32,7 +32,7 @@ public class VisionCommands {
     }
 
     public Command noteAutoAlign() {
-        Command turn = Commands.run(() -> drivebase.turn(-vision.getNoteYaw() * .1), drivebase, vision);
+        Command turn = Commands.run(() -> drivebase.turn(-vision.getNoteYaw() * .13 ), drivebase, vision);
         Command command = turn.until(() -> vision.isAlignedNote());
         command.setName("note auto rotate align");
         return command;
