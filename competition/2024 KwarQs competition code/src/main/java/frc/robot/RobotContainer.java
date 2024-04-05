@@ -60,8 +60,8 @@ public class RobotContainer {
   private final SwerveSubsystem drivebase = new SwerveSubsystem(
       new File(Filesystem.getDeployDirectory(), deployDirectory));
 
-  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(5);
-  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(5);
+  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(7);
+  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(7);
 
   // A chooser for autonomous commands
   SendableChooser<String> m_chooser = new SendableChooser<>();
