@@ -95,4 +95,8 @@ public class ShooterAngleCommands {
 
   }
 
+  public boolean isShooterAngleAtGoal() {
+    return shooterAngle.isShooterAtGoal();
+  }
+
 }

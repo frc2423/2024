@@ -73,6 +73,7 @@ public class ShooterCommands {
                 Commands.parallel(
                         swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose,
                                 Rotation2d.fromDegrees(180)),
+                        // revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS().until(shooterAngle::isShooterAngleAtGoal).withTimeout(1.5)),
                         revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS().withTimeout(1.5)),
                 Commands.parallel(
                         shoot(), intake.intakeHandoff()));
