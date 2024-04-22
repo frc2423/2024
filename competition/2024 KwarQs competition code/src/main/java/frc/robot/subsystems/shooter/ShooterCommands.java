@@ -37,15 +37,13 @@ public class ShooterCommands {
         Command command = Commands.sequence(
                 // shoot by intaking and running feeder motor. Once beam break no longer detects
                 // game piece move on to next step
-                Commands.parallel(moveFeedMotorFast().withTimeout(5), intake.intakeIntake(.7))
+                intake.intakeIntake(.7)
                         .until(() -> !iintake.isBeamBroken()),
                 // Game piece no longer in intake so stop intake and bring it down to prepare
                 // for intaking the next game piece. Continue running feeder motor briefly since
                 // game piece
                 // might still be in the shooter
-                Commands.parallel(
-                        moveFeedMotorFast(),
-                        Commands.sequence(intake.beltStopCommand(), intake.intakeDown())).withTimeout(.1),
+                Commands.sequence(intake.beltStopCommand(), intake.intakeDown()).withTimeout(.1),
                 // shooting finished, stop feeder motor
                 Commands.runOnce(shooterFeed::stopFeederMotor));
         command.setName("shoot in auto");
@@ -63,7 +61,7 @@ public class ShooterCommands {
 
     public Command runDAS() {
         Command command = Commands.parallel(
-                revStartCommand(), shooterAngle.setShooterAngleFromDAS());
+                moveFeedMotorFast(), revStartCommand(), shooterAngle.setShooterAngleFromDAS());
         command.setName("runDAS");
         return command;
     }
@@ -73,7 +71,8 @@ public class ShooterCommands {
                 Commands.parallel(
                         swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose,
                                 Rotation2d.fromDegrees(180)),
-                        // revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS().until(shooterAngle::isShooterAngleAtGoal).withTimeout(1.5)),
+                        // revSpeedFromDAS(),
+                        // shooterAngle.setShooterAngleFromDAS().until(shooterAngle::isShooterAngleAtGoal).withTimeout(1.5)),
                         revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS().withTimeout(1.5)),
                 Commands.parallel(
                         shoot(), intake.intakeHandoff()));
