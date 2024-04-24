@@ -295,6 +295,18 @@ public class ShooterCommands {
         return command;
     }
 
+    public Command prepareToShoot() {
+        Command command = Commands.sequence(
+                Commands.parallel(
+                    // need to change speaker location pose to be something else that allows driver to change x, y while angle remains fixed on target
+                        swerveCommands.lookAtTarget(Constants.autoAlign,
+                                Rotation2d.fromDegrees(180)),
+                        revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS().withTimeout(1.5)));
+                
+        command.setName("shootFromDAS");
+        return command;
+    }
+
     public Command intakeSequencePlusHandoffCommand() {
         Command intakeDown = Commands.runOnce(iintake::extend);
         Command intakeStart = intake.intakeIntake().until(iintake::isBeamBroken);

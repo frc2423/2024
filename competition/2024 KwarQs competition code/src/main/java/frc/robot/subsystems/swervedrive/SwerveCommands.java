@@ -86,6 +86,33 @@ public class SwerveCommands {
         return command;
     }
 
+    public Command lookAtTarget(Rotation2d offset) { // to
+        var command = Commands.sequence(
+                Commands.runOnce(currentAngleFilter::reset),
+                Commands.run(() -> {
+                    Pose2d transformedPose = PoseTransformUtils.transformXRedPose(targetAngle);
+                    specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
+                    swerve.actuallyLookAngle(specialAngle);
+                }, swerve).until(() -> {
+                    double desiredAngle = normalizedAngle(specialAngle.getDegrees());
+                    double currentAngle = currentAngleFilter
+                            .calculate(normalizedAngle(swerve.getHeading().getDegrees()));
+                    double angleDiff = getNormalizedAngleDiff(desiredAngle, currentAngle);
+                    return angleDiff < 3;
+                }),
+                Commands.run(() -> {
+                    Pose2d transformedPose = PoseTransformUtils.transformXRedPose(targetAngle);
+                    specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
+                    swerve.actuallyLookAngle(specialAngle);
+                }, swerve).withTimeout(.5),
+                Commands.runOnce(() -> {
+                    swerve.stop();
+                }));
+
+        command.setName("setLookAngle");
+        return command;
+    }
+
     public Command autoAlignShootCommand(Pose2d pose) {
 
         // Since we are using a holonomic drivetrain, the rotation component of this
