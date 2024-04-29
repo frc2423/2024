@@ -2,11 +2,14 @@ package frc.robot.subsystems.vision;
 
 import java.util.Optional;
 
+import javax.print.attribute.standard.Media;
+
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -14,7 +17,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.NTHelper;
 import frc.robot.vision.Vision;
 
 public class VisionSubsystem extends SubsystemBase {
@@ -23,12 +25,22 @@ public class VisionSubsystem extends SubsystemBase {
     private Optional<EstimatedRobotPose> estimatedPose = Optional.empty();
     private PhotonPipelineResult aprilTagResult = visionInterface.getLatestResult();
     private PhotonPipelineResult noteResult = visionInterface.getLatestNoteResult();
+    private MedianFilter noteFilter = new MedianFilter(5);
+    private double noteAverage = 0;
+    private double notePitch = 0;
+    private double noteYaw = 0;
+
 
     @Override
     public void periodic() {
         estimatedPose = visionInterface.getEstimatedGlobalPose();
         aprilTagResult = visionInterface.getLatestResult();
         noteResult = visionInterface.getLatestNoteResult();
+        noteAverage = noteFilter.calculate(seesRawNote() ? 1 : 0);
+        if (noteResult.hasTargets()) {
+            notePitch = noteResult.getBestTarget().getPitch();
+            noteYaw = noteResult.getBestTarget().getYaw();
+        }
     }
 
     public Optional<EstimatedRobotPose> getEstimatedRobotPose() {
@@ -76,41 +88,40 @@ public class VisionSubsystem extends SubsystemBase {
         if (!noteResult.hasTargets()) {
             return 0; //
         }
-        double x = getX(noteResult.getBestTarget().getPitch());
-        double y = getY(noteResult.getBestTarget().getYaw());
+        double x = getX(notePitch);
+        double y = getY(noteYaw);
 
         double angle = Math.tan(x / y);
         return angle;
     }
 
+    public boolean seesRawNote() {
+        return noteResult.hasTargets();
+    }
+
     public boolean seesNote() {
-        if (noteResult.hasTargets()){
-            return true;
-        } else{
-            return false;
-        }
+        return noteAverage > .5;
     }
 
     public double getNoteYaw() {
-        if (!noteResult.hasTargets()) {
+        if (!seesNote()) {
             return 0;
         }
-        double noteYaw = noteResult.getBestTarget().getYaw();
         return noteYaw;
     }
 
     public boolean isAlignedNote() {
-        if (!noteResult.hasTargets()) {
+        if (!seesNote()) {
             return false;
         }
-        return Math.abs(noteResult.getBestTarget().getYaw()) < 1.5;
+        return Math.abs(noteYaw) < 4;
     }
 
     public double yawAfterAligned(){
-        if (!noteResult.hasTargets()) {
+        if (!seesNote()) {
             return 0;
         }
-        if(Math.abs(noteResult.getBestTarget().getYaw()) < .5){
+        if(Math.abs(noteYaw) < .5){
             return 0;
         } else {
             return -getNoteYaw() * .075;

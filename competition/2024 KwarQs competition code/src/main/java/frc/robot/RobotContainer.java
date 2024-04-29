@@ -60,8 +60,8 @@ public class RobotContainer {
   private final SwerveSubsystem drivebase = new SwerveSubsystem(
       new File(Filesystem.getDeployDirectory(), deployDirectory));
 
-  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(5);
-  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(5);
+  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(7);
+  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(7);
 
   // A chooser for autonomous commands
   SendableChooser<String> m_chooser = new SendableChooser<>();
@@ -76,7 +76,8 @@ public class RobotContainer {
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
-  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands, shooterAngleCommands);
+  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands,
+      shooterAngleCommands);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
       drivebase, swerveCommands, shooterFeed);
   KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem, driverXbox);
@@ -118,13 +119,12 @@ public class RobotContainer {
     m_chooser.addOption("Comp Single Note", "Comp Single Note");
 
     // faster middle 2 Piece (emily and ben)
-    m_chooser.addOption("Faster Amp 2 Piece", "Faster Amp 2 Piece");
-    m_chooser.addOption("Faster Center 2 Piece", "Faster Center 2 Piece");
-    m_chooser.addOption("Faster Feeder 2 Piece", "Faster Feeder 2 Piece");
-    m_chooser.addOption("echarles Amp 3 Piece", "echarles Amp 3 Piece");
+    // m_chooser.addOption("Faster Amp 2 Piece", "Faster Amp 2 Piece");
+    // m_chooser.addOption("Faster Center 2 Piece", "Faster Center 2 Piece");
+    // m_chooser.addOption("Faster Feeder 2 Piece", "Faster Feeder 2 Piece");
+    // m_chooser.addOption("echarles Amp 3 Piece", "echarles Amp 3 Piece");
     m_chooser.addOption("Bens Amp 3 Piece", "Bens Amp 3 Piece");
     m_chooser.addOption("Bens Feeder 3 Piece", "Bens Feeder 3 Piece");
-
 
     // comp 2 piece autos
     m_chooser.addOption("Amp 2 Piece", "Amp 2 Piece");
@@ -137,50 +137,31 @@ public class RobotContainer {
     m_chooser.addOption("Feeder Center 2nd from Wall 2 Piece", "Feeder Center 2nd from Wall 2 Piece");
     m_chooser.addOption("Feeder Center Wall 2 Piece", "Feeder Center Wall 2 Piece");
     m_chooser.addOption("Bens 4 Piece2", "Bens 4 Piece2");
-    m_chooser.addOption("Bens 4 Piece", "Bens 4 Piece");
-
+    // m_chooser.addOption("Bens 4 Piece", "Bens 4 Piece");
 
     // 3 piece autos
-    m_chooser.addOption("Amp 3 Piece", "Amp 3 Piece");
-    m_chooser.addOption("Feeder 3 Piece", "Feeder 3 Piece");
+    // m_chooser.addOption("Amp 3 Piece", "Amp 3 Piece");
+    // m_chooser.addOption("Feeder 3 Piece", "Feeder 3 Piece");
 
     m_chooser.addOption("Taxi Amp Side", "Taxi Amp Side");
 
     // faster 3 piece autos
-    m_chooser.addOption("Faster Feeder 3 Piece", "Faster Feeder 3 Piece");
-    m_chooser.addOption("Faster Amp 3 Piece", "Faster Amp 3 Piece");
+    // m_chooser.addOption("Faster Feeder 3 Piece", "Faster Feeder 3 Piece");
+    // m_chooser.addOption("Faster Amp 3 Piece", "Faster Amp 3 Piece");
 
     // Blitz autos
-        m_chooser.addOption("Blitz Center Note Auto", "Blitz Center Note Auto");
+    // m_chooser.addOption("Blitz Center Note Auto", "Blitz Center Note Auto");
 
-        m_chooser.addOption("Blitz Center Line Auto", "Blitz Center Line Auto");
-        m_chooser.addOption("Blitz Center Line Auto2", "Blitz Center Line Auto2");
+    // m_chooser.addOption("Blitz Center Line Auto", "Blitz Center Line Auto");
+    m_chooser.addOption("Blitz Center Line Auto2", "Blitz Center Line Auto2");
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
 
-    Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> {
-          double y = MathUtil.applyDeadband(
-              -driverXbox.getLeftY(),
-              OperatorConstants.LEFT_Y_DEADBAND);
-          if (PoseTransformUtils.isRedAlliance()) {
-            y *= -1;
-          }
-          return m_yspeedLimiter.calculate(y);
-        },
-        () -> {
-          double x = MathUtil.applyDeadband(
-              -driverXbox.getLeftX(),
-              OperatorConstants.LEFT_X_DEADBAND);
-          if (PoseTransformUtils.isRedAlliance()) {
-            x *= -1;
-          }
-          return m_xspeedLimiter.calculate(x);
-        },
-        () -> -driverXbox.getRightX());
 
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    Command driveFieldOrientedAngularVelocity = getTeleopDriveCommand();
+
+    drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
 
     // auto commands
     // EXAMPLE: NamedCommands.registerCommand("useless",
@@ -202,7 +183,8 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("Shoot", shooterCommands.shoot());
 
-    // NamedCommands.registerCommand("echarles Amp 3 Piece", shooterCommands.shootFromIntakeAuto());
+    // NamedCommands.registerCommand("echarles Amp 3 Piece",
+    // shooterCommands.shootFromIntakeAuto());
 
     NamedCommands.registerCommand("distanceShoot", shooterCommands.shootFromDAS());
 
@@ -216,7 +198,6 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("moveFeedSlowCommand", shooterCommands.moveFeedSlowCommandAuto());
 
-
     NamedCommands.registerCommand("rev Start", shooterCommands.revStartCommand().withName("rev Start"));
 
     NamedCommands.registerCommand("shootFromIntake", shooterCommands.shootFromIntakeAuto().withName("shootFromIntake"));
@@ -226,16 +207,16 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake Slurp", shooterCommands.revStopCommand().withName("Intake Slurp"));
 
     NamedCommands.registerCommand("ShooterToAngle", shooterAngleCommands.setShooterAngleFromDAS().withTimeout(1.5));
-    
-    NamedCommands.registerCommand("runDAS", shooterCommands.runDAS());
 
+    NamedCommands.registerCommand("runDAS", shooterCommands.runDAS());
 
     // .withTimeout(1.5)
 
     Command lookAtAmpNote = swerveCommands.lookAtTarget(Constants.autoAlign.ampNote, new Rotation2d());
     Command lookAtMiddleNote = swerveCommands.lookAtTarget(Constants.autoAlign.middleNote, new Rotation2d());
     Command lookAtStageNote = swerveCommands.lookAtTarget(Constants.autoAlign.stageNote, new Rotation2d());
-    Command lookAtSpeaker = swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose, Rotation2d.fromDegrees(180));
+    Command lookAtSpeaker = swerveCommands.lookAtTarget(Constants.autoAlign.speakerLocationPose,
+        Rotation2d.fromDegrees(180));
 
     NamedCommands.registerCommand("lookAtAmpNote", lookAtAmpNote);
     NamedCommands.registerCommand("lookAtMiddleNote", lookAtMiddleNote);
@@ -267,6 +248,30 @@ public class RobotContainer {
     });
   }
 
+  private Command getTeleopDriveCommand(){
+    Command driveFieldOrientedAngularVelocity = drivebase.driveCommand(
+        () -> {
+          double y = MathUtil.applyDeadband(
+              -driverXbox.getLeftY(),
+              OperatorConstants.LEFT_Y_DEADBAND);
+          if (PoseTransformUtils.isRedAlliance()) {
+            y *= -1;
+          }
+          return m_yspeedLimiter.calculate(y);
+        },
+        () -> {
+          double x = MathUtil.applyDeadband(
+              -driverXbox.getLeftX(),
+              OperatorConstants.LEFT_X_DEADBAND);
+          if (PoseTransformUtils.isRedAlliance()) {
+            x *= -1;
+          }
+          return m_xspeedLimiter.calculate(x);
+        },
+        () -> -driverXbox.getRightX());
+        return driveFieldOrientedAngularVelocity;
+  }
+
   private void configureBindings() {
 
     new JoystickButton(driverXbox, XboxController.Button.kStart.value)
@@ -277,8 +282,9 @@ public class RobotContainer {
     new JoystickButton(driverXbox, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake()); // intake.intakeOuttake
     // .onFalse(new RunCommand(intake::beltStop));
 
-    new JoystickButton(driverXbox, XboxController.Button.kB.value).whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
-        //.whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
+    new JoystickButton(driverXbox, XboxController.Button.kB.value)
+        .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(Commands.parallel(shooterCommands.intakeSequencePlusHandoffCommand(), getTeleopDriveCommand())));
+    // .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
     // Command intakeOrOuttake = Commands.either(intakeCommands.intakeOuttake(),
@@ -286,8 +292,7 @@ public class RobotContainer {
 
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
-    new JoystickButton(driverXbox, XboxController.Button.kRightBumper.value)
-        .whileTrue(shooterAngleCommands.moveShooterDown());
+
     new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterUp());
 
@@ -295,7 +300,7 @@ public class RobotContainer {
     // .5).whileTrue(shooterCommands.shooterCommand());
 
     new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromIntake())
-        .onFalse(shooterAngleCommands.feederAngleCommand());
+        .onFalse(shooterAngleCommands.handOffAngleCommand());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
     new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand())
         .onFalse(shooterCommands.moveFeedAmpCommandEnd());
@@ -304,7 +309,10 @@ public class RobotContainer {
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
 
-    shooter.setDefaultCommand(shooterCommands.stopShooter());
+    Command justRev = Commands.either(shooterCommands.rev(), shooterCommands.stopShooter(), () -> driverXbox.getRightBumper());
+
+    
+    shooter.setDefaultCommand(justRev);
     shooterFeed.setDefaultCommand(shooterCommands.stopFeeder());
 
     new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
@@ -318,7 +326,7 @@ public class RobotContainer {
     new Trigger(() -> driverXbox.getPOV() == 90)
         .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.sourceMiddlePose));
     // new Trigger(() -> driverXbox.getPOV() == 0)
-    //     .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.handOffCommand()));
+    // .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.handOffCommand()));
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
@@ -389,13 +397,14 @@ public class RobotContainer {
     var std = visionSubsystem.getStandardDeviations();
     if (estimatedPose.isPresent() && std.isPresent()) {
       // var pose = estimatedPose.get().estimatedPose.toPose2d();
-      // NTHelper.setDoubleArray("Measurments/estimatedPose", NTHelper.getDoubleArrayPose2d(pose));
+      // NTHelper.setDoubleArray("Measurments/estimatedPose",
+      // NTHelper.getDoubleArrayPose2d(pose));
       // NTHelper.setDoubleArray("Measurments/std",
       // NTHelper.getDoubleArrayPose2d(pose));
       double distanceToSpeaker = drivebase.getDistanceToSpeaker(estimatedPose.get().estimatedPose.toPose2d());
       // Pose estimation is very inacurrate past 4 meters and is throwing off our
       // center piece autos
-      boolean skipAdding = RobotState.isAutonomous() && distanceToSpeaker > 4.0;
+      boolean skipAdding = RobotState.isAutonomous() && distanceToSpeaker > 4.0 && RobotState.isEnabled();
       if (!skipAdding)
         drivebase.addCameraInput(estimatedPose.get().estimatedPose.toPose2d(),
             visionSubsystem.getTimestampSeconds(), std.get());
