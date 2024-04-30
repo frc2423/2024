@@ -299,7 +299,7 @@ public class ShooterCommands {
         Command command = Commands.sequence(
                 Commands.parallel(
                     // need to change speaker location pose to be something else that allows driver to change x, y while angle remains fixed on target
-                        swerveCommands.lookAtTarget(Constants.autoAlign,
+                        swerveCommands.lookAtTargetButStillMove(Constants.autoAlign.speakerLocationPose,
                                 Rotation2d.fromDegrees(180)),
                         revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS().withTimeout(1.5)));
                 

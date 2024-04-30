@@ -86,7 +86,7 @@ public class SwerveCommands {
         return command;
     }
 
-    public Command lookAtTarget(Rotation2d offset) { // to
+    public Command lookAtTargetButStillMove(Pose2d targetAngle, Rotation2d offset) { // to
         var command = Commands.sequence(
                 Commands.runOnce(currentAngleFilter::reset),
                 Commands.run(() -> {
@@ -109,7 +109,7 @@ public class SwerveCommands {
                     swerve.stop();
                 }));
 
-        command.setName("setLookAngle");
+        command.setName("setLookAngleButMove");
         return command;
     }
 

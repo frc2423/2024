@@ -357,6 +357,7 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.autoFlopCommand());
     new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(shooterCommands.shootAmp());
 
+    new JoystickButton(driverXbox, XboxController.Button.kX.value).onTrue(shooterCommands.prepareToShoot());
   }
 
   /**
