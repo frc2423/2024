@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
+import com.choreo.lib.Choreo;
+import com.choreo.lib.ChoreoTrajectory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -20,6 +22,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,6 +37,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -153,6 +157,22 @@ public class SwerveSubsystem extends SubsystemBase {
     );
 
     PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
+  }
+
+  public void followChoreoPath(){
+    ChoreoTrajectory traj = Choreo.getTrajectory("Trajectory"); // 
+      Choreo.choreoSwerveCommand(
+        traj, // 
+        this::getPose, // 
+        new PIDController(5.0, 0.0, 0.0), // 
+        new PIDController(5.0, 0.0, 0.0), // 
+        new PIDController(swerveDrive.swerveController.config.headingPIDF.p, swerveDrive.swerveController.config.headingPIDF.i, swerveDrive.swerveController.config.headingPIDF.d), // 
+        this::setChassisSpeeds,
+        () -> {
+        Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+        return alliance.isPresent() && alliance.get() == Alliance.Red;
+      }, // 
+    this );
   }
 
   public void setAutoRotationTarget(Pose2d pose) {
