@@ -19,7 +19,9 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,6 +36,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,6 +48,7 @@ import frc.robot.NTHelper;
 import frc.robot.PoseTransformUtils;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.Drivebase;
+import frc.robot.Constants.OperatorConstants;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -58,6 +62,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private Optional<Pose2d> autoRotationTarget = Optional.empty();
   private Rotation2d autoRotationTargetOffset = Rotation2d.fromDegrees(0);
+  XboxController driverXbox = new XboxController(0);
+
+  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(7);
+  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(7);
+
 
   /**
    * Swerve drive object.
@@ -605,6 +614,33 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void actuallyLookAngle(Rotation2d rotation2d) {
     ChassisSpeeds desiredSpeeds = this.getTargetSpeeds(0.0, 0.0,
+        rotation2d);
+    double maxRadsPerSecond = 2.5;
+    // Make the robot move
+    if(Math.abs(desiredSpeeds.omegaRadiansPerSecond) > maxRadsPerSecond){
+      desiredSpeeds.omegaRadiansPerSecond = Math.copySign(maxRadsPerSecond, desiredSpeeds.omegaRadiansPerSecond);
+    }
+    this.drive(desiredSpeeds);
+  }
+
+  public void actuallyLookAngleButMove(Rotation2d rotation2d) {
+    double x = MathUtil.applyDeadband(
+              -driverXbox.getLeftX(),
+              OperatorConstants.LEFT_X_DEADBAND);
+    if (PoseTransformUtils.isRedAlliance()) {
+        x *= -1;
+    }
+    double xSpeedTarget = m_xspeedLimiter.calculate(x);
+
+    double y = MathUtil.applyDeadband(
+              -driverXbox.getLeftY(),
+              OperatorConstants.LEFT_Y_DEADBAND);
+    if (PoseTransformUtils.isRedAlliance()) {
+        y *= -1;
+    }
+    double ySpeedTarget = m_yspeedLimiter.calculate(y);
+
+    ChassisSpeeds desiredSpeeds = this.getTargetSpeeds(xSpeedTarget, ySpeedTarget,
         rotation2d);
     double maxRadsPerSecond = 2.5;
     // Make the robot move

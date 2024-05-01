@@ -92,7 +92,7 @@ public class SwerveCommands {
                 Commands.run(() -> {
                     Pose2d transformedPose = PoseTransformUtils.transformXRedPose(targetAngle);
                     specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
-                    swerve.actuallyLookAngle(specialAngle);
+                    swerve.actuallyLookAngleButMove(specialAngle);
                 }, swerve).until(() -> {
                     double desiredAngle = normalizedAngle(specialAngle.getDegrees());
                     double currentAngle = currentAngleFilter
@@ -103,11 +103,8 @@ public class SwerveCommands {
                 Commands.run(() -> {
                     Pose2d transformedPose = PoseTransformUtils.transformXRedPose(targetAngle);
                     specialAngle = swerve.getLookAngle(transformedPose).plus(offset);
-                    swerve.actuallyLookAngle(specialAngle);
-                }, swerve).withTimeout(.5),
-                Commands.runOnce(() -> {
-                    swerve.stop();
-                }));
+                    swerve.actuallyLookAngleButMove(specialAngle);
+                }, swerve));
 
         command.setName("setLookAngleButMove");
         return command;

@@ -125,7 +125,13 @@ public class ShooterCommands {
 
     public Command moveFeedMotorFast() {
         var command = Commands.run(() -> shooterFeed.moveFeederMotorFast(), shooterFeed).withTimeout(.1);
-        command.setName("Feeding");
+        command.setName("FeedingFast");
+        return command;
+    }
+
+    public Command moveFeedMotorFastNoTimeout() {
+        var command = Commands.run(() -> shooterFeed.moveFeederMotorFast(), shooterFeed);
+        command.setName("FeedingFastNoTimeout");
         return command;
     }
 
@@ -301,7 +307,7 @@ public class ShooterCommands {
                     // need to change speaker location pose to be something else that allows driver to change x, y while angle remains fixed on target
                         swerveCommands.lookAtTargetButStillMove(Constants.autoAlign.speakerLocationPose,
                                 Rotation2d.fromDegrees(180)),
-                        revSpeedFromDAS(), shooterAngle.setShooterAngleFromDAS().withTimeout(1.5)));
+                        revSpeedFromDAS().withTimeout(150), shooterAngle.setShooterAngleFromDAS().withTimeout(150)));
                 
         command.setName("shootFromDAS");
         return command;
