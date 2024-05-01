@@ -353,7 +353,8 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kB.value)
         .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
-    new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
+    //new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
+    new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(drivebase.followChoreoPath("fakeFourPiece"));
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
 
     new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.autoFlopCommand());

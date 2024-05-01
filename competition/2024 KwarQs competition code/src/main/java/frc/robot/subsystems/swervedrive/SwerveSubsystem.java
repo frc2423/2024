@@ -159,20 +159,21 @@ public class SwerveSubsystem extends SubsystemBase {
     PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
   }
 
-  public void followChoreoPath(){
-    ChoreoTrajectory traj = Choreo.getTrajectory("Trajectory"); // 
-      Choreo.choreoSwerveCommand(
-        traj, // 
-        this::getPose, // 
-        new PIDController(5.0, 0.0, 0.0), // 
-        new PIDController(5.0, 0.0, 0.0), // 
-        new PIDController(swerveDrive.swerveController.config.headingPIDF.p, swerveDrive.swerveController.config.headingPIDF.i, swerveDrive.swerveController.config.headingPIDF.d), // 
+  public Command followChoreoPath(String path) {
+    ChoreoTrajectory traj = Choreo.getTrajectory(path); //
+    return Choreo.choreoSwerveCommand(
+        traj, //
+        this::getPose, //
+        new PIDController(5.0, 0.0, 0.0), //
+        new PIDController(5.0, 0.0, 0.0), //
+        new PIDController(swerveDrive.swerveController.config.headingPIDF.p,
+            swerveDrive.swerveController.config.headingPIDF.i, swerveDrive.swerveController.config.headingPIDF.d), //
         this::setChassisSpeeds,
         () -> {
-        Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
-        return alliance.isPresent() && alliance.get() == Alliance.Red;
-      }, // 
-    this );
+          Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+          return alliance.isPresent() && alliance.get() == Alliance.Red;
+        }, //
+        this);
   }
 
   public void setAutoRotationTarget(Pose2d pose) {
@@ -184,15 +185,15 @@ public class SwerveSubsystem extends SubsystemBase {
     autoRotationTargetOffset = offset;
   }
 
-  public Optional<Rotation2d> getRotationTargetOverride(){
-    // Some condition that should decide if we want to override rotation    
+  public Optional<Rotation2d> getRotationTargetOverride() {
+    // Some condition that should decide if we want to override rotation
     if (autoRotationTarget.isEmpty()) {
       return Optional.empty();
     }
     Pose2d transformedPose = PoseTransformUtils.transformXRedPose(autoRotationTarget.get());
     Rotation2d angle = getLookAngle(transformedPose).plus(autoRotationTargetOffset);
     return Optional.of(angle);
-}
+  }
 
   /**
    * Get the path follower with events.
@@ -344,6 +345,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public void drive(ChassisSpeeds velocity) {
     swerveDrive.drive(velocity);
   }
+
   public void stop() {
     swerveDrive.drive(new ChassisSpeeds());
   }
@@ -628,19 +630,19 @@ public class SwerveSubsystem extends SubsystemBase {
         rotation2d);
     double maxRadsPerSecond = 2.5;
     // Make the robot move
-    if(Math.abs(desiredSpeeds.omegaRadiansPerSecond) > maxRadsPerSecond){
+    if (Math.abs(desiredSpeeds.omegaRadiansPerSecond) > maxRadsPerSecond) {
       desiredSpeeds.omegaRadiansPerSecond = Math.copySign(maxRadsPerSecond, desiredSpeeds.omegaRadiansPerSecond);
     }
     this.drive(desiredSpeeds);
   }
 
   public void turn(double speed) {
-    ChassisSpeeds speeds = new ChassisSpeeds(0,0,speed);
+    ChassisSpeeds speeds = new ChassisSpeeds(0, 0, speed);
     drive(speeds);
   }
 
   public void turnAndGo(double x, double turn) {
-    ChassisSpeeds speeds = new ChassisSpeeds(x,0,turn);
+    ChassisSpeeds speeds = new ChassisSpeeds(x, 0, turn);
     drive(speeds);
   }
 }
