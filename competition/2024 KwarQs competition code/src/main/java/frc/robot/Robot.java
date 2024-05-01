@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.controllers.GuitarHeroController;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,7 +88,6 @@ public class Robot extends TimedRobot {
     m_robotContainer.JointReader();
 
     NTHelper.setDouble("/Time", periodTimer.get());
-    
 
     if (!isSimulation()) {
       m_robotContainer.updateVision();
@@ -192,5 +192,6 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationPeriodic() {
     m_robotContainer.updateSimVision();
+    m_robotContainer.updateGuitarButtons();
   }
 }

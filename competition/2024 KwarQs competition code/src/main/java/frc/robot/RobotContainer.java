@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.controllers.GuitarHeroController;
 import frc.robot.subsystems.LED.KwarqsLed;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -67,7 +68,8 @@ public class RobotContainer {
   SendableChooser<String> m_chooser = new SendableChooser<>();
 
   XboxController driverXbox = new XboxController(0);
-  XboxController operator = new XboxController(1);
+  XboxController operator = new XboxController(4);
+  GuitarHeroController coolguy = new GuitarHeroController(1);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
   ShooterFeedSubsystem shooterFeed = new ShooterFeedSubsystem();
@@ -158,7 +160,6 @@ public class RobotContainer {
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
 
-
     Command driveFieldOrientedAngularVelocity = getTeleopDriveCommand();
 
     drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
@@ -248,7 +249,7 @@ public class RobotContainer {
     });
   }
 
-  private Command getTeleopDriveCommand(){
+  private Command getTeleopDriveCommand() {
     Command driveFieldOrientedAngularVelocity = drivebase.driveCommand(
         () -> {
           double y = MathUtil.applyDeadband(
@@ -269,7 +270,7 @@ public class RobotContainer {
           return m_xspeedLimiter.calculate(x);
         },
         () -> -driverXbox.getRightX());
-        return driveFieldOrientedAngularVelocity;
+    return driveFieldOrientedAngularVelocity;
   }
 
   private void configureBindings() {
@@ -283,7 +284,8 @@ public class RobotContainer {
     // .onFalse(new RunCommand(intake::beltStop));
 
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
-        .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(Commands.parallel(shooterCommands.intakeSequencePlusHandoffCommand(), getTeleopDriveCommand())));
+        .whileTrue(visionCommands.noteAutoAlignPickUp()
+            .andThen(Commands.parallel(shooterCommands.intakeSequencePlusHandoffCommand(), getTeleopDriveCommand())));
     // .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
@@ -292,6 +294,8 @@ public class RobotContainer {
 
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
+    // new JoystickButton(coolguy,
+    // GuitarHeroController.Button.kGreen.value).whileTrue();
 
     new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterUp());
@@ -309,9 +313,9 @@ public class RobotContainer {
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
 
-    Command justRev = Commands.either(shooterCommands.rev(), shooterCommands.stopShooter(), () -> driverXbox.getRightBumper());
+    Command justRev = Commands.either(shooterCommands.rev(), shooterCommands.stopShooter(),
+        () -> driverXbox.getRightBumper());
 
-    
     shooter.setDefaultCommand(justRev);
     shooterFeed.setDefaultCommand(shooterCommands.stopFeeder());
 
@@ -390,6 +394,10 @@ public class RobotContainer {
 
     // System.out.println(drivebase.getPose());
 
+  }
+
+  public void updateGuitarButtons() {
+    System.out.println(coolguy.getGreen());
   }
 
   public void addVision() {
