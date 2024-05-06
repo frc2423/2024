@@ -11,7 +11,6 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -42,7 +41,6 @@ import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionCommands;
 import frc.robot.subsystems.vision.VisionSubsystem;
-import com.choreo.lib.Choreo;
 
 
 import java.util.Optional;
@@ -353,8 +351,7 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kB.value)
         .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
-    //new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
-    new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(drivebase.followChoreoPath("fakeFourPiece"));
+    new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
 
     new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.autoFlopCommand());
