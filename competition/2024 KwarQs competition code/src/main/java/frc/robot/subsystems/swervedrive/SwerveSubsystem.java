@@ -67,7 +67,6 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(7);
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(7);
 
-
   /**
    * Swerve drive object.
    */
@@ -173,15 +172,15 @@ public class SwerveSubsystem extends SubsystemBase {
     autoRotationTargetOffset = offset;
   }
 
-  public Optional<Rotation2d> getRotationTargetOverride(){
-    // Some condition that should decide if we want to override rotation    
+  public Optional<Rotation2d> getRotationTargetOverride() {
+    // Some condition that should decide if we want to override rotation
     if (autoRotationTarget.isEmpty()) {
       return Optional.empty();
     }
     Pose2d transformedPose = PoseTransformUtils.transformXRedPose(autoRotationTarget.get());
     Rotation2d angle = getLookAngle(transformedPose).plus(autoRotationTargetOffset);
     return Optional.of(angle);
-}
+  }
 
   /**
    * Get the path follower with events.
@@ -333,6 +332,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public void drive(ChassisSpeeds velocity) {
     swerveDrive.drive(velocity);
   }
+
   public void stop() {
     swerveDrive.drive(new ChassisSpeeds());
   }
@@ -617,7 +617,7 @@ public class SwerveSubsystem extends SubsystemBase {
         rotation2d);
     double maxRadsPerSecond = 2.5;
     // Make the robot move
-    if(Math.abs(desiredSpeeds.omegaRadiansPerSecond) > maxRadsPerSecond){
+    if (Math.abs(desiredSpeeds.omegaRadiansPerSecond) > maxRadsPerSecond) {
       desiredSpeeds.omegaRadiansPerSecond = Math.copySign(maxRadsPerSecond, desiredSpeeds.omegaRadiansPerSecond);
     }
     this.drive(desiredSpeeds);
@@ -625,38 +625,38 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void actuallyLookAngleButMove(Rotation2d rotation2d) {
     double x = MathUtil.applyDeadband(
-              -driverXbox.getLeftX(),
-              OperatorConstants.LEFT_X_DEADBAND);
+        -driverXbox.getLeftX(),
+        OperatorConstants.LEFT_X_DEADBAND);
     if (PoseTransformUtils.isRedAlliance()) {
-        x *= -1;
+      x *= -1;
     }
-    double xSpeedTarget = m_xspeedLimiter.calculate(x);
+    double ySpeedTarget = m_xspeedLimiter.calculate(x);
 
     double y = MathUtil.applyDeadband(
-              -driverXbox.getLeftY(),
-              OperatorConstants.LEFT_Y_DEADBAND);
+        -driverXbox.getLeftY(),
+        OperatorConstants.LEFT_Y_DEADBAND);
     if (PoseTransformUtils.isRedAlliance()) {
-        y *= -1;
+      y *= -1;
     }
-    double ySpeedTarget = m_yspeedLimiter.calculate(y);
+    double xSpeedTarget = m_yspeedLimiter.calculate(y);
 
     ChassisSpeeds desiredSpeeds = this.getTargetSpeeds(xSpeedTarget, ySpeedTarget,
         rotation2d);
     double maxRadsPerSecond = 2.5;
     // Make the robot move
-    if(Math.abs(desiredSpeeds.omegaRadiansPerSecond) > maxRadsPerSecond){
+    if (Math.abs(desiredSpeeds.omegaRadiansPerSecond) > maxRadsPerSecond) {
       desiredSpeeds.omegaRadiansPerSecond = Math.copySign(maxRadsPerSecond, desiredSpeeds.omegaRadiansPerSecond);
     }
-    this.drive(desiredSpeeds);
+    this.driveFieldOriented(desiredSpeeds);
   }
 
   public void turn(double speed) {
-    ChassisSpeeds speeds = new ChassisSpeeds(0,0,speed);
+    ChassisSpeeds speeds = new ChassisSpeeds(0, 0, speed);
     drive(speeds);
   }
 
   public void turnAndGo(double x, double turn) {
-    ChassisSpeeds speeds = new ChassisSpeeds(x,0,turn);
+    ChassisSpeeds speeds = new ChassisSpeeds(x, 0, turn);
     drive(speeds);
   }
 }
