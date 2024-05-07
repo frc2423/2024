@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.controllers.GuitarHeroController;
+import frc.robot.controllers.NotVeryOldGuitarHero;
 import frc.robot.subsystems.LED.KwarqsLed;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -69,7 +69,7 @@ public class RobotContainer {
 
   XboxController driverXbox = new XboxController(0);
   XboxController operator = new XboxController(4);
-  GuitarHeroController coolguy = new GuitarHeroController(1);
+  NotVeryOldGuitarHero coolguy = new NotVeryOldGuitarHero();
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
   ShooterFeedSubsystem shooterFeed = new ShooterFeedSubsystem();
@@ -396,9 +396,9 @@ public class RobotContainer {
 
   }
 
-  public void updateGuitarButtons() {
-    System.out.println(coolguy.getGreen());
-  }
+  // public void updateGuitarButtons() {
+  //   System.out.println(coolguy.getGreenButton());
+  // }
 
   public void addVision() {
     var estimatedPose = visionSubsystem.getEstimatedRobotPose();
