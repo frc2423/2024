@@ -58,7 +58,7 @@ public final class Constants {
 
     public static final Pose3d autoCameraPose = new Pose3d(6, 9, 3, new Rotation3d(0, .4, -Math.toRadians(160)));
 
-    public static final Pose2d ampPose = new Pose2d(1.82, 7.75, Rotation2d.fromDegrees(270));
+    public static final Pose2d ampPose = new Pose2d(1.82, 7.79, Rotation2d.fromDegrees(270));
     public static final Pose2d ampNote = new Pose2d(2.92, 6.99, Rotation2d.fromDegrees(0));
     public static final Pose2d middleNote = new Pose2d(2.89, 5.55, Rotation2d.fromDegrees(0));
     public static final Pose2d stageNote = new Pose2d(2.89, 4.10, Rotation2d.fromDegrees(0));

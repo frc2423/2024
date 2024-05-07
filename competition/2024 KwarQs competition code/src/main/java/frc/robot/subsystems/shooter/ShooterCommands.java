@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -155,6 +156,12 @@ public class ShooterCommands {
             shooterFeed.moveFeederAmpOpp();
         }, shooter, shooterFeed);
         command.setName("Feeding SLOW REVERSE");
+        return command;
+    }
+
+    public Command autoAmpScore(Pose2d pose) {
+        var command = swerveCommands.autoAmpDrive(pose).andThen(moveFeedAmpOppCommand());
+
         return command;
     }
 

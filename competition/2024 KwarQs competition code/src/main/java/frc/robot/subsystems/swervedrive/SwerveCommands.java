@@ -18,7 +18,6 @@ public class SwerveCommands {
 
     private SwerveSubsystem swerve;
     private ShooterAngleCommands shooter;
-    private ShooterCommands shooterCommands;
 
 
 
@@ -26,10 +25,9 @@ public class SwerveCommands {
 
     private MedianFilter currentAngleFilter = new MedianFilter(5);
 
-    public SwerveCommands(SwerveSubsystem swerve, ShooterAngleCommands shooter, ShooterCommands shooterCommands) {
+    public SwerveCommands(SwerveSubsystem swerve, ShooterAngleCommands shooter) {
         this.swerve = swerve;
         this.shooter = shooter;
-        this.shooterCommands = shooterCommands;
 
 
 
@@ -132,7 +130,7 @@ public class SwerveCommands {
 
         // Create the constraints to use while pathfinding
         PathConstraints constraints = new PathConstraints(
-                1.0, 2.0,
+                2.0, 2.0,
                 Units.degreesToRadians(540), Units.degreesToRadians(720));
 
         // Since AutoBuilder is configured, we can use it to build pathfinding commands
@@ -148,21 +146,37 @@ public class SwerveCommands {
         return pathfindingCommand;
     }
 
-    public Command autoAmpScore(Pose2d pose) {
-        Command ampGoCommand = Commands.parallel(shooter.ampAngleCommand(), waitForPosition(pose));
+    public Command autoAmpDrive(Pose2d pose) {
 
 
-        Command ampScoreCommand = Commands.parallel(autoAlignAmpCommand(pose), ampGoCommand);
+        Command ampScoreCommand = Commands.parallel(autoAlignAmpCommand(pose), shooter.ampAngleCommand());
 
         return ampScoreCommand;
 
     }
 
-    public Command waitForPosition(Pose2d pose) {
-        Pose2d position = swerve.getPose();
+    public Command waitForPositionCommand(Pose2d pose) {
+    
+        var command = Commands.run(() -> {
+            waitForPosition(pose);
+        });
 
-       
-        return shooterCommands().until(() -> position.getY() == pose.getY() + 0.03 || position.getY() == pose.getY() - 0.03);
+            command.setName("waiting");
+
+        return command;
+    }
+
+    public void waitForPosition(Pose2d pose) {
+        Pose2d position = swerve.getPose();
+        double positionY = position.getY();
+        Pose2d target = pose;
+        double targetY = target.getY();
+
+        if (!(Math.abs(positionY - targetY) <= 0.03)) {
+            waitForPositionCommand(pose);
+        } else {
+
+        }
         
     }
 
