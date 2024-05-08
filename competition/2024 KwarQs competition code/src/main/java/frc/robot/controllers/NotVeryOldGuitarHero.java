@@ -4,7 +4,7 @@ package frc.robot.controllers;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class NotVeryOldGuitarHero {
-    Joystick guitarHero = new Joystick(0);
+    Joystick guitarHero = new Joystick(3);
 
     public enum Button {
         kGreen(8),
@@ -36,7 +36,7 @@ public class NotVeryOldGuitarHero {
     }
 
     public boolean getBlueButton(){
-        return guitarHero.getRawButton(Button.kBlue.value);
+        return guitarHero.getRawButton(3);
     }
 
     public boolean getOrangeButton(){
@@ -52,15 +52,18 @@ public class NotVeryOldGuitarHero {
     }
 
     public boolean getUpStrum(){
-        // TODO: figure out how to use getRawAxis
-        // return guitarHero.getRawAxis(1);
-        return false;
+        if (guitarHero.getRawAxis(1) == -1){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean getDownStrum(){
-        // TODO: figure out how to use getRawAxis
-
-        // return guitarHero.getRawButton(Button.kDown.value);
-        return false;
+        if (guitarHero.getRawAxis(1) == 1){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

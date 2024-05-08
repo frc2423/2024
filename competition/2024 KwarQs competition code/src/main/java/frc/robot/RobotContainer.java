@@ -98,6 +98,7 @@ public class RobotContainer {
     Rotation2d angle = drivebase.getLookAngle(PoseTransformUtils.transformXRedPose(Constants.autoAlign.middleNote));
     NTHelper.setDouble("/debug/autoRotationOverride", angle.getDegrees());
 
+
   }
 
   /**
@@ -332,6 +333,8 @@ public class RobotContainer {
     // new Trigger(() -> driverXbox.getPOV() == 0)
     // .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.handOffCommand()));
 
+    guitarHeroTriggers();
+
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
       driverXbox.setRumble(RumbleType.kBothRumble, 1);
@@ -372,6 +375,19 @@ public class RobotContainer {
     // An example command will be run in autonomous
     drivebase.setAutoRotationTarget(null);
     return drivebase.getAuto(m_chooser.getSelected());
+  }
+
+  public void guitarHeroTriggers(){
+    new Trigger(() -> coolguy.getGreenButton()).whileTrue(Commands.run(() -> {System.out.println("GREEN");}));
+    new Trigger(() -> coolguy.getRedButton()).whileTrue(Commands.run(() -> {System.out.println("RED");}));
+    new Trigger(() -> coolguy.getYellowButton()).whileTrue(Commands.run(() -> {System.out.println("YELLOW");}));
+    new Trigger(() -> coolguy.getBlueButton()).whileTrue(Commands.run(() -> {System.out.println("BLUE");}));
+    new Trigger(() -> coolguy.getOrangeButton()).whileTrue(Commands.run(() -> {System.out.println("ORANGE");}));
+    new Trigger(() -> coolguy.getSelectButton()).whileTrue(Commands.run(() -> {System.out.println("SELECT");}));
+    new Trigger(() -> coolguy.getStartButton()).whileTrue(Commands.run(() -> {System.out.println("START");}));
+
+    new Trigger(() -> coolguy.getUpStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING UP");}));
+    new Trigger(() -> coolguy.getDownStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING DOWN");}));
   }
 
   public void setDriveMode() {
