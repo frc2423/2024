@@ -669,7 +669,7 @@ public class SwerveSubsystem extends SubsystemBase {
     if (PoseTransformUtils.isRedAlliance()) {
       x *= -1;
     }
-    double xSpeedTarget = m_xspeedLimiter.calculate(x);
+    double ySpeedTarget = m_xspeedLimiter.calculate(x);
 
     double y = MathUtil.applyDeadband(
         -driverXbox.getLeftY(),
@@ -677,7 +677,7 @@ public class SwerveSubsystem extends SubsystemBase {
     if (PoseTransformUtils.isRedAlliance()) {
       y *= -1;
     }
-    double ySpeedTarget = m_yspeedLimiter.calculate(y);
+    double xSpeedTarget = m_yspeedLimiter.calculate(y);
 
     ChassisSpeeds desiredSpeeds = this.getTargetSpeeds(xSpeedTarget, ySpeedTarget,
         rotation2d);
