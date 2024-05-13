@@ -299,8 +299,9 @@ public class RobotContainer {
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
 
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromIntake())
-        .onFalse(shooterAngleCommands.handOffAngleCommand());
+    //new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromIntake())
+        //.onFalse(shooterAngleCommands.handOffAngleCommand());
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedMotorFastNoTimeout());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
     new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand())
         .onFalse(shooterCommands.moveFeedAmpCommandEnd());
@@ -357,6 +358,7 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.autoFlopCommand());
     new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(shooterCommands.shootAmp());
 
+    new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(shooterCommands.prepareToShoot());
   }
 
   /**
