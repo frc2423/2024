@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
+import com.choreo.lib.Choreo;
+import com.choreo.lib.ChoreoTrajectory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -23,6 +25,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -39,6 +42,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -80,7 +84,7 @@ public class SwerveSubsystem extends SubsystemBase {
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
-  public double maximumSpeed = Units.feetToMeters(14.5);
+  public double maximumSpeed = Units.feetToMeters(16.5);
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -110,7 +114,7 @@ public class SwerveSubsystem extends SubsystemBase {
     // objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try {
-      swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed);
+      swerveDrive = new SwerveParser(directory).createSwerveDrive(Units.feetToMeters(20));
       // Alternative method if you don't want to supply the conversion factor via JSON
       // files.
       // swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed,
@@ -131,7 +135,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param controllerCfg Swerve Controller.
    */
   public SwerveSubsystem(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
-    swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
+    swerveDrive = new SwerveDrive(driveCfg, controllerCfg, Units.feetToMeters(20));
   }
 
   /**
@@ -169,6 +173,23 @@ public class SwerveSubsystem extends SubsystemBase {
     );
 
     PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
+  }
+
+  public Command followChoreoPath(String path) {
+    ChoreoTrajectory traj = Choreo.getTrajectory(path); //
+    return Choreo.choreoSwerveCommand(
+        traj, //
+        this::getPose, //
+        new PIDController(5.0, 0.0, 0.0), //
+        new PIDController(5.0, 0.0, 0.0), //
+        new PIDController(swerveDrive.swerveController.config.headingPIDF.p,
+            swerveDrive.swerveController.config.headingPIDF.i, swerveDrive.swerveController.config.headingPIDF.d), //
+        this::setChassisSpeeds,
+        () -> {
+          Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+          return alliance.isPresent() && alliance.get() == Alliance.Red;
+        }, //
+        this);
   }
 
   public void setAutoRotationTarget(Pose2d pose) {
@@ -285,8 +306,8 @@ public class SwerveSubsystem extends SubsystemBase {
       DoubleSupplier angularRotationX) {
     return run(() -> {
       // Make the robot move
-      swerveDrive.drive(new Translation2d(Math.pow(translationX.getAsDouble(), 3) * swerveDrive.getMaximumVelocity(),
-          Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity()),
+      swerveDrive.drive(new Translation2d(Math.pow(translationX.getAsDouble(), 3) * maximumSpeed,
+          Math.pow(translationY.getAsDouble(), 3) * maximumSpeed),
           Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
           true,
           false);

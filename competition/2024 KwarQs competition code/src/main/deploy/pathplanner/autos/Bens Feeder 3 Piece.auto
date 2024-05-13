@@ -32,12 +32,6 @@
                       }
                     },
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "moveFeedSlowCommand"
-                      }
-                    },
-                    {
                       "type": "parallel",
                       "data": {
                         "commands": [

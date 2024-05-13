@@ -43,9 +43,8 @@ public class ShooterCommands {
                 // for intaking the next game piece. Continue running feeder motor briefly since
                 // game piece
                 // might still be in the shooter
-                Commands.sequence(intake.beltStopCommand(), intake.intakeDown()).withTimeout(.1),
-                // shooting finished, stop feeder motor
-                Commands.runOnce(shooterFeed::stopFeederMotor));
+                Commands.sequence(intake.beltStopCommand(), intake.intakeDown()).withTimeout(.1)
+        );
         command.setName("shoot in auto");
         return command;
     }
@@ -60,8 +59,9 @@ public class ShooterCommands {
     }
 
     public Command runDAS() {
+        Command wait = Commands.waitSeconds(.75);
         Command command = Commands.parallel(
-                moveFeedMotorFast(), revStartCommand(), shooterAngle.setShooterAngleFromDAS());
+                Commands.sequence(wait, moveFeedMotorFast()), revStartCommand(), shooterAngle.setShooterAngleFromDAS());
         command.setName("runDAS");
         return command;
     }
@@ -120,6 +120,7 @@ public class ShooterCommands {
     public Command moveFeedMotor() {
         var command = Commands.run(() -> shooterFeed.moveFeederMotor(), shooterFeed).withTimeout(.1);
         command.setName("Feeding");
+        command.addRequirements(shooterFeed);
         return command;
     }
 
@@ -267,6 +268,7 @@ public class ShooterCommands {
             shooter.shooterOn();
         }, shooter);
         command.setName("rev Start");
+        command.addRequirements(shooter);
         return command;
     }
 

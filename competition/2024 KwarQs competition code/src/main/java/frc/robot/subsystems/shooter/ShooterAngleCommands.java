@@ -92,7 +92,6 @@ public class ShooterAngleCommands {
       DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
       shooterAngle.setAngle(as.getAngle());
     }, shooterAngle);
-
   }
 
   public boolean isShooterAngleAtGoal() {
