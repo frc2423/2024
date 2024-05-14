@@ -56,19 +56,22 @@ public class VisionCommands {
     public Command noteAutoAlignPickUpHandoffAndPrepareToShoot() {
         Command turn = Commands.run(() -> drivebase.turn(-vision.getNoteYaw() * .075), drivebase, vision);
         Command driveAndTurn = Commands.run(() -> drivebase.turnAndGo(2, vision.yawAfterAligned()), drivebase, vision);
-        Command stopMoving =  Commands.runOnce(() -> drivebase.turnAndGo(0, 0), drivebase);
         Command drive = drivebase.getTeleopDriveCommand();
+        Command drive1 = drivebase.getTeleopDriveCommand();
+
         Command command = Commands.sequence(  
             Commands.parallel(intakeCommands.intakeDown(), shooterAngleCommands.handOffAngleCommand()).withTimeout(.2),
             Commands.parallel(
                 Commands.sequence(
-                    Commands.waitUntil(() -> vision.seesNote()),
+                    drive.until(() -> vision.seesNote()),
+                    // Commands.waitUntil(() -> vision.seesNote()),
                     turn.until(() -> vision.isAlignedNote()),
-                    driveAndTurn, stopMoving
+                    driveAndTurn.until(() -> intake.isBeamBroken()), drive1
                 ),
                 Commands.sequence(
                     intakeCommands.intakeIntake().until(() -> intake.isBeamBroken()),
-                    shooterCommands.intakeSequencePlusHandoffCommand()
+                    shooterCommands.intakeSequencePlusHandoffCommand(),
+                    intakeCommands.beltStopCommand()
                 )
             )
         );
