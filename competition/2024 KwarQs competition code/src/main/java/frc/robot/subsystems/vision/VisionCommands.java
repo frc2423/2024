@@ -26,7 +26,6 @@ public class VisionCommands {
         this.shooterAngleCommands = shooterAngleCommands;
         this.shooterCommands = shooterCommands;
     }
-
     public Command notePoseAutoAlign() {
         Command command = Commands.run(() -> drivebase.actuallyLookAngle(vision.getTurn()))
                 .until(() -> vision.isAlignedNote());
@@ -58,8 +57,9 @@ public class VisionCommands {
         Command turn = Commands.run(() -> drivebase.turn(-vision.getNoteYaw() * .075), drivebase, vision);
         Command driveAndTurn = Commands.run(() -> drivebase.turnAndGo(2, vision.yawAfterAligned()), drivebase, vision);
         Command stopMoving =  Commands.runOnce(() -> drivebase.turnAndGo(0, 0), drivebase);
+        Command drive = drivebase.getTeleopDriveCommand();
         Command command = Commands.sequence(  
-            Commands.parallel(intakeCommands.intakeDown(), shooterAngleCommands.handOffAngleCommand().withTimeout(.2)),
+            Commands.parallel(intakeCommands.intakeDown(), shooterAngleCommands.handOffAngleCommand()).withTimeout(.2),
             Commands.parallel(
                 Commands.sequence(
                     Commands.waitUntil(() -> vision.seesNote()),
@@ -68,9 +68,10 @@ public class VisionCommands {
                 ),
                 Commands.sequence(
                     intakeCommands.intakeIntake().until(() -> intake.isBeamBroken()),
-                    shooterCommands.intakeSequencePlusHandoffCommand())
+                    shooterCommands.intakeSequencePlusHandoffCommand()
                 )
-            );
+            )
+        );
         return command;
     }
 }
