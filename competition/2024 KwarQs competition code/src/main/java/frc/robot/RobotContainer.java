@@ -76,10 +76,10 @@ public class RobotContainer {
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
-  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands,
-      shooterAngleCommands);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
       drivebase, swerveCommands, shooterFeed);
+  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands, 
+  shooterCommands, shooterAngleCommands);
   KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem, driverXbox);
 
   public static final DAS das = new DAS();
@@ -284,6 +284,8 @@ public class RobotContainer {
 
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
         .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(Commands.parallel(shooterCommands.intakeSequencePlusHandoffCommand(), getTeleopDriveCommand())));
+    new JoystickButton(driverXbox, XboxController.Button.kB.value)
+        .onTrue(visionCommands.noteAutoAlignPickUpHandoffAndPrepareToShoot());
     // .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
