@@ -67,6 +67,7 @@
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/Shooter": "Subsystem",
       "/SmartDashboard/ShooterAngle": "Subsystem",
+      "/SmartDashboard/ShooterFeed": "Subsystem",
       "/SmartDashboard/SwerveSubsystem": "Subsystem",
       "/SmartDashboard/VisionSubsystem": "Subsystem",
       "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d",

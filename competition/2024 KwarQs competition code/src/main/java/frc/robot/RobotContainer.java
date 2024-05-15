@@ -11,6 +11,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -30,6 +31,8 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.LED.KwarqsLed;
+import frc.robot.subsystems.climber.ClimberCommands;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterAngle;
@@ -41,7 +44,6 @@ import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionCommands;
 import frc.robot.subsystems.vision.VisionSubsystem;
-
 
 import java.util.Optional;
 
@@ -67,7 +69,7 @@ public class RobotContainer {
   SendableChooser<String> m_chooser = new SendableChooser<>();
 
   XboxController driverXbox = new XboxController(0);
-  XboxController operator = new XboxController(1);
+  XboxController operator = new XboxController(4);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
   ShooterFeedSubsystem shooterFeed = new ShooterFeedSubsystem();
@@ -78,6 +80,8 @@ public class RobotContainer {
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
   VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands,
       shooterAngleCommands);
+  ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  ClimberCommands climberCommands = new ClimberCommands(climberSubsystem);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
       drivebase, swerveCommands, shooterFeed);
   KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem, driverXbox);
@@ -95,6 +99,7 @@ public class RobotContainer {
 
     Rotation2d angle = drivebase.getLookAngle(PoseTransformUtils.transformXRedPose(Constants.autoAlign.middleNote));
     NTHelper.setDouble("/debug/autoRotationOverride", angle.getDegrees());
+
 
   }
 
@@ -157,7 +162,6 @@ public class RobotContainer {
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
-
 
     Command driveFieldOrientedAngularVelocity = getTeleopDriveCommand();
 
@@ -248,7 +252,7 @@ public class RobotContainer {
     });
   }
 
-  private Command getTeleopDriveCommand(){
+  private Command getTeleopDriveCommand() {
     Command driveFieldOrientedAngularVelocity = drivebase.driveCommand(
         () -> {
           double y = MathUtil.applyDeadband(
@@ -269,7 +273,7 @@ public class RobotContainer {
           return m_xspeedLimiter.calculate(x);
         },
         () -> -driverXbox.getRightX());
-        return driveFieldOrientedAngularVelocity;
+    return driveFieldOrientedAngularVelocity;
   }
 
   private void configureBindings() {
@@ -283,15 +287,18 @@ public class RobotContainer {
     // .onFalse(new RunCommand(intake::beltStop));
 
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
-        .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(Commands.parallel(shooterCommands.intakeSequencePlusHandoffCommand(), getTeleopDriveCommand())));
+        .whileTrue(visionCommands.noteAutoAlignPickUp()
+            .andThen(Commands.parallel(shooterCommands.intakeSequencePlusHandoffCommand(), getTeleopDriveCommand())));
     // .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
     // Command intakeOrOuttake = Commands.either(intakeCommands.intakeOuttake(),
     // intakeCommands.intakeIntake(), () -> driverXbox.getYButton());
 
-    new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
-    new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
+    new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(climberCommands.climbStartCommand());
+    new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(climberCommands.climbStopCommand());
+    // new JoystickButton(coolguy,
+    // GuitarHeroController.Button.kGreen.value).whileTrue();
 
     new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterUp());
@@ -309,9 +316,9 @@ public class RobotContainer {
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
 
-    Command justRev = Commands.either(shooterCommands.rev(), shooterCommands.stopShooter(), () -> driverXbox.getRightBumper());
+    Command justRev = Commands.either(shooterCommands.rev(), shooterCommands.stopShooter(),
+        () -> driverXbox.getRightBumper());
 
-    
     shooter.setDefaultCommand(justRev);
     shooterFeed.setDefaultCommand(shooterCommands.stopFeeder());
 
@@ -327,6 +334,7 @@ public class RobotContainer {
         .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.sourceMiddlePose));
     // new Trigger(() -> driverXbox.getPOV() == 0)
     // .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.handOffCommand()));
+
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
@@ -391,6 +399,10 @@ public class RobotContainer {
     // System.out.println(drivebase.getPose());
 
   }
+
+  // public void updateGuitarButtons() {
+  //   System.out.println(coolguy.getGreenButton());
+  // }
 
   public void addVision() {
     var estimatedPose = visionSubsystem.getEstimatedRobotPose();
