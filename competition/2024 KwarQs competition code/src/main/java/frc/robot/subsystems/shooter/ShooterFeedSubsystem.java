@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkFlex;
 
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterFeedSubsystem extends SubsystemBase {
@@ -45,8 +46,16 @@ public class ShooterFeedSubsystem extends SubsystemBase {
     }
 
     public void moveFeederHandoff() {
-        feeder_Motor.setVoltage(0.6);
+        feeder_Motor.setVoltage(8);
 
+    }
+
+    public Command setFeedSpeed(double percent){
+        return this.runOnce(() -> {feeder_Motor.set(-percent);});
+    }
+
+    public Command setFeedVoltage(double voltage){
+        return this.runOnce(() -> {feeder_Motor.setVoltage(-voltage);});
     }
 
     public void moveFeederAmpOpp() {
