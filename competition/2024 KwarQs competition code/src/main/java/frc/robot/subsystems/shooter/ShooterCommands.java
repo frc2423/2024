@@ -218,15 +218,6 @@ public class ShooterCommands {
         return command;
     }
 
-    public Command handOff() {
-        var command = Commands.sequence(
-            Commands.parallel(moveFeedMotor(), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.5),
-                Commands.run(() -> shooterFeed.moveFeederHandoff()).withTimeout(.15)
-        );
-        command.setName("Just the Handoff");
-        return command;
-    }
-
     public Command handOffCommandAuto() {
         Command shooterHandOff = shooterAngle.handOffAngleCommand();
         var command = Commands.sequence(shooterHandOff.withTimeout(0.02),
