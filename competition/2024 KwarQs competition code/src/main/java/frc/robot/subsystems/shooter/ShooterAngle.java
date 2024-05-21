@@ -49,9 +49,9 @@ public class ShooterAngle extends SubsystemBase {
   private static double minShooterPivotAngle = 140;
   private CANcoder shooterAngle; // figured out? i think
 
-  public static double feedAngle = 333.5; // is correct number now
+  public static double feedAngle = 323.5; // is correct number now
   public static double climbAngle = 180; // is correct number now
-  public static double shootAngle = 333.5; // is good
+  public static double shootAngle = 323.5; // is good
   public static double ampAngle = 141; // maybe good
   public static double handOffAngle = 303.5; // maybe good
   public double shooterSlowPivotMotorPercent = 0.02;
@@ -119,7 +119,7 @@ public class ShooterAngle extends SubsystemBase {
         shooterPivotAngle = Rotation2d.fromDegrees(360 + shooterPivotAngle.getDegrees());
       }
     } else {
-      double offset = 21.8 + 3.8;
+      double offset = 25.6 - 14.1 + 88.5;
       double encoderPosition = shooterAngle.getAbsolutePosition().getValueAsDouble() * 360 + 178 + offset;
       shooterPivotAngle = Rotation2d.fromDegrees(encoderPosition);
     }
