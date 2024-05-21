@@ -203,12 +203,14 @@ public class ShooterCommands {
 
     public Command handOffCommand() {
         var command = Commands.sequence(
-                Commands.parallel(moveFeedMotor(), intake.intakeIntake(.7), shooterOnFlop())
+                Commands.parallel(moveFeedMotor(), intake.intakeIntake(.7)) //, shooterOnFlop()
                         .until(() -> !iintake.isBeamBroken()),
-                Commands.parallel(moveFeedMotor(), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.5),
-                Commands.run(() -> shooterFeed.moveFeederHandoff()).withTimeout(.15),
+                Commands.parallel(moveFeedMotor(), intake.intakeIntake(.7)).withTimeout(.5), //, shooterOnFlop())
+                //shooterFeed.setFeedSpeed(-.1),
+                shooterFeed.setFeedVoltage(-.5),
+                Commands.waitSeconds(.25),
                 Commands.runOnce(() -> {
-                    shooter.shooterOff();
+                    //shooter.shooterOff();
                     shooterFeed.feedOff();
                 }));
         // intake.intakeUp().until(() -> iintake.isAngleGreat()));
