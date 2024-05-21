@@ -29,7 +29,7 @@ public class ShooterFeedSubsystem extends SubsystemBase {
     }
 
     public void moveFeederMotorFast() {
-        feeder_Motor.setVoltage(-8);
+        feeder_Motor.setVoltage(-12);
     }
 
     public void moveFeederSlow() {
