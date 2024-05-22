@@ -21,7 +21,10 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -33,10 +36,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,8 +52,10 @@ import frc.robot.Constants;
 import frc.robot.DAS;
 import frc.robot.NTHelper;
 import frc.robot.PoseTransformUtils;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.Drivebase;
+import frc.robot.Constants.OperatorConstants;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -62,6 +69,13 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private Optional<Pose2d> autoRotationTarget = Optional.empty();
   private Rotation2d autoRotationTargetOffset = Rotation2d.fromDegrees(0);
+  XboxController driverXbox = new XboxController(0);
+
+  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(7);
+  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(7);
+
+  ProfiledPIDController thetaController = new ProfiledPIDController(3, 0, 0,
+      new TrapezoidProfile.Constraints(6.28, 12)); // .5, 500, 400
 
   /**
    * Swerve drive object.
@@ -78,6 +92,8 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param directory Directory of swerve drive config files.
    */
   public SwerveSubsystem(File directory) {
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
     // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
     // In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
     // The encoder resolution per motor revolution is 1 per motor revolution.
@@ -157,6 +173,30 @@ public class SwerveSubsystem extends SubsystemBase {
     );
 
     PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
+  }
+
+  public Command getTeleopDriveCommand(){
+    Command driveFieldOrientedAngularVelocity = driveCommand(
+        () -> {
+          double y = MathUtil.applyDeadband(
+              -driverXbox.getLeftY(),
+              OperatorConstants.LEFT_Y_DEADBAND);
+          if (PoseTransformUtils.isRedAlliance()) {
+            y *= -1;
+          }
+          return m_yspeedLimiter.calculate(y);
+        },
+        () -> {
+          double x = MathUtil.applyDeadband(
+              -driverXbox.getLeftX(),
+              OperatorConstants.LEFT_X_DEADBAND);
+          if (PoseTransformUtils.isRedAlliance()) {
+            x *= -1;
+          }
+          return m_xspeedLimiter.calculate(x);
+        },
+        () -> -driverXbox.getRightX());
+        return driveFieldOrientedAngularVelocity;
   }
 
   public Command followChoreoPath(String path) {
@@ -482,11 +522,42 @@ public class SwerveSubsystem extends SubsystemBase {
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, Rotation2d angle) {
     xInput = Math.pow(xInput, 3);
     yInput = Math.pow(yInput, 3);
-    return swerveDrive.swerveController.getTargetSpeeds(xInput,
+    return getTargetSpeeds(xInput,
         yInput,
         angle.getRadians(),
         getHeading().getRadians(),
         maximumSpeed);
+  }
+
+  public ChassisSpeeds getTargetSpeeds(
+      double xInput,
+      double yInput,
+      double angle,
+      double currentHeadingAngleRadians,
+      double maxSpeed) {
+    // Convert joystick inputs to m/s by scaling by max linear speed. Also uses a
+    // cubic function
+    // to allow for precise control and fast movement.
+    double x = xInput * maxSpeed;
+    double y = yInput * maxSpeed;
+
+    return swerveDrive.swerveController.getRawTargetSpeeds(x, y, angle, currentHeadingAngleRadians);
+  }
+
+  public ChassisSpeeds getRawTargetSpeeds(
+      double xSpeed,
+      double ySpeed,
+      double targetHeadingAngleRadians,
+      double currentHeadingAngleRadians) {
+    // Calculates an angular rate using a PIDController and the commanded angle.
+    // Returns a value
+    // between -1 and 1
+    // which is then scaled to be between -maxAngularVelocity and
+    // +maxAngularVelocity.
+    return swerveDrive.swerveController.getRawTargetSpeeds(
+        xSpeed,
+        ySpeed,
+        thetaController.calculate(currentHeadingAngleRadians, targetHeadingAngleRadians));
   }
 
   public Field2d getField() {
@@ -634,6 +705,33 @@ public class SwerveSubsystem extends SubsystemBase {
       desiredSpeeds.omegaRadiansPerSecond = Math.copySign(maxRadsPerSecond, desiredSpeeds.omegaRadiansPerSecond);
     }
     this.drive(desiredSpeeds);
+  }
+
+  public void actuallyLookAngleButMove(Rotation2d rotation2d) {
+    double x = MathUtil.applyDeadband(
+        -driverXbox.getLeftX(),
+        OperatorConstants.LEFT_X_DEADBAND);
+    if (PoseTransformUtils.isRedAlliance()) {
+      x *= -1;
+    }
+    double ySpeedTarget = m_xspeedLimiter.calculate(x);
+
+    double y = MathUtil.applyDeadband(
+        -driverXbox.getLeftY(),
+        OperatorConstants.LEFT_Y_DEADBAND);
+    if (PoseTransformUtils.isRedAlliance()) {
+      y *= -1;
+    }
+    double xSpeedTarget = m_yspeedLimiter.calculate(y);
+
+    ChassisSpeeds desiredSpeeds = this.getTargetSpeeds(xSpeedTarget, ySpeedTarget,
+        rotation2d);
+    double maxRadsPerSecond = 10000; // 2.5
+    // Make the robot move
+    if (Math.abs(desiredSpeeds.omegaRadiansPerSecond) > maxRadsPerSecond) {
+      desiredSpeeds.omegaRadiansPerSecond = Math.copySign(maxRadsPerSecond, desiredSpeeds.omegaRadiansPerSecond);
+    }
+    this.driveFieldOriented(desiredSpeeds);
   }
 
   public void turn(double speed) {
