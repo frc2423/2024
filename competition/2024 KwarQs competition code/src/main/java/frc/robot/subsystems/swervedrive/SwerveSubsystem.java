@@ -175,6 +175,30 @@ public class SwerveSubsystem extends SubsystemBase {
     PPHolonomicDriveController.setRotationTargetOverride(this::getRotationTargetOverride);
   }
 
+  public Command getTeleopDriveCommand(){
+    Command driveFieldOrientedAngularVelocity = driveCommand(
+        () -> {
+          double y = MathUtil.applyDeadband(
+              -driverXbox.getLeftY(),
+              OperatorConstants.LEFT_Y_DEADBAND);
+          if (PoseTransformUtils.isRedAlliance()) {
+            y *= -1;
+          }
+          return m_yspeedLimiter.calculate(y);
+        },
+        () -> {
+          double x = MathUtil.applyDeadband(
+              -driverXbox.getLeftX(),
+              OperatorConstants.LEFT_X_DEADBAND);
+          if (PoseTransformUtils.isRedAlliance()) {
+            x *= -1;
+          }
+          return m_xspeedLimiter.calculate(x);
+        },
+        () -> -driverXbox.getRightX());
+        return driveFieldOrientedAngularVelocity;
+  }
+
   public Command followChoreoPath(String path) {
     ChoreoTrajectory traj = Choreo.getTrajectory(path); //
     return Choreo.choreoSwerveCommand(

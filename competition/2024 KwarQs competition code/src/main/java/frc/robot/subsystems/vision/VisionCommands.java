@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterAngleCommands;
+import frc.robot.subsystems.shooter.ShooterCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -13,17 +14,18 @@ public class VisionCommands {
     private SwerveSubsystem drivebase;
     private IntakeSubsystem intake;
     private IntakeCommands intakeCommands;
+    private ShooterCommands shooterCommands;
     private ShooterAngleCommands shooterAngleCommands;
 
     public VisionCommands(VisionSubsystem vision, SwerveSubsystem drivebase, IntakeSubsystem intake,
-            IntakeCommands intakeCommands, ShooterAngleCommands shooterAngleCommands) {
+            IntakeCommands intakeCommands, ShooterCommands shooterCommands, ShooterAngleCommands shooterAngleCommands) {
         this.vision = vision;
         this.drivebase = drivebase;
         this.intake = intake;
         this.intakeCommands = intakeCommands;
         this.shooterAngleCommands = shooterAngleCommands;
+        this.shooterCommands = shooterCommands;
     }
-
     public Command notePoseAutoAlign() {
         Command command = Commands.run(() -> drivebase.actuallyLookAngle(vision.getTurn()))
                 .until(() -> vision.isAlignedNote());
@@ -48,6 +50,31 @@ public class VisionCommands {
                 // intakeCommands.intakeDown(),
                 Commands.parallel(driveAndTurn, intakeCommands.intakeIntake()).until(() -> intake.isBeamBroken()),
                 stopMoving);
+        return command;
+    }
+
+    public Command noteAutoAlignPickUpHandoffAndPrepareToShoot() {
+        Command turn = Commands.run(() -> drivebase.turn(-vision.getNoteYaw() * .075), drivebase, vision);
+        Command driveAndTurn = Commands.run(() -> drivebase.turnAndGo(2, vision.yawAfterAligned()), drivebase, vision);
+        Command drive = drivebase.getTeleopDriveCommand();
+        Command drive1 = drivebase.getTeleopDriveCommand();
+
+        Command command = Commands.sequence(  
+            Commands.parallel(intakeCommands.intakeDown(), shooterAngleCommands.handOffAngleCommand()).withTimeout(.2),
+            Commands.parallel(
+                Commands.sequence(
+                    drive.until(() -> vision.seesNote()),
+                    // Commands.waitUntil(() -> vision.seesNote()),
+                    turn.until(() -> vision.isAlignedNote()),
+                    driveAndTurn.until(() -> intake.isBeamBroken()), drive1
+                ),
+                Commands.sequence(
+                    intakeCommands.intakeIntake().until(() -> intake.isBeamBroken()),
+                    shooterCommands.intakeSequencePlusHandoffCommand(),
+                    intakeCommands.beltStopCommand()
+                )
+            )
+        );
         return command;
     }
 }
