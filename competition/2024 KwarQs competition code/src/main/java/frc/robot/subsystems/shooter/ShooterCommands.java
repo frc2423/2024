@@ -208,7 +208,7 @@ public class ShooterCommands {
                         .until(() -> !iintake.isBeamBroken()),
                 Commands.parallel(shooterFeed.setFeedVoltage(6.5), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.5), //, shooterOnFlop())
                 //shooterFeed.setFeedSpeed(-.1),
-                shooterFeed.setFeedVoltage(-1),
+                shooterFeed.setFeedVoltage(-.5),
                 Commands.waitSeconds(.25),
                 Commands.runOnce(() -> {
                     shooter.shooterOff();
@@ -267,7 +267,7 @@ public class ShooterCommands {
 
     public Command revStartCommand() {
         Command command = Commands.run(() -> {
-            shooter.setVoltageSpeed(-12);
+            shooter.setVoltageSpeed(-13);
             shooter.shooterOn();
         }, shooter);
         command.setName("rev Start");
@@ -312,7 +312,7 @@ public class ShooterCommands {
                     // need to change speaker location pose to be something else that allows driver to change x, y while angle remains fixed on target
                         swerveCommands.lookAtTargetButStillMove(Constants.autoAlign.speakerLocationPose,
                                 Rotation2d.fromDegrees(180)),
-                        revSpeedFromDAS().withTimeout(150), shooterAngle.setShooterAngleFromDAS().withTimeout(150)));
+                        revStartCommand().withTimeout(150), shooterAngle.setShooterAngleFromDAS().withTimeout(150)));
                 
         command.setName("shootFromDAS");
         return command;
