@@ -29,7 +29,11 @@ public class ClimberSubsystem extends SubsystemBase {
     public void climbStart(){
         climberMotorRight.setPercent(climber1Speed);
         climberMotorLeft.setPercent(climber2Speed);
-        System.out.println("CLIMB START!");
+    }
+
+    public void climbDown(){
+        climberMotorRight.setPercent(-climber1Speed);
+        climberMotorLeft.setPercent(-climber2Speed);
     }
 
     public void climbStop() {

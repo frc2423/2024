@@ -18,6 +18,12 @@ public class ClimberCommands {
         command.setName("Start Climb");
         return command;
     }
+    
+    public Command climbDownCommand() {
+        var command = Commands.runOnce(() -> climberSubsystem.climbDown());
+        command.setName("Start Climb");
+        return command;
+    }
 
     public Command climbStopCommand() {
         var command = Commands.runOnce(() -> climberSubsystem.climbStop());
