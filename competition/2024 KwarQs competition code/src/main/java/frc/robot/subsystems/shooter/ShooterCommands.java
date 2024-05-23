@@ -208,7 +208,7 @@ public class ShooterCommands {
                         .until(() -> !iintake.isBeamBroken()),
                 Commands.parallel(shooterFeed.setFeedVoltage(6.5), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.5), //, shooterOnFlop())
                 //shooterFeed.setFeedSpeed(-.1),
-                shooterFeed.setFeedVoltage(-.5),
+                shooterFeed.setFeedVoltage(-1),
                 Commands.waitSeconds(.25),
                 Commands.runOnce(() -> {
                     shooter.shooterOff();
