@@ -348,6 +348,9 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterDown());
     new JoystickButton(operator, XboxController.Button.kRightBumper.value)
+        .whileTrue(shooterAngleCommands.moveShooterUp());
+
+        new JoystickButton(driverXbox, XboxController.Button.kRightBumper.value)
         .whileTrue(shooterCommands.moveFeedMotorFastNoTimeout());
 
     new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
