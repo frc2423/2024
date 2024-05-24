@@ -69,7 +69,7 @@ public class RobotContainer {
   SendableChooser<String> m_chooser = new SendableChooser<>();
 
   XboxController driverXbox = new XboxController(0);
-  XboxController operator = new XboxController(4);
+  XboxController operator = new XboxController(1);
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
   ShooterFeedSubsystem shooterFeed = new ShooterFeedSubsystem();
