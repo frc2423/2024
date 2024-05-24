@@ -11,17 +11,26 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.NTHelper;
 import frc.robot.PoseTransformUtils;
+import frc.robot.subsystems.shooter.ShooterAngleCommands;
+import frc.robot.subsystems.shooter.ShooterCommands;
 
 public class SwerveCommands {
 
     private SwerveSubsystem swerve;
+    private ShooterAngleCommands shooter;
+
+
 
     Rotation2d specialAngle = new Rotation2d();
 
     private MedianFilter currentAngleFilter = new MedianFilter(5);
 
-    public SwerveCommands(SwerveSubsystem swerve) {
+    public SwerveCommands(SwerveSubsystem swerve, ShooterAngleCommands shooter) {
         this.swerve = swerve;
+        this.shooter = shooter;
+
+
+
     }
 
     public static double normalizedAngle(double currentAngleDegrees) {
@@ -145,7 +154,7 @@ public class SwerveCommands {
 
         // Create the constraints to use while pathfinding
         PathConstraints constraints = new PathConstraints(
-                2.0, 4.0,
+                2.0, 2.0,
                 Units.degreesToRadians(540), Units.degreesToRadians(720));
 
         // Since AutoBuilder is configured, we can use it to build pathfinding commands
@@ -159,6 +168,40 @@ public class SwerveCommands {
         pathfindingCommand.setName("Align to Amp");
 
         return pathfindingCommand;
+    }
+
+    public Command autoAmpDrive(Pose2d pose) {
+
+
+        Command ampScoreCommand = Commands.parallel(autoAlignAmpCommand(pose), shooter.ampAngleCommand());
+
+        return ampScoreCommand;
+
+    }
+
+    public Command waitForPositionCommand(Pose2d pose) {
+    
+        var command = Commands.run(() -> {
+            waitForPosition(pose);
+        });
+
+            command.setName("waiting");
+
+        return command;
+    }
+
+    public void waitForPosition(Pose2d pose) {
+        Pose2d position = swerve.getPose();
+        double positionY = position.getY();
+        Pose2d target = pose;
+        double targetY = target.getY();
+
+        if (!(Math.abs(positionY - targetY) <= 0.03)) {
+            waitForPositionCommand(pose);
+        } else {
+
+        }
+        
     }
 
     public Command autoAlignSourceMiddleCommand(Pose2d pose) {
