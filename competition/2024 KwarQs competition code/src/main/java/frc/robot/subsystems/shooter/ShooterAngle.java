@@ -45,7 +45,7 @@ public class ShooterAngle extends SubsystemBase {
       new TrapezoidProfile.Constraints(450, 600)); // .5, 500, 400
   private double shooterPivotMotorPercent = 0;
   private Rotation2d shooterPivotAngle = new Rotation2d(0);
-  private static double maxShooterPivotAngle = 329; // 334
+  private static double maxShooterPivotAngle = 323.5; // 334
   private static double minShooterPivotAngle = 140;
   private CANcoder shooterAngle; // figured out? i think
 
