@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.controllers.NotVeryOldGuitarHero;
 import frc.robot.subsystems.LED.KwarqsLed;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -68,6 +69,7 @@ public class RobotContainer {
 
   XboxController driverXbox = new XboxController(0);
   XboxController operator = new XboxController(1);
+  NotVeryOldGuitarHero coolguy = new NotVeryOldGuitarHero();
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
   ShooterFeedSubsystem shooterFeed = new ShooterFeedSubsystem();
@@ -95,6 +97,7 @@ public class RobotContainer {
 
     Rotation2d angle = drivebase.getLookAngle(PoseTransformUtils.transformXRedPose(Constants.autoAlign.middleNote));
     NTHelper.setDouble("/debug/autoRotationOverride", angle.getDegrees());
+
 
   }
 
@@ -157,7 +160,6 @@ public class RobotContainer {
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
-
 
     Command driveFieldOrientedAngularVelocity = getTeleopDriveCommand();
 
@@ -248,7 +250,7 @@ public class RobotContainer {
     });
   }
 
-  private Command getTeleopDriveCommand(){
+  private Command getTeleopDriveCommand() {
     Command driveFieldOrientedAngularVelocity = drivebase.driveCommand(
         () -> {
           double y = MathUtil.applyDeadband(
@@ -269,7 +271,7 @@ public class RobotContainer {
           return m_xspeedLimiter.calculate(x);
         },
         () -> -driverXbox.getRightX());
-        return driveFieldOrientedAngularVelocity;
+    return driveFieldOrientedAngularVelocity;
   }
 
   private void configureBindings() {
@@ -294,6 +296,8 @@ public class RobotContainer {
 
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     // new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
+    // new JoystickButton(coolguy,
+    // GuitarHeroController.Button.kGreen.value).whileTrue();
 
     new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterUp());
@@ -312,9 +316,9 @@ public class RobotContainer {
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
 
-    Command justRev = Commands.either(shooterCommands.rev(), shooterCommands.stopShooter(), () -> driverXbox.getRightBumper());
+    Command justRev = Commands.either(shooterCommands.rev(), shooterCommands.stopShooter(),
+        () -> driverXbox.getRightBumper());
 
-    
     shooter.setDefaultCommand(justRev);
     shooterFeed.setDefaultCommand(shooterCommands.stopFeeder());
 
@@ -330,6 +334,8 @@ public class RobotContainer {
         .whileTrue(swerveCommands.autoAlignAmpCommand(Constants.autoAlign.sourceMiddlePose));
     // new Trigger(() -> driverXbox.getPOV() == 0)
     // .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.handOffCommand()));
+
+    guitarHeroTriggers();
 
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
@@ -377,6 +383,19 @@ public class RobotContainer {
     return drivebase.getAuto(m_chooser.getSelected());
   }
 
+  public void guitarHeroTriggers(){
+    new Trigger(() -> coolguy.getGreenButton()).whileTrue(shooterAngleCommands.climberAngleCommand()); //figure climbing out //here
+    new Trigger(() -> coolguy.getRedButton()).whileTrue(shooterAngleCommands.ampAngleCommand());
+    new Trigger(() -> coolguy.getYellowButton()).whileTrue(shooterAngleCommands.shooterAngleCommand());
+    new Trigger(() -> coolguy.getBlueButton()).whileTrue(shooterCommands.moveFeedAmpCommand());
+    new Trigger(() -> coolguy.getOrangeButton()).whileTrue(shooterCommands.moveFeedAmpOppCommand());
+    new Trigger(() -> coolguy.getSelectButton()).whileTrue(Commands.run(() -> {System.out.println("SELECT");})); //figure climbing out
+    new Trigger(() -> coolguy.getStartButton()).whileTrue(Commands.run(() -> {System.out.println("START");})); //figure climbing out
+
+    new Trigger(() -> coolguy.getUpStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING UP");}));
+    new Trigger(() -> coolguy.getDownStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING DOWN");}));
+  }
+
   public void setDriveMode() {
     // drivebase.setDefaultCommand();
   }
@@ -398,6 +417,10 @@ public class RobotContainer {
     // System.out.println(drivebase.getPose());
 
   }
+
+  // public void updateGuitarButtons() {
+  //   System.out.println(coolguy.getGreenButton());
+  // }
 
   public void addVision() {
     var estimatedPose = visionSubsystem.getEstimatedRobotPose();

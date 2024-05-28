@@ -87,7 +87,6 @@ public class Robot extends TimedRobot {
     m_robotContainer.JointReader();
 
     NTHelper.setDouble("/Time", periodTimer.get());
-    
 
     if (!isSimulation()) {
       m_robotContainer.updateVision();
