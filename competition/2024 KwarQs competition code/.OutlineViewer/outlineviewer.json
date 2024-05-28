@@ -26,12 +26,10 @@
       "IMU": {
         "open": true
       },
-      "Intake": {
-        "open": true
-      },
       "ShooterAngle": {
         "open": true
-      }
+      },
+      "open": true
     },
     "best target": {
       "double[]##v_/best target/pose": {

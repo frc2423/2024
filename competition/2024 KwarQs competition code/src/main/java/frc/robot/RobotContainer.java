@@ -11,7 +11,6 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -43,6 +42,7 @@ import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionCommands;
 import frc.robot.subsystems.vision.VisionSubsystem;
+
 
 import java.util.Optional;
 
@@ -77,11 +77,11 @@ public class RobotContainer {
   ShooterAngle shooterAngle = new ShooterAngle();
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
-  SwerveCommands swerveCommands = new SwerveCommands(drivebase);
-  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands,
-      shooterAngleCommands);
+  SwerveCommands swerveCommands = new SwerveCommands(drivebase, shooterAngleCommands);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
       drivebase, swerveCommands, shooterFeed);
+  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands, 
+  shooterCommands, shooterAngleCommands);
   KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem, driverXbox);
 
   public static final DAS das = new DAS();
@@ -285,8 +285,9 @@ public class RobotContainer {
     // .onFalse(new RunCommand(intake::beltStop));
 
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
-        .whileTrue(visionCommands.noteAutoAlignPickUp()
-            .andThen(Commands.parallel(shooterCommands.intakeSequencePlusHandoffCommand(), getTeleopDriveCommand())));
+        .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(Commands.parallel(shooterCommands.intakeSequencePlusHandoffCommand(), getTeleopDriveCommand())));
+    new JoystickButton(driverXbox, XboxController.Button.kB.value)
+        .onTrue(visionCommands.noteAutoAlignPickUpHandoffAndPrepareToShoot());
     // .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
     // .onFalse(new RunCommand(intake::beltStop));
 
@@ -294,7 +295,7 @@ public class RobotContainer {
     // intakeCommands.intakeIntake(), () -> driverXbox.getYButton());
 
     new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
-    new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
+    // new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
     // new JoystickButton(coolguy,
     // GuitarHeroController.Button.kGreen.value).whileTrue();
 
@@ -304,8 +305,9 @@ public class RobotContainer {
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
 
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromIntake())
-        .onFalse(shooterAngleCommands.handOffAngleCommand());
+    //new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromIntake())
+        //.onFalse(shooterAngleCommands.handOffAngleCommand());
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.prepareToShoot());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
     new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand())
         .onFalse(shooterCommands.moveFeedAmpCommandEnd());
@@ -354,6 +356,9 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kRightBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterUp());
 
+        new JoystickButton(driverXbox, XboxController.Button.kRightBumper.value)
+        .whileTrue(shooterCommands.moveFeedMotorFastNoTimeout());
+
     new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(operator, XboxController.Button.kB.value)
         .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
@@ -364,6 +369,7 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.autoFlopCommand());
     new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(shooterCommands.shootAmp());
 
+    new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
   }
 
   /**

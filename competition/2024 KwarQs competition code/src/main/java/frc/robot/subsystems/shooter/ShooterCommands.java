@@ -43,9 +43,8 @@ public class ShooterCommands {
                 // for intaking the next game piece. Continue running feeder motor briefly since
                 // game piece
                 // might still be in the shooter
-                Commands.sequence(intake.beltStopCommand(), intake.intakeDown()).withTimeout(.1),
-                // shooting finished, stop feeder motor
-                Commands.runOnce(shooterFeed::stopFeederMotor));
+                Commands.sequence(intake.beltStopCommand(), intake.intakeDown()).withTimeout(.1)
+        );
         command.setName("shoot in auto");
         return command;
     }
@@ -60,8 +59,9 @@ public class ShooterCommands {
     }
 
     public Command runDAS() {
+        Command wait = Commands.waitSeconds(.75);
         Command command = Commands.parallel(
-                moveFeedMotorFast(), revStartCommand(), shooterAngle.setShooterAngleFromDAS());
+                Commands.sequence(wait, moveFeedMotorFast()), revStartCommand(), shooterAngle.setShooterAngleFromDAS());
         command.setName("runDAS");
         return command;
     }
@@ -120,12 +120,19 @@ public class ShooterCommands {
     public Command moveFeedMotor() {
         var command = Commands.run(() -> shooterFeed.moveFeederMotor(), shooterFeed).withTimeout(.1);
         command.setName("Feeding");
+        command.addRequirements(shooterFeed);
         return command;
     }
 
     public Command moveFeedMotorFast() {
         var command = Commands.run(() -> shooterFeed.moveFeederMotorFast(), shooterFeed).withTimeout(.1);
-        command.setName("Feeding");
+        command.setName("FeedingFast");
+        return command;
+    }
+
+    public Command moveFeedMotorFastNoTimeout() {
+        var command = Commands.run(() -> shooterFeed.moveFeederMotorFast(), shooterFeed);
+        command.setName("FeedingFastNoTimeout");
         return command;
     }
 
@@ -196,10 +203,13 @@ public class ShooterCommands {
 
     public Command handOffCommand() {
         var command = Commands.sequence(
-                Commands.parallel(moveFeedMotor(), intake.intakeIntake(.7), shooterOnFlop())
+                Commands.parallel(shooterFeed.setFeedVoltage(6.5
+                ), intake.intakeIntake(.7), shooterOnFlop()) //, shooterOnFlop()
                         .until(() -> !iintake.isBeamBroken()),
-                Commands.parallel(moveFeedMotor(), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.5),
-                Commands.run(() -> shooterFeed.moveFeederHandoff()).withTimeout(.15),
+                Commands.parallel(shooterFeed.setFeedVoltage(6.5), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.5), //, shooterOnFlop())
+                //shooterFeed.setFeedSpeed(-.1),
+                shooterFeed.setFeedVoltage(-.5),
+                Commands.waitSeconds(.25),
                 Commands.runOnce(() -> {
                     shooter.shooterOff();
                     shooterFeed.feedOff();
@@ -257,10 +267,11 @@ public class ShooterCommands {
 
     public Command revStartCommand() {
         Command command = Commands.run(() -> {
-            shooter.setVoltageSpeed(-12);
+            shooter.setVoltageSpeed(-13);
             shooter.shooterOn();
         }, shooter);
         command.setName("rev Start");
+        command.addRequirements(shooter);
         return command;
     }
 
@@ -291,6 +302,18 @@ public class ShooterCommands {
                 stopIt(),
                 shooterAngle.handOffAngleCommand());
 
+        command.setName("shootFromDAS");
+        return command;
+    }
+
+    public Command prepareToShoot() {
+        Command command = Commands.sequence(
+                Commands.parallel(
+                    // need to change speaker location pose to be something else that allows driver to change x, y while angle remains fixed on target
+                        swerveCommands.lookAtTargetButStillMove(Constants.autoAlign.speakerLocationPose,
+                                Rotation2d.fromDegrees(180)),
+                        revStartCommand().withTimeout(150), shooterAngle.setShooterAngleFromDAS().withTimeout(150)));
+                
         command.setName("shootFromDAS");
         return command;
     }
