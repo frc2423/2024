@@ -4,7 +4,7 @@ package frc.robot.controllers;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class NotVeryOldGuitarHero {
-    Joystick guitarHero = new Joystick(3);
+    Joystick guitarHero = new Joystick(2);
 
     public enum Button {
         kGreen(8),
