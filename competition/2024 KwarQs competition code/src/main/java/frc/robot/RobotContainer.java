@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.controllers.NotVeryOldGuitarHero;
 import frc.robot.subsystems.LED.KwarqsLed;
 import frc.robot.subsystems.climber.ClimberCommands;
 import frc.robot.subsystems.climber.ClimberSubsystem;
@@ -70,6 +71,7 @@ public class RobotContainer {
 
   XboxController driverXbox = new XboxController(0);
   XboxController operator = new XboxController(1);
+  NotVeryOldGuitarHero coolguy = new NotVeryOldGuitarHero();
   IntakeSubsystem intake = new IntakeSubsystem();
   ShooterSubsystem shooter = new ShooterSubsystem();
   ShooterFeedSubsystem shooterFeed = new ShooterFeedSubsystem();
@@ -99,6 +101,7 @@ public class RobotContainer {
 
     Rotation2d angle = drivebase.getLookAngle(PoseTransformUtils.transformXRedPose(Constants.autoAlign.middleNote));
     NTHelper.setDouble("/debug/autoRotationOverride", angle.getDegrees());
+
 
   }
 
@@ -296,14 +299,14 @@ public class RobotContainer {
     // Command intakeOrOuttake = Commands.either(intakeCommands.intakeOuttake(),
     // intakeCommands.intakeIntake(), () -> driverXbox.getYButton());
 
-    new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(Commands.sequence(climberCommands.climbStartCommand(),
-     intakeCommands.intakeDown())).onFalse(climberCommands.climbStopCommand());
-    new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(Commands.sequence(intakeCommands.intakeDown(),
-     climberCommands.climbDownCommand())).onFalse(climberCommands.climbStopCommand());
+    //new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(Commands.sequence(climberCommands.climbStartCommand(),
+     //intakeCommands.intakeDown())).onFalse(climberCommands.climbStopCommand());
+    //new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(Commands.sequence(intakeCommands.intakeDown(),
+     //climberCommands.climbDownCommand())).onFalse(climberCommands.climbStopCommand()); for guitarhero
+
     // new JoystickButton(coolguy,
     // GuitarHeroController.Button.kGreen.value).whileTrue();
-    // new JoystickButton(driverXbox,
-    // XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
+    new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     // new JoystickButton(driverXbox,
     // XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
 
@@ -313,10 +316,9 @@ public class RobotContainer {
     // new Trigger(() -> driverXbox.getRightTriggerAxis() >
     // .5).whileTrue(shooterCommands.shooterCommand());
 
-    // new Trigger(() -> driverXbox.getRightTriggerAxis() >
-    // .5).whileTrue(shooterCommands.shootFromIntake())
-    // .onFalse(shooterAngleCommands.handOffAngleCommand());
-    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedMotorFastNoTimeout());
+    //new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.shootFromIntake())
+        //.onFalse(shooterAngleCommands.handOffAngleCommand());
+    new Trigger(() -> driverXbox.getRightTriggerAxis() > .5).whileTrue(shooterCommands.prepareToShoot());
     new Trigger(() -> driverXbox.getLeftTriggerAxis() > .5).whileTrue(shooterCommands.revAndShoot());
     new Trigger(() -> operator.getRightTriggerAxis() > .5).whileTrue(shooterCommands.moveFeedAmpCommand())
         .onFalse(shooterCommands.moveFeedAmpCommandEnd());
@@ -344,6 +346,8 @@ public class RobotContainer {
     // new Trigger(() -> driverXbox.getPOV() == 0)
     // .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(shooterCommands.handOffCommand()));
 
+    guitarHeroTriggers();
+
     new Trigger(intake::isBeamBroken).onTrue(Commands.run(() -> {
       operator.setRumble(RumbleType.kBothRumble, 1);
       driverXbox.setRumble(RumbleType.kBothRumble, 1);
@@ -363,6 +367,9 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kRightBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterUp());
 
+        new JoystickButton(driverXbox, XboxController.Button.kRightBumper.value)
+        .whileTrue(shooterCommands.moveFeedMotorFastNoTimeout());
+
     new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
     new JoystickButton(operator, XboxController.Button.kB.value)
         .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
@@ -373,7 +380,7 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.autoFlopCommand());
     new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(shooterCommands.shootAmp());
 
-    new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(shooterCommands.prepareToShoot());
+    new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
   }
 
   /**
@@ -385,6 +392,19 @@ public class RobotContainer {
     // An example command will be run in autonomous
     drivebase.setAutoRotationTarget(null);
     return drivebase.getAuto(m_chooser.getSelected());
+  }
+
+  public void guitarHeroTriggers(){
+    new Trigger(() -> coolguy.getGreenButton()).whileTrue(shooterAngleCommands.climberAngleCommand()); //figure climbing out //here
+    new Trigger(() -> coolguy.getRedButton()).whileTrue(shooterAngleCommands.ampAngleCommand());
+    new Trigger(() -> coolguy.getYellowButton()).whileTrue(shooterAngleCommands.shooterAngleCommand());
+    new Trigger(() -> coolguy.getBlueButton()).whileTrue(shooterCommands.moveFeedAmpCommand());
+    new Trigger(() -> coolguy.getOrangeButton()).whileTrue(shooterCommands.moveFeedAmpOppCommand());
+    new Trigger(() -> coolguy.getSelectButton()).whileTrue(Commands.run(() -> {System.out.println("SELECT");})); //figure climbing out
+    new Trigger(() -> coolguy.getStartButton()).whileTrue(Commands.run(() -> {System.out.println("START");})); //figure climbing out
+
+    new Trigger(() -> coolguy.getUpStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING UP");}));
+    new Trigger(() -> coolguy.getDownStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING DOWN");}));
   }
 
   public void setDriveMode() {
@@ -408,10 +428,6 @@ public class RobotContainer {
     // System.out.println(drivebase.getPose());
 
   }
-
-  // public void updateGuitarButtons() {
-  // System.out.println(coolguy.getGreenButton());
-  // }
 
   public void addVision() {
     var estimatedPose = visionSubsystem.getEstimatedRobotPose();
