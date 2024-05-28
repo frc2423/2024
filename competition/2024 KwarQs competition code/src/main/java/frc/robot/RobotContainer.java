@@ -378,13 +378,13 @@ public class RobotContainer {
   }
 
   public void guitarHeroTriggers(){
-    new Trigger(() -> coolguy.getGreenButton()).whileTrue(shooterAngleCommands.climberAngleCommand()); //here
+    new Trigger(() -> coolguy.getGreenButton()).whileTrue(shooterAngleCommands.climberAngleCommand()); //figure climbing out //here
     new Trigger(() -> coolguy.getRedButton()).whileTrue(shooterAngleCommands.ampAngleCommand());
     new Trigger(() -> coolguy.getYellowButton()).whileTrue(shooterAngleCommands.shooterAngleCommand());
-    new Trigger(() -> coolguy.getBlueButton()).whileTrue(Commands.run(() -> {System.out.println("BLUE");}));
-    new Trigger(() -> coolguy.getOrangeButton()).whileTrue(Commands.run(() -> {System.out.println("ORANGE");}));
-    new Trigger(() -> coolguy.getSelectButton()).whileTrue(Commands.run(() -> {System.out.println("SELECT");}));
-    new Trigger(() -> coolguy.getStartButton()).whileTrue(Commands.run(() -> {System.out.println("START");}));
+    new Trigger(() -> coolguy.getBlueButton()).whileTrue(shooterCommands.moveFeedAmpCommand());
+    new Trigger(() -> coolguy.getOrangeButton()).whileTrue(shooterCommands.moveFeedAmpOppCommand());
+    new Trigger(() -> coolguy.getSelectButton()).whileTrue(Commands.run(() -> {System.out.println("SELECT");})); //figure climbing out
+    new Trigger(() -> coolguy.getStartButton()).whileTrue(Commands.run(() -> {System.out.println("START");})); //figure climbing out
 
     new Trigger(() -> coolguy.getUpStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING UP");}));
     new Trigger(() -> coolguy.getDownStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING DOWN");}));
