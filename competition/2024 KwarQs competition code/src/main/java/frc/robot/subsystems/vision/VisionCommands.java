@@ -75,6 +75,7 @@ public class VisionCommands {
                 )
             )
         );
+        command.setName("Note Align Pick Up Handoff and PrepareToShoot");
         return command;
     }
 }
