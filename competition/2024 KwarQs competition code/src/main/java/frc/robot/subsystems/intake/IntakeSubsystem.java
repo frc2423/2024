@@ -104,6 +104,15 @@ public class IntakeSubsystem extends SubsystemBase {
         return feedforward + pid;
     }
 
+    public boolean isHandoff() {
+        if (getCurrentCommand() == null) {
+            return false;
+        }
+        if (getCurrentCommand().getName().equals("Note Align Pick Up Handoff and PrepareToShoot")) {
+            return true;
+        }
+        return false;
+    }
     private void setSetpointToCurrentAngle() {
         updatePivotAngle();
         setpoint = pivotAngle;
