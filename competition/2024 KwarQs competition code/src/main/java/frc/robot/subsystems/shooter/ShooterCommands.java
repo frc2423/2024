@@ -209,7 +209,7 @@ public class ShooterCommands {
                 Commands.parallel(shooterFeed.setFeedVoltage(6.5), intake.intakeIntake(.7), shooterOnFlop()).withTimeout(.5), //, shooterOnFlop())
                 //shooterFeed.setFeedSpeed(-.1),
                 shooterFeed.setFeedVoltage(-.5),
-                Commands.waitSeconds(.25),
+                Commands.waitSeconds(.3),
                 Commands.runOnce(() -> {
                     shooter.shooterOff();
                     shooterFeed.feedOff();

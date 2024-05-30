@@ -105,6 +105,9 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean isHandoff() {
+        if (getCurrentCommand() == null) {
+            return false;
+        }
         if (getCurrentCommand().getName().equals("Note Align Pick Up Handoff and PrepareToShoot")) {
             return true;
         }

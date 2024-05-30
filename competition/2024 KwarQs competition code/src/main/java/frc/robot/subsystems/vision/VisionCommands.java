@@ -26,6 +26,7 @@ public class VisionCommands {
         this.shooterAngleCommands = shooterAngleCommands;
         this.shooterCommands = shooterCommands;
     }
+
     public Command notePoseAutoAlign() {
         Command command = Commands.run(() -> drivebase.actuallyLookAngle(vision.getTurn()))
                 .until(() -> vision.isAlignedNote());
@@ -34,7 +35,7 @@ public class VisionCommands {
     }
 
     public Command noteAutoAlign() {
-        Command turn = Commands.run(() -> drivebase.turn(-vision.getNoteYaw() * .13 ), drivebase, vision);
+        Command turn = Commands.run(() -> drivebase.turn(-vision.getNoteYaw() * .13), drivebase, vision);
         Command command = turn.until(() -> vision.isAlignedNote());
         command.setName("note auto rotate align");
         return command;
@@ -43,9 +44,10 @@ public class VisionCommands {
     public Command noteAutoAlignPickUp() {
         Command turn = Commands.run(() -> drivebase.turn(-vision.getNoteYaw() * .075), drivebase, vision);
         Command driveAndTurn = Commands.run(() -> drivebase.turnAndGo(2, vision.yawAfterAligned()), drivebase, vision);
-        Command stopMoving =  Commands.runOnce(() -> drivebase.turnAndGo(0, 0), drivebase);
+        Command stopMoving = Commands.runOnce(() -> drivebase.turnAndGo(0, 0), drivebase);
         Command command = Commands.sequence(
-                Commands.parallel(intakeCommands.intakeDown(), shooterAngleCommands.handOffAngleCommand()).withTimeout(.2),
+                Commands.parallel(intakeCommands.intakeDown(), shooterAngleCommands.handOffAngleCommand())
+                        .withTimeout(.2),
                 turn.until(() -> vision.isAlignedNote()),
                 // intakeCommands.intakeDown(),
                 Commands.parallel(driveAndTurn, intakeCommands.intakeIntake()).until(() -> intake.isBeamBroken()),
@@ -59,22 +61,19 @@ public class VisionCommands {
         Command drive = drivebase.getTeleopDriveCommand();
         Command drive1 = drivebase.getTeleopDriveCommand();
 
-        Command command = Commands.sequence(  
-            Commands.parallel(intakeCommands.intakeDown(), shooterAngleCommands.handOffAngleCommand()).withTimeout(.2),
-            Commands.parallel(
-                Commands.sequence(
-                    drive.until(() -> vision.seesNote()),
-                    // Commands.waitUntil(() -> vision.seesNote()),
-                    turn.until(() -> vision.isAlignedNote()),
-                    driveAndTurn.until(() -> intake.isBeamBroken()), drive1
-                ),
-                Commands.sequence(
-                    intakeCommands.intakeIntake().until(() -> intake.isBeamBroken()),
-                    shooterCommands.intakeSequencePlusHandoffCommand(),
-                    intakeCommands.beltStopCommand()
-                )
-            )
-        );
+        Command command = Commands.sequence(
+                Commands.parallel(intakeCommands.intakeDown(), shooterAngleCommands.handOffAngleCommand())
+                        .withTimeout(.2),
+                Commands.parallel(
+                        Commands.sequence(
+                                drive.until(() -> vision.seesNote()),
+                                turn.until(() -> vision.isAlignedNote()),
+                                driveAndTurn.until(() -> intake.isBeamBroken()), drive1),
+                        Commands.sequence(
+                                intakeCommands.intakeIntake().until(() -> intake.isBeamBroken()),
+                                shooterCommands.intakeSequencePlusHandoffCommand(),
+                                intakeCommands.beltStopCommand(),
+                                Commands.runOnce(() -> intake.getCurrentCommand().cancel()))));
         command.setName("Note Align Pick Up Handoff and PrepareToShoot");
         return command;
     }
