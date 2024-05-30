@@ -50,7 +50,8 @@ public class ShooterAngle extends SubsystemBase {
   private CANcoder shooterAngle; // figured out? i think
 
   public static double feedAngle = 323.5; // is correct number now
-  public static double climbAngle = 180; // is correct number now
+  public static double climbAngle = 180; // old
+  public static double climbingAngle = 200; //maybe good (new)
   public static double shootAngle = 323.5; // is good
   public static double ampAngle = 141; // maybe good
   public static double handOffAngle = 303.5; // maybe good

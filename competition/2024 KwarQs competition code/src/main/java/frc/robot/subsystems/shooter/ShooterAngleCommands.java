@@ -29,10 +29,16 @@ public class ShooterAngleCommands {
     return command;
   }
 
-  public Command climberAngleCommand() {
+  public Command climberAngleCommand() { //this is the old one
     var command = shooterAngle.runOnce(() -> shooterAngle.setAngle(shooterAngle.climbAngle));
     // put in actual value
     command.setName("Climber Angle");
+    return command;
+  }
+
+  public Command climbingAngleCommand() { //with new climber
+    var command = shooterAngle.runOnce(() -> shooterAngle.setAngle(shooterAngle.climbingAngle));
+    command.setName("Climbing Angle");
     return command;
   }
 

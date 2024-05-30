@@ -395,12 +395,12 @@ public class RobotContainer {
   }
 
   public void guitarHeroTriggers(){
-    new Trigger(() -> coolguy.getGreenButton()).whileTrue(Commands.sequence(climberCommands.climbStartCommand(), intakeCommands.intakeDown())).onFalse(climberCommands.climbStopCommand()); //clibing fr //here
+    new Trigger(() -> coolguy.getGreenButton()).onTrue(Commands.sequence(shooterAngleCommands.climbingAngleCommand(), climberCommands.climbStartCommand(), intakeCommands.intakeDown().withTimeout(.1))).onFalse(climberCommands.climbStopCommand()); //clibing fr //here
     new Trigger(() -> coolguy.getRedButton()).whileTrue(shooterAngleCommands.ampAngleCommand());
     new Trigger(() -> coolguy.getYellowButton()).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> coolguy.getBlueButton()).whileTrue(shooterCommands.moveFeedAmpCommand());
     new Trigger(() -> coolguy.getOrangeButton()).whileTrue(shooterCommands.moveFeedAmpOppCommand());
-    new Trigger(() -> coolguy.getSelectButton()).whileTrue(Commands.sequence(intakeCommands.intakeDown(), climberCommands.climbDownCommand())).onFalse(climberCommands.climbStopCommand()); // un climbing//figure climbing out
+    new Trigger(() -> coolguy.getSelectButton()).onTrue(Commands.sequence(intakeCommands.intakeDown().withTimeout(.05), climberCommands.climbDownCommand())).onFalse(climberCommands.climbStopCommand()); // un climbing//figure climbing out
     new Trigger(() -> coolguy.getStartButton()).whileTrue(shooterAngleCommands.moveShooterDown()); //figure climbing out
 
     new Trigger(() -> coolguy.getUpStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING UP");}));
