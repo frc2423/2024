@@ -48,11 +48,19 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     private boolean leftClimberIsDown(){
-        return climberMotorLeft.getEncoderCount() <= -51.2;
+        return climberMotorLeft.getEncoderCount() <= -50.8; //-51.2;
     }
     
     private boolean rightClimberIsDown(){
-        return climberMotorRight.getEncoderCount() >= 48.9;
+        return climberMotorRight.getEncoderCount() >= 49.2; //48.9;
+    }
+
+    private boolean leftClimberIsUp(){
+        return climberMotorLeft.getEncoderCount() >= 72.8;
+    }
+    
+    private boolean rightClimberIsUp(){
+        return climberMotorRight.getEncoderCount() <= -71.6;
     }
 
     public void leftGoingDown(){
@@ -69,6 +77,29 @@ public class ClimberSubsystem extends SubsystemBase {
         } else {
             climbStop();
         }
+    }
+
+    public void leftGoingUp(){
+        if(!leftClimberIsUp()){
+            climbDown();
+        } else {
+            climbStop();
+        }
+    }
+
+    public void rightGoingUp(){
+        if(!rightClimberIsUp()){
+            climbDown();
+        } else {
+            climbStop();
+        }
+    }
+
+    public Command climberUpCommand() {
+        return Commands.run(() -> {
+            leftGoingUp();
+            rightGoingUp();
+        }, this).until(() -> leftClimberIsUp() && rightClimberIsUp());
     }
 
     public Command climberDownCommand() {

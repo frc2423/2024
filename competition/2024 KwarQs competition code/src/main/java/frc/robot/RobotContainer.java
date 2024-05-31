@@ -401,8 +401,8 @@ public class RobotContainer {
     new Trigger(() -> coolguy.getYellowButton()).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> coolguy.getBlueButton()).whileTrue(shooterCommands.moveFeedAmpCommand());
     new Trigger(() -> coolguy.getOrangeButton()).whileTrue(shooterCommands.moveFeedAmpOppCommand());
-    new Trigger(() -> coolguy.getSelectButton()).onTrue(Commands.sequence(intakeCommands.intakeDown().withTimeout(.05), climberCommands.climbDownCommand())).onFalse(climberCommands.climbStopCommand()); // un climbing//figure climbing out
-    new Trigger(() -> coolguy.getStartButton()).whileTrue(shooterAngleCommands.moveShooterDown()); //figure climbing out
+    new Trigger(() -> coolguy.getSelectButton()).onTrue(Commands.sequence(shooterAngleCommands.climbingAngleCommand(), intakeCommands.intakeDown().withTimeout(.05), climberSubsystem.climberUpCommand())).onFalse(climberCommands.climbStopCommand()); // un climbing//figure climbing out
+    new Trigger(() -> coolguy.getStartButton()).whileTrue(shooterAngleCommands.moveShooterDown()); 
 
     new Trigger(() -> coolguy.getUpStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING UP");}));
     new Trigger(() -> coolguy.getDownStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING DOWN");}));
