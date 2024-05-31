@@ -15,18 +15,21 @@ public class ClimberCommands {
 
     public Command climbStartCommand() {
         var command = Commands.runOnce(() -> climberSubsystem.climbStart());
+        command.addRequirements(climberSubsystem);
         command.setName("Start Climb");
         return command;
     }
     
     public Command climbDownCommand() {
         var command = Commands.runOnce(() -> climberSubsystem.climbDown());
+        command.addRequirements(climberSubsystem);
         command.setName("Start Climb");
         return command;
     }
 
     public Command climbStopCommand() {
         var command = Commands.runOnce(() -> climberSubsystem.climbStop());
+        command.addRequirements(climberSubsystem);
         command.setName("Stop Climb");
         return command;
     }

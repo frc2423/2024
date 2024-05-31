@@ -2,10 +2,14 @@ package frc.robot.subsystems.climber;
 
 import frc.robot.devices.NeoMotor;
 
+import com.revrobotics.SparkAbsoluteEncoder;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.NTHelper;
 import frc.robot.devices.NeoMotor;
@@ -24,6 +28,8 @@ public class ClimberSubsystem extends SubsystemBase {
         climberMotorRight = new NeoMotor(30);
         climberMotorLeft = new NeoMotor(31);
 
+        climberMotorLeft.resetEncoder(0);
+        climberMotorRight.resetEncoder(0);
     }
 
     public void climbStart(){
@@ -37,11 +43,48 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public void climbStop() {
-         climberMotorRight.setPercent(0);
+        climberMotorRight.setPercent(0);
         climberMotorLeft.setPercent(0);
     }
 
+    private boolean leftClimberIsDown(){
+        return climberMotorLeft.getEncoderCount() <= -51.2;
+    }
+    
+    private boolean rightClimberIsDown(){
+        return climberMotorRight.getEncoderCount() >= 48.9;
+    }
 
+    public void leftGoingDown(){
+        if(!leftClimberIsDown()){
+            climbStart();
+        } else {
+            climbStop();
+        }
+    }
 
+    public void rightGoingDown(){
+        if(!rightClimberIsDown()){
+            climbStart();
+        } else {
+            climbStop();
+        }
+    }
 
+    public Command climberDownCommand() {
+        return Commands.run(() -> {
+            leftGoingDown();
+            rightGoingDown();
+        }, this).until(() -> leftClimberIsDown() && rightClimberIsDown());
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        super.initSendable(builder);
+
+        builder.addDoubleProperty("Left Motor Encoder Count",
+                () -> climberMotorLeft.getEncoderCount(), null);
+        builder.addDoubleProperty("Right Motor Encoder Count",
+                () -> climberMotorRight.getEncoderCount(), null);
+    }
 }

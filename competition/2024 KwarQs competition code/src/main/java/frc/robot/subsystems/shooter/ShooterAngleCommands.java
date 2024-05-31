@@ -38,6 +38,7 @@ public class ShooterAngleCommands {
 
   public Command climbingAngleCommand() { //with new climber
     var command = shooterAngle.runOnce(() -> shooterAngle.setAngle(shooterAngle.climbingAngle));
+    command.addRequirements(shooterAngle);
     command.setName("Climbing Angle");
     return command;
   }

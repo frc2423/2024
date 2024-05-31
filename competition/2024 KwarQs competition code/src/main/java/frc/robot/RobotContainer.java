@@ -113,6 +113,7 @@ public class RobotContainer {
     configureBindings();
     intake.beltStop();
     SmartDashboard.putData("Intake", intake);
+    SmartDashboard.putData("Climber", climberSubsystem);
     SmartDashboard.putData("SwerveSubsystem", drivebase);
     SmartDashboard.putData("ShooterFeed", shooterFeed);
     SmartDashboard.putData("Shooter", shooter);
@@ -395,7 +396,7 @@ public class RobotContainer {
   }
 
   public void guitarHeroTriggers(){
-    new Trigger(() -> coolguy.getGreenButton()).onTrue(Commands.sequence(shooterAngleCommands.climbingAngleCommand(), climberCommands.climbStartCommand(), intakeCommands.intakeDown().withTimeout(.1))).onFalse(climberCommands.climbStopCommand()); //clibing fr //here
+    new Trigger(() -> coolguy.getGreenButton()).onTrue(Commands.sequence(shooterAngleCommands.climbingAngleCommand(), climberSubsystem.climberDownCommand(), intakeCommands.intakeDown().withTimeout(.1))).onFalse(climberCommands.climbStopCommand()); //clibing fr //here
     new Trigger(() -> coolguy.getRedButton()).whileTrue(shooterAngleCommands.ampAngleCommand());
     new Trigger(() -> coolguy.getYellowButton()).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> coolguy.getBlueButton()).whileTrue(shooterCommands.moveFeedAmpCommand());
