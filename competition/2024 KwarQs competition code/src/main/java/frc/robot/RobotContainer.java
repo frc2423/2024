@@ -11,6 +11,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -31,6 +32,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.controllers.NotVeryOldGuitarHero;
 import frc.robot.subsystems.LED.KwarqsLed;
+import frc.robot.subsystems.climber.ClimberCommands;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.intake.IntakeCommands;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterAngle;
@@ -42,7 +45,6 @@ import frc.robot.subsystems.swervedrive.SwerveCommands;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.vision.VisionCommands;
 import frc.robot.subsystems.vision.VisionSubsystem;
-
 
 import java.util.Optional;
 
@@ -78,10 +80,12 @@ public class RobotContainer {
   ShooterAngleCommands shooterAngleCommands = new ShooterAngleCommands(shooterAngle, drivebase, shooter);
   IntakeCommands intakeCommands = new IntakeCommands(intake, shooterAngleCommands);
   SwerveCommands swerveCommands = new SwerveCommands(drivebase);
+  ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  ClimberCommands climberCommands = new ClimberCommands(climberSubsystem);
   ShooterCommands shooterCommands = new ShooterCommands(shooter, shooterAngleCommands, intakeCommands, intake,
       drivebase, swerveCommands, shooterFeed);
-  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands, 
-  shooterCommands, shooterAngleCommands);
+  VisionCommands visionCommands = new VisionCommands(visionSubsystem, drivebase, intake, intakeCommands,
+      shooterCommands, shooterAngleCommands);
   KwarqsLed ledKwarqs = new KwarqsLed(visionSubsystem, driverXbox);
 
   public static final DAS das = new DAS();
@@ -109,6 +113,7 @@ public class RobotContainer {
     configureBindings();
     intake.beltStop();
     SmartDashboard.putData("Intake", intake);
+    SmartDashboard.putData("Climber", climberSubsystem);
     SmartDashboard.putData("SwerveSubsystem", drivebase);
     SmartDashboard.putData("ShooterFeed", shooterFeed);
     SmartDashboard.putData("Shooter", shooter);
@@ -285,7 +290,8 @@ public class RobotContainer {
     // .onFalse(new RunCommand(intake::beltStop));
 
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
-        .whileTrue(visionCommands.noteAutoAlignPickUp().andThen(Commands.parallel(shooterCommands.intakeSequencePlusHandoffCommand(), getTeleopDriveCommand())));
+        .whileTrue(visionCommands.noteAutoAlignPickUp()
+            .andThen(Commands.parallel(shooterCommands.intakeSequencePlusHandoffCommand(), getTeleopDriveCommand())));
     new JoystickButton(driverXbox, XboxController.Button.kB.value)
         .onTrue(visionCommands.noteAutoAlignPickUpHandoffAndPrepareToShoot());
     // .whileTrue(intakeCommands.intakeIntakeUntil().andThen(shooterCommands.intakeSequencePlusHandoffCommand()));
@@ -294,10 +300,16 @@ public class RobotContainer {
     // Command intakeOrOuttake = Commands.either(intakeCommands.intakeOuttake(),
     // intakeCommands.intakeIntake(), () -> driverXbox.getYButton());
 
-    new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
-    // new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
+    //new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(Commands.sequence(climberCommands.climbStartCommand(),
+     //intakeCommands.intakeDown())).onFalse(climberCommands.climbStopCommand());
+    //new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(Commands.sequence(intakeCommands.intakeDown(),
+     //climberCommands.climbDownCommand())).onFalse(climberCommands.climbStopCommand()); for guitarhero
+
     // new JoystickButton(coolguy,
     // GuitarHeroController.Button.kGreen.value).whileTrue();
+    new JoystickButton(driverXbox, XboxController.Button.kA.value).whileTrue(intakeCommands.intakeDown());
+    // new JoystickButton(driverXbox,
+    // XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
 
     new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value)
         .whileTrue(shooterAngleCommands.moveShooterUp());
@@ -384,13 +396,13 @@ public class RobotContainer {
   }
 
   public void guitarHeroTriggers(){
-    new Trigger(() -> coolguy.getGreenButton()).whileTrue(shooterAngleCommands.climberAngleCommand()); //figure climbing out //here
+    new Trigger(() -> coolguy.getGreenButton()).onTrue(Commands.sequence(shooterAngleCommands.climbingAngleCommand(), climberSubsystem.climberDownCommand(), intakeCommands.intakeDown().withTimeout(.1))).onFalse(climberCommands.climbStopCommand()); //clibing fr //here
     new Trigger(() -> coolguy.getRedButton()).whileTrue(shooterAngleCommands.ampAngleCommand());
     new Trigger(() -> coolguy.getYellowButton()).whileTrue(shooterAngleCommands.shooterAngleCommand());
     new Trigger(() -> coolguy.getBlueButton()).whileTrue(shooterCommands.moveFeedAmpCommand());
     new Trigger(() -> coolguy.getOrangeButton()).whileTrue(shooterCommands.moveFeedAmpOppCommand());
-    new Trigger(() -> coolguy.getSelectButton()).whileTrue(Commands.run(() -> {System.out.println("SELECT");})); //figure climbing out
-    new Trigger(() -> coolguy.getStartButton()).whileTrue(Commands.run(() -> {System.out.println("START");})); //figure climbing out
+    new Trigger(() -> coolguy.getSelectButton()).onTrue(Commands.sequence(shooterAngleCommands.climbingAngleCommand(), intakeCommands.intakeDown().withTimeout(.05), climberSubsystem.climberUpCommand())).onFalse(climberCommands.climbStopCommand()); // un climbing//figure climbing out
+    new Trigger(() -> coolguy.getStartButton()).whileTrue(shooterAngleCommands.moveShooterDown()); 
 
     new Trigger(() -> coolguy.getUpStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING UP");}));
     new Trigger(() -> coolguy.getDownStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING DOWN");}));
@@ -417,10 +429,6 @@ public class RobotContainer {
     // System.out.println(drivebase.getPose());
 
   }
-
-  // public void updateGuitarButtons() {
-  //   System.out.println(coolguy.getGreenButton());
-  // }
 
   public void addVision() {
     var estimatedPose = visionSubsystem.getEstimatedRobotPose();
