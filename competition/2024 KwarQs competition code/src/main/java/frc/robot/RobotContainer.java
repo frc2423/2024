@@ -378,8 +378,8 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(intakeCommands.intakeOuttake());
     intake.setDefaultCommand(new RunCommand(intake::beltStop, intake));
 
-    new JoystickButton(operator, XboxController.Button.kStart.value).whileTrue(shooterCommands.autoFlopCommand());
-    new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(shooterCommands.shootAmp());
+    new JoystickButton(operator, XboxController.Button.kStart.value).onTrue(Commands.sequence(shooterAngleCommands.climbingAngleCommand(), climberSubsystem.climberDownCommand(), intakeCommands.intakeDown().withTimeout(.1))).onFalse(climberCommands.climbStopCommand());
+    new JoystickButton(operator, XboxController.Button.kBack.value).onTrue(Commands.sequence(shooterAngleCommands.climbingAngleCommand(), intakeCommands.intakeDown().withTimeout(.05), climberSubsystem.climberUpCommand())).onFalse(climberCommands.climbStopCommand()); //whileTrue(shooterCommands.shootAmp());
 
     new JoystickButton(driverXbox, XboxController.Button.kX.value).whileTrue(intakeCommands.intakeUp());
   }
@@ -404,7 +404,7 @@ public class RobotContainer {
     new Trigger(() -> coolguy.getSelectButton()).onTrue(Commands.sequence(shooterAngleCommands.climbingAngleCommand(), intakeCommands.intakeDown().withTimeout(.05), climberSubsystem.climberUpCommand())).onFalse(climberCommands.climbStopCommand()); // un climbing//figure climbing out
     new Trigger(() -> coolguy.getStartButton()).whileTrue(shooterAngleCommands.moveShooterDown()); 
 
-    new Trigger(() -> coolguy.getUpStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING UP");}));
+    new Trigger(() -> coolguy.getUpStrum()).whileTrue(intakeCommands.intakeUp());
     new Trigger(() -> coolguy.getDownStrum()).whileTrue(Commands.run(() -> {System.out.println("STRUMMING DOWN");}));
   }
 

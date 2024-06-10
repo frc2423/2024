@@ -62,6 +62,8 @@
             <frc-field3d-urdf></frc-field3d-urdf>
             <!---->
             <frc-field3d-urdf></frc-field3d-urdf>
+            <!---->
+            <frc-field3d-urdf></frc-field3d-urdf>
         </frc-field3d-urdf-wrapper><frc-field3d-pose-visualizer
             source-provider="NetworkTables"
             source-key="/best target"
@@ -83,7 +85,12 @@
         source-key="/sourcePickUp"
         options="[&quot;ground&quot;,&quot;source&quot;,&quot;none&quot;]"
         value="source"
-    ></frc-toggle-group></dashboard-tab><dashboard-tab
+    ></frc-toggle-group><frc-sendable-chooser
+        source-provider="NetworkTables"
+        style="transform: translate(329.4px, 108.6px);"
+        source-key="/Shuffleboard/Autonomous/SendableChooser[0]"
+        options="[]"
+    ></frc-sendable-chooser></dashboard-tab><dashboard-tab
     slot="tab"
     tab-name="Autonomous"
     source-provider="NetworkTables"
