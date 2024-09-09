@@ -116,6 +116,12 @@ public class ShooterSubsystem extends SubsystemBase {
         shooter2Speed = speed;
     }
 
+    public void setVoltageSpeedForHuman(double humanspeed){
+        isPidMode = false;
+        shooter1Speed = humanspeed;
+        shooter2Speed = humanspeed;    
+    }
+
     public void periodic() {
         // double speed = -3000;
         NTHelper.setDouble("/debug/shooterFeedforward", calcShooterFeedFor(shooter1Speed));

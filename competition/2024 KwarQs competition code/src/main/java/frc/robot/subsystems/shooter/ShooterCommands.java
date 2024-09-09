@@ -58,6 +58,15 @@ public class ShooterCommands {
         return command;
     }
 
+    public Command shootADude() {
+        var command = Commands.run(() -> {
+            shooter.setVoltageSpeedForHuman(-3);
+            shooter.shooterOn();
+        }, shooter).withTimeout(shooter.isDoneSec);
+        command.setName("ShootAHuman");
+        return command;
+    }
+
     public Command runDAS() {
         Command wait = Commands.waitSeconds(.75);
         Command command = Commands.parallel(
@@ -195,6 +204,14 @@ public class ShooterCommands {
         return command;
     }
 
+       public Command revAndShootTheBros() { 
+        var command = Commands.sequence(
+                shootADude(),
+                shoot());
+        command.setName("Revvvvv and Shoot the haters");
+        return command;
+    }
+
     public Command shooterOnFlop() {
         var command = Commands.run(() -> shooter.shooterOnFlop(), shooter).withTimeout(0.1);
         command.setName("sPiNiNg");
@@ -260,14 +277,14 @@ public class ShooterCommands {
         return Commands.run(() -> {
             double distance = drivebase.getDistanceToSpeaker();
             DAS.MotorSettings as = RobotContainer.das.calculateAS(distance);
-            shooter.setPidSpeed(as.getVelocity());
+            shooter.setPidSpeed(-1000);//as.getVelocity()
             shooter.shooterOn();
         }, shooter).until(() -> shooter.isRevatSpeed()).withTimeout(4);
     }
 
     public Command revStartCommand() {
         Command command = Commands.run(() -> {
-            shooter.setVoltageSpeed(-13);
+            shooter.setVoltageSpeed(-12);
             shooter.shooterOn();
         }, shooter);
         command.setName("rev Start");
