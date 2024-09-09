@@ -17,8 +17,14 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    SmartDashboard.putData(led.setGreen());
+    SmartDashboard.putData(led.disable());
     SmartDashboard.putData(led.setOrange());
+    SmartDashboard.putData(led.setFirst3Green());
+    SmartDashboard.putData(led.setAllGreen());
+    SmartDashboard.putData(led.setEvenOdd());
+    SmartDashboard.putData(led.setBlackToGreenFade());
+    SmartDashboard.putData(led.setRainbow());
+    SmartDashboard.putData(led.setBouncy());
   }
 
   private void configureBindings() {

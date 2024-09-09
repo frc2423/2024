@@ -7,21 +7,64 @@
       "window": {
         "visible": true
       }
+    },
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
     }
   },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/All Green": "Command",
+      "/SmartDashboard/Black to Green Fade": "Command",
+      "/SmartDashboard/Bouncy": "Command",
+      "/SmartDashboard/Disable": "Command",
+      "/SmartDashboard/Even Odd": "Command",
+      "/SmartDashboard/First 3 Green": "Command",
+      "/SmartDashboard/Orange": "Command",
+      "/SmartDashboard/Rainbow": "Command",
       "/SmartDashboard/green": "Command",
       "/SmartDashboard/orange": "Command"
     },
     "windows": {
-      "/SmartDashboard/green": {
+      "/SmartDashboard/All Green": {
         "window": {
           "visible": true
         }
       },
-      "/SmartDashboard/orange": {
+      "/SmartDashboard/Black to Green Fade": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Bouncy": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Disable": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Even Odd": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/First 3 Green": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Orange": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Rainbow": {
         "window": {
           "visible": true
         }
