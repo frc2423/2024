@@ -14,6 +14,9 @@ public class First3Green implements Led {
     }
 
     public void run(AddressableLEDBuffer buffer, int length) {
+        for (var i = 0; i < 3; i++) {
+            buffer.setRGB(i, 00, 255, 00);
+        }
 
     }
 
