@@ -52,6 +52,7 @@ public final class Constants {
     public static final Pose2d sourceMiddlePose = new Pose2d(15.42, 0.89, Rotation2d.fromDegrees(126.28));
     public static final Pose2d sourceLeftPose = new Pose2d(15.97, 1.23, Rotation2d.fromDegrees(126.28));
     public static final Pose2d speakerLocationPose = new Pose2d(0.00, 5.56, Rotation2d.fromDegrees(0));
+    public static final Pose2d ID3Pose = new Pose2d(0.00, 5, Rotation2d.fromDegrees(-180));
     public static final Pose2d StageLeftPose = new Pose2d(4.09, 5.43, Rotation2d.fromDegrees(-60));
     public static final Pose2d StageRightPose = new Pose2d(3.97, 2.82, Rotation2d.fromDegrees(60));
     public static final Pose2d StageCenterPose = new Pose2d(6.55, 4.15, Rotation2d.fromDegrees(-180));

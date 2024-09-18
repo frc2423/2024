@@ -32,18 +32,23 @@ public class DAS {
 
     private void initializeMap() {
         // Example values, replace these with your actual mappings
-        distanceMap.put(1.318, new MotorSettings(323, -3000)); // fix values -8
-        distanceMap.put(1.655, new MotorSettings(321.5, -3000)); // fix values -8
-        distanceMap.put(2.01, new MotorSettings(315.3, -3000));// -317.
-        distanceMap.put(2.357, new MotorSettings(311.5, -3000)); // -9
-        distanceMap.put(2.7, new MotorSettings(310, -3000)); // -9
-        distanceMap.put(3.01, new MotorSettings(306, -3000)); // -12
-        distanceMap.put(3.20, new MotorSettings(304.5, -3000)); // -12
-        distanceMap.put(3.40, new MotorSettings(304, -3000)); // -12
-        distanceMap.put(3.50, new MotorSettings(303, -3000)); // -12
-        distanceMap.put(3.60, new MotorSettings(301, -3000));
-        distanceMap.put(3.7, new MotorSettings(300.75, -3000));
-        distanceMap.put(4.5, new MotorSettings(297, -3000)); // -12 300.75
+
+        distanceMap.put(2.75, new MotorSettings(310, -300));
+
+
+        //ACUAL DAS TUNE
+        // distanceMap.put(1.318, new MotorSettings(323, -3000)); // fix values -8
+        // distanceMap.put(1.655, new MotorSettings(321.5, -3000)); // fix values -8
+        // distanceMap.put(2.01, new MotorSettings(315.3, -3000));// -317.
+        // distanceMap.put(2.357, new MotorSettings(311.5, -3000)); // -9
+        // distanceMap.put(2.7, new MotorSettings(310, -3000)); // -9
+        // distanceMap.put(3.01, new MotorSettings(306, -3000)); // -12
+        // distanceMap.put(3.20, new MotorSettings(304.5, -3000)); // -12
+        // distanceMap.put(3.40, new MotorSettings(304, -3000)); // -12
+        // distanceMap.put(3.50, new MotorSettings(303, -3000)); // -12
+        // distanceMap.put(3.60, new MotorSettings(301, -3000));
+        // distanceMap.put(3.7, new MotorSettings(300.75, -3000));
+        // distanceMap.put(4.5, new MotorSettings(297, -3000)); // -12 300.75
     }
 
     public MotorSettings calculateAS(double distance) {
