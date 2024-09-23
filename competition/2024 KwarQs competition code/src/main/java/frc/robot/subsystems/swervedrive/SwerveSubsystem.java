@@ -75,7 +75,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(7);
 
   ProfiledPIDController thetaController = new ProfiledPIDController(3, 0, 0,
-      new TrapezoidProfile.Constraints(6.28, 12)); // .5, 500, 400
+      new TrapezoidProfile.Constraints(6.28, 12)); // .5, 500, 400 ,,,, changed for faire on the square orignal vslues.. 6.28  12
 
   /**
    * Swerve drive object.

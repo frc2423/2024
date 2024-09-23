@@ -33,7 +33,7 @@ public class DAS {
     private void initializeMap() {
         // Example values, replace these with your actual mappings
 
-        distanceMap.put(2.75, new MotorSettings(310, -300));
+        distanceMap.put(2.75, new MotorSettings(328, -300));
 
 
         //ACUAL DAS TUNE
