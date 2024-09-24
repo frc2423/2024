@@ -12,8 +12,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 public class RobotContainer {
   private final KwarqsLed led = new KwarqsLed();
 
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
@@ -25,10 +26,12 @@ public class RobotContainer {
     SmartDashboard.putData(led.setBlackToGreenFade());
     SmartDashboard.putData(led.setRainbow());
     SmartDashboard.putData(led.setBouncy());
+    SmartDashboard.putData(led.setComet());
+
   }
 
   private void configureBindings() {
-   
+
   }
 
   public Command getAutonomousCommand() {

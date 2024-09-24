@@ -15,6 +15,7 @@ public class KwarqsLed extends SubsystemBase {
         ledController.add("BlackToGreenFade", new BlackToGreenFade());
         ledController.add("Rainbow", new Rainbow());
         ledController.add("Bouncy", new Bouncy());
+        ledController.add("Comet", new Comet());
 
         setDefaultCommand(disable());
     }
@@ -49,6 +50,10 @@ public class KwarqsLed extends SubsystemBase {
 
     public Command setBouncy() {
         return run(() -> ledController.set(("Bouncy"))).withName("Bouncy");
+    }
+
+    public Command setComet() {
+        return run(() -> ledController.set(("Comet"))).withName("Comet");
     }
 
     @Override
