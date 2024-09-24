@@ -14,7 +14,7 @@ public class Rainbow implements Led {
     }
 
     public void run(AddressableLEDBuffer buffer, int length) {
-
+    buffer.setHSV(, , 3, 4);
     }
 
     public void end(AddressableLEDBuffer buffer, int length) {

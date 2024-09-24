@@ -14,7 +14,13 @@ public class EvenOdd implements Led {
     }
 
     public void run(AddressableLEDBuffer buffer, int length) {
-
+        for (var i = 0; i < buffer.getLength(); i++){
+        if(i%2==0){
+            buffer.setRGB(i, 0, 255, 0);
+        }else{
+            buffer.setRGB(i,0,0,255);
+        }
+    }
     }
 
     public void end(AddressableLEDBuffer buffer, int length) {
