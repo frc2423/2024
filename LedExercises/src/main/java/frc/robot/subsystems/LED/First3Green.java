@@ -14,9 +14,9 @@ public class First3Green implements Led {
     }
 
     public void run(AddressableLEDBuffer buffer, int length) {
-        buffer.setRGB(2, 255, 0, 20);
-        buffer.setRGB(0, 255, 0, 20);
-        buffer.setRGB(1, 255, 0, 20);
+        for(int i=0;i<3;i=i+1){
+            buffer.setRGB(i, 255, 0, 20);
+        }
     }
 
     public void end(AddressableLEDBuffer buffer, int length) {
