@@ -14,17 +14,15 @@ public class BlackToGreenFade implements Led {
 
     public void start(AddressableLEDBuffer buffer, int length) {
         for (var i = 0; i < buffer.getLength(); i++) {
-            buffer.setRGB(i, 00, 00, 00);
-            
+            // buffer.setRGB(i, 00, 00, 00);      
         }
     }
-
+    
     public void run(AddressableLEDBuffer buffer, int length) {
+        x+=1;
         for (var i = 0; i < buffer.getLength(); i++) {
-            buffer.setRGB(i, 00, x, 00);
+            buffer.setRGB(i, 0, x,0);
         }
-        x+=255/length;
-
     }
 
     public void end(AddressableLEDBuffer buffer, int length) {
