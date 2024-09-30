@@ -267,7 +267,7 @@ public class ShooterCommands {
 
     public Command revStartCommand() {
         Command command = Commands.run(() -> {
-            shooter.setVoltageSpeed(-13);
+            shooter.setVoltageSpeed(-7);
             shooter.shooterOn();
         }, shooter);
         command.setName("rev Start");
