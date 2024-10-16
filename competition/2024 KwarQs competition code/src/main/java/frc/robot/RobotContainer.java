@@ -335,7 +335,7 @@ public class RobotContainer {
     shooterFeed.setDefaultCommand(shooterCommands.stopFeeder());
 
     new Trigger(() -> operator.getPOV() == 180).whileTrue(shooterAngleCommands.shooterAngleCommand());
-    new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.climberAngleCommand());
+    new Trigger(() -> operator.getPOV() == 0).whileTrue(shooterAngleCommands.shuttleAngleCommand()); //broski
     new Trigger(() -> operator.getPOV() == 270).whileTrue(shooterAngleCommands.ampAngleCommand());
     new Trigger(() -> operator.getPOV() == 90).whileTrue(shooterAngleCommands.handOffAngleCommand());
     new Trigger(() -> driverXbox.getPOV() == 180)

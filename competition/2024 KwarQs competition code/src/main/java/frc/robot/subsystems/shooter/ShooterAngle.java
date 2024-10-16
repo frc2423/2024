@@ -51,6 +51,7 @@ public class ShooterAngle extends SubsystemBase {
 
   public static double feedAngle = 323.5; // is correct number now
   public static double climbAngle = 180; // old
+  public static double shuttleAngle = 270;
   public static double climbingAngle = 200; //maybe good (new)
   public static double shootAngle = 323.5; // is good
   public static double ampAngle = 141; // maybe good

@@ -57,6 +57,13 @@ public class ShooterAngleCommands {
     return command;
   }
 
+  public Command shuttleAngleCommand() {
+    var command = shooterAngle.runOnce(() -> shooterAngle.setAngle(shooterAngle.shuttleAngle));
+    // put in actual value
+    command.setName("Shuttle Angle");
+    return command;
+  }
+
   public Command handOffAngleCommand() {
     var command = shooterAngle.runOnce(() -> shooterAngle.setAngle(shooterAngle.handOffAngle));
     command.addRequirements(shooterAngle);
