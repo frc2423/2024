@@ -36,9 +36,9 @@ public class DAS {
         distanceMap.put(/*distance*/1.6, new MotorSettings(/*angle*/317, -5200)); //~11 in
         distanceMap.put(/*distance*/1.71, new MotorSettings(/*angle*/316, -5200));//~15.5 in
         distanceMap.put(/*distance*/2.0, new MotorSettings(/*angle*/313, -5200));//28
-        distanceMap.put(/*distance*/2.21, new MotorSettings(/*angle*/308.5, -5200));//32
-        distanceMap.put(/*distance*/2.4, new MotorSettings(/*angle*/305.5, -5200));
-        distanceMap.put(/*distance*/2.7, new MotorSettings(/*angle*/301.5, -5200));
+        distanceMap.put(/*distance*/2.21, new MotorSettings(/*angle*/310, -5200));//32
+        distanceMap.put(/*distance*/2.4, new MotorSettings(/*angle*/308, -5200)); //40
+        distanceMap.put(/*distance*/2.7, new MotorSettings(/*angle*/305, -5200)); //50
         distanceMap.put(/*distance*/3.01, new MotorSettings(/*angle*/300, -5200));//65in
         distanceMap.put(/*distance*/3.15, new MotorSettings(/*angle*/297, -5200));//70in
         distanceMap.put(/*distance*/3.502, new MotorSettings(/*angle*/293, -5200));//84
