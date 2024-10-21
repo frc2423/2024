@@ -7,7 +7,7 @@ import frc.robot.commands.TurnDegrees;
 import frc.robot.commands.TurnTime;
 import frc.robot.subsystems.Drivetrain;
 /*
- * TODO: Move the romi in a square
+ * TODO: Move the romi in a square during autonomous, make sure to select square in the autonomous selection
  * 
  */
 

@@ -8,12 +8,12 @@ import frc.robot.commands.TurnDegrees;
 import frc.robot.commands.TurnTime;
 import frc.robot.subsystems.Drivetrain;
 /*
- * TODO: Move the robot forward 10 inches during autonomous, make sure to select forward10 in the autonomous selection
+ * TODO: Move the robot forward during autonomous, make sure to select forward in the autonomous selection
  * 
  */
 
-public class Forward10 extends SequentialCommandGroup {
-    public Forward10(Drivetrain drivetrain) {
+public class Forward extends SequentialCommandGroup {
+    public Forward(Drivetrain drivetrain) {
         addCommands(
             
         );

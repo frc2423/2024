@@ -10,9 +10,14 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Exercises.AutonomousDistanceExample;
 import frc.robot.Exercises.AutonomousTimeExample;
 import frc.robot.Exercises.ButtonsExample;
+import frc.robot.Exercises.Circle;
+import frc.robot.Exercises.Forward;
 import frc.robot.Exercises.Forward10;
 import frc.robot.Exercises.ForwardBackButtons;
+import frc.robot.Exercises.ForwardTurnButtons;
+import frc.robot.Exercises.JoysticksMove;
 import frc.robot.Exercises.Square;
+import frc.robot.Exercises.SquareButtons;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.romi.OnBoardIO;
@@ -37,9 +42,11 @@ public class RobotContainer {
   // Assumes a gamepad plugged into channel 0
   private final XboxController m_controller = new XboxController(0);
 
-
-  private final ForwardBackButtons fBackButtons = new ForwardBackButtons(m_drivetrain, m_controller);
+  private final ForwardTurnButtons fowardTurnButtons = new ForwardTurnButtons(m_drivetrain, m_controller);
+  private final ForwardBackButtons fowardBackButtons = new ForwardBackButtons(m_drivetrain, m_controller);
   private final ButtonsExample buttonsExample = new ButtonsExample(m_drivetrain, m_controller);
+  private final SquareButtons squareButtons = new SquareButtons(m_drivetrain, m_controller);
+  private final JoysticksMove joysticksMove = new JoysticksMove(m_drivetrain, m_controller);
 
   // Create SmartDashboard chooser for autonomous routines
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -85,13 +92,17 @@ public class RobotContainer {
     m_chooser.addOption("Auto Routine Time", new AutonomousTimeExample(m_drivetrain));
     m_chooser.addOption("Forward10", new Forward10(m_drivetrain));
     m_chooser.addOption("Square", new Square(m_drivetrain));
+    m_chooser.addOption("Forward", new Forward(m_drivetrain));
+    m_chooser.addOption("Circle", new Circle(m_drivetrain));
 
     SmartDashboard.putData(m_chooser);
 
     //Change this depending on what exercise you are doing
-    fBackButtons.addBindings();
-    //buttonsExample.addBindings();
-
+    buttonsExample.addBindings();
+    //fowardBackButtons.addBindings();
+    //squareButtons.addBindings();
+    //fowardTurnButtons.addBindings();
+    //joysticksMove.addBindings();
   }
 
   /**

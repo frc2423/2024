@@ -1,0 +1,14 @@
+All Command Exercises, suggested order
+
+Autonmous:
+1.Forward
+2.Forward10
+3.Square
+4.Circle
+
+
+Teleop
+1. SquareButtons
+2. ForwardBackButtons
+3. ForwardTurnButtons
+4. JoysticksMove

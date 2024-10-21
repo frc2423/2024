@@ -12,7 +12,7 @@ import frc.robot.subsystems.Drivetrain;
 /*
  * TODO: Move the romi forward when Y is pressed and backwards when X is pressed
  * 
- * Change the 
+ * Change line 102 in RobotContainer to have fowardBackButtons.addBindings(); be uncommented and the rest commented
  * 
  */
 

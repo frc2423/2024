@@ -1,6 +1,5 @@
 package frc.robot.Exercises;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DriveDistance;
 import frc.robot.commands.DriveTime;
@@ -8,14 +7,14 @@ import frc.robot.commands.TurnDegrees;
 import frc.robot.commands.TurnTime;
 import frc.robot.subsystems.Drivetrain;
 /*
- * TODO: Move the robot forward 10 inches during autonomous, make sure to select forward10 in the autonomous selection
+ * TODO: Move the romi in a Circle during autonomous, make sure to select Circle in the autonomous selection
  * 
  */
 
-public class Forward10 extends SequentialCommandGroup {
-    public Forward10(Drivetrain drivetrain) {
+public class Circle extends SequentialCommandGroup {
+    public Circle(Drivetrain drivetrain) {
         addCommands(
-            
+
         );
     }
 }
