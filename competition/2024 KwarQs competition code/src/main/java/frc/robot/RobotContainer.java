@@ -119,49 +119,35 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter", shooter);
     SmartDashboard.putData("ShooterAngle", shooterAngle);
     SmartDashboard.putData("VisionSubsystem", visionSubsystem);
-
-    // Add commands to the autonomous command chooser
+    
+    // Taxi autos
     m_chooser.setDefaultOption("Taxi Auto", "Taxi Auto");
-
+    m_chooser.addOption("Taxi Amp Side", "Taxi Amp Side");
+    
     // comp single game piece auto
-    m_chooser.addOption("Comp Single Note", "Comp Single Note");
-
-    // faster middle 2 Piece (emily and ben)
-    // m_chooser.addOption("Faster Amp 2 Piece", "Faster Amp 2 Piece");
-    // m_chooser.addOption("Faster Center 2 Piece", "Faster Center 2 Piece");
-    // m_chooser.addOption("Faster Feeder 2 Piece", "Faster Feeder 2 Piece");
-    // m_chooser.addOption("echarles Amp 3 Piece", "echarles Amp 3 Piece");
-    m_chooser.addOption("Bens Amp 3 Piece", "Bens Amp 3 Piece");
-    m_chooser.addOption("Bens Feeder 3 Piece", "Bens Feeder 3 Piece");
+    m_chooser.addOption("Comp Single Note", "Close - Comp Single Note");
 
     // comp 2 piece autos
-    m_chooser.addOption("Amp 2 Piece", "Amp 2 Piece");
-    m_chooser.addOption("Center 2 Piece", "Center 2 Piece");
-    m_chooser.addOption("Feeder 2 Piece", "Feeder 2 Piece");
+    m_chooser.addOption("Amp 2 Piece Amp", "Close - 2 Piece Amp");
+    m_chooser.addOption("Center 2 Piece Center", "Close - 2 Piece Center");
+    m_chooser.addOption("Source 2 Piece Source", "Close - 2 Piece Source");
+    
+    // comp 3 piece autos
+    m_chooser.addOption("Close Center 3 Piece Amp", "Close - 3 Piece Amp");
+    m_chooser.addOption("Close Center 3 Piece Source", "Close - 3 Piece Source");
+    
+    // comp 4 piece autos
+    m_chooser.addOption("Close Center 4 Piece", "Close - Center 4 Piece");
 
     // center line autos
-    m_chooser.addOption("Amp Center Wall 3 Piece", "Amp Center Wall 3 Piece");
-    m_chooser.addOption("Amp Center Wall 2 Piece", "Amp Center 2 Piece");
-    m_chooser.addOption("Feeder Center 2nd from Wall 2 Piece", "Feeder Center 2nd from Wall 2 Piece");
-    m_chooser.addOption("Feeder Center Wall 2 Piece", "Feeder Center Wall 2 Piece");
-    m_chooser.addOption("Bens 4 Piece2", "Bens 4 Piece2");
-    // m_chooser.addOption("Bens 4 Piece", "Bens 4 Piece");
+    // m_chooser.addOption("Amp Wall Far 3 Piece Amp","Amp Wall Far 3 Piece Amp");
+    m_chooser.addOption("Amp Wall Far 2 Piece Amp", "Far - Wall 2 Piece Amp");
+    m_chooser.addOption("Source Blitz Center Line 2 Piece Source", "Far - Blitz Center Line 2 Piece Source");
+    m_chooser.addOption("Source Wall Far 2 Piece 2nd From Wall Source", "Far - Wall 2 Piece 2nd From Wall Source");
+    m_chooser.addOption("Source Wall Far 2 Piece Source", "Far - Wall 2 Piece Source");
+    
 
-    // 3 piece autos
-    // m_chooser.addOption("Amp 3 Piece", "Amp 3 Piece");
-    // m_chooser.addOption("Feeder 3 Piece", "Feeder 3 Piece");
 
-    m_chooser.addOption("Taxi Amp Side", "Taxi Amp Side");
-
-    // faster 3 piece autos
-    // m_chooser.addOption("Faster Feeder 3 Piece", "Faster Feeder 3 Piece");
-    // m_chooser.addOption("Faster Amp 3 Piece", "Faster Amp 3 Piece");
-
-    // Blitz autos
-    // m_chooser.addOption("Blitz Center Note Auto", "Blitz Center Note Auto");
-
-    // m_chooser.addOption("Blitz Center Line Auto", "Blitz Center Line Auto");
-    m_chooser.addOption("Blitz Center Line Auto2", "Blitz Center Line Auto2");
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
