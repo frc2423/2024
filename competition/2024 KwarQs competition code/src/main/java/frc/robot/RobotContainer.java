@@ -125,26 +125,26 @@ public class RobotContainer {
     m_chooser.addOption("Taxi Amp Side", "Taxi Amp Side");
     
     // comp single game piece auto
-    m_chooser.addOption("Comp Single Note", "Close - Comp Single Note");
+    m_chooser.addOption("Close - Comp Single Note","Comp Single Note" );
 
     // comp 2 piece autos
-    m_chooser.addOption("Amp 2 Piece Amp", "Close - 2 Piece Amp");
-    m_chooser.addOption("Center 2 Piece Center", "Close - 2 Piece Center");
-    m_chooser.addOption("Source 2 Piece Source", "Close - 2 Piece Source");
+    m_chooser.addOption( "Close - 2 Piece Amp","Amp 2 Piece Amp");
+    m_chooser.addOption("Close - 2 Piece Center", "Center 2 Piece Center");
+    m_chooser.addOption("Close - 2 Piece Source", "Source 2 Piece Source");
     
     // comp 3 piece autos
-    m_chooser.addOption("Close Center 3 Piece Amp", "Close - 3 Piece Amp");
-    m_chooser.addOption("Close Center 3 Piece Source", "Close - 3 Piece Source");
+    m_chooser.addOption("Close - 3 Piece Amp","Close Center 3 Piece Amp");
+    m_chooser.addOption("Close - 3 Piece Source","Close Center 3 Piece Source");
     
     // comp 4 piece autos
-    m_chooser.addOption("Close Center 4 Piece", "Close - Center 4 Piece");
+    m_chooser.addOption( "Close - Center 4 Piece","Close Center 4 Piece");
 
     // center line autos
     // m_chooser.addOption("Amp Wall Far 3 Piece Amp","Amp Wall Far 3 Piece Amp");
-    m_chooser.addOption("Amp Wall Far 2 Piece Amp", "Far - Wall 2 Piece Amp");
-    m_chooser.addOption("Source Blitz Center Line 2 Piece Source", "Far - Blitz Center Line 2 Piece Source");
-    m_chooser.addOption("Source Wall Far 2 Piece 2nd From Wall Source", "Far - Wall 2 Piece 2nd From Wall Source");
-    m_chooser.addOption("Source Wall Far 2 Piece Source", "Far - Wall 2 Piece Source");
+    m_chooser.addOption( "Far - Wall 2 Piece Amp","Amp Wall Far 2 Piece Amp");
+    m_chooser.addOption("Far - Blitz Center Line 2 Piece Source","Source Blitz Center Line 2 Piece Source");
+    m_chooser.addOption("Far - Wall 2 Piece 2nd From Wall Source","Source Wall Far 2 Piece 2nd From Wall Source");
+    m_chooser.addOption("Far - Wall 2 Piece Source","Source Wall Far 2 Piece Source");
     
 
 
