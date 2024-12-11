@@ -11,6 +11,13 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
  */
 public class EvenOdd implements Led {
     public void start(AddressableLEDBuffer buffer, int length) {
+        for(var i = 0; i < length; i++) {
+            if (i % 2 == 0) {
+                buffer.setRGB(i, 00, 255, 00);
+            } else {
+                buffer.setRGB(i, 00, 00, 255);
+            }
+        }
     }
 
     public void run(AddressableLEDBuffer buffer, int length) {
